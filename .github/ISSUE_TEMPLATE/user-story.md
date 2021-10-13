@@ -2,7 +2,7 @@
 name: User Story
 about: Kan gebruikt worden om user stories te maken
 title: ''
-labels: ''
+labels: User Story
 assignees: ''
 
 ---

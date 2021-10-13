@@ -2,7 +2,7 @@
 name: Learning Story
 about: Dit gaat over dingen die je nog moet leren
 title: ''
-labels: ''
+labels: Learning Story
 assignees: ''
 
 ---
