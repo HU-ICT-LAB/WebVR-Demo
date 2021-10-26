@@ -1,0 +1,31 @@
+<script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+<script>
+  AFRAME.registerComponent('change-color-on-hover', {
+    schema: {
+      color: {default: 'red'}
+    },
+
+    init: function () {
+      var data = this.data;
+      var el = this.el;  // <a-box>
+      var defaultColor = el.getAttribute('material').color;
+
+      el.addEventListener('mouseenter', function () {
+        el.setAttribute('color', data.color);
+        el.setAttribute('geometry', {width: el.getAttribute('geometry').width + 1});
+        console.log(el.getAttribute('geometry').width);
+      });
+
+      el.addEventListener('mouseleave', function () {
+        el.setAttribute('color', defaultColor);
+      });
+    }
+  });
+</script>
+<body>
+  <a-scene>
+    <a-box color="#EF2D5E" position="0 1 -4" change-color-on-hover="color: blue"></a-box>
+
+    <a-camera><a-cursor></a-cursor></a-camera>
+  </a-scene>
+</body>
