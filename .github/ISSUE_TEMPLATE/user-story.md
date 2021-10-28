@@ -1,19 +1,21 @@
 ---
 name: User Story
-about: Kan gebruikt worden om user stories te maken
+about: This template can be used to make a User Story.
 title: ''
 labels: User Story
 assignees: ''
 
 ---
 
-**Prioriteit:**            [ ]
-**Tijds schatting:**   [ ]
+**Priority:**            [ ]
+**Time estimation:**   [ ]
 
-**Beschrijving:**
-Beschrijving van de user story
+**Description:**
+description of the user story
 
-Taken:
-- [ ] Taak 1
-- [ ] Taak 2
-- [ ] Taak 3
+Tasks:
+- [ ] Task 1
+- [ ] Task 2
+- [ ] Task 3
+
+**Definition of Done:**
