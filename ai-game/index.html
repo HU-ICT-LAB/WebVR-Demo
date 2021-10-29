@@ -1,0 +1,45 @@
+<html>
+    <head>
+        <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+
+        <script>
+            AFRAME.registerComponent('move', {
+                schema: {
+                    thing: {type: 'string'}
+                },
+
+                init: function () {
+                    const data = this.data;
+                    var el = this.el;
+                    var elEntity = document.querySelector(data.thing);
+                    el.addEventListener('mouseenter', function () {
+                        var pos = elEntity.getAttribute('position')
+                        pos.y = pos.y +1
+                        elEntity.setAttribute('position', pos);
+                    });
+                }
+            });
+        </script>
+
+    </head>
+    <body>
+        <a-scene>
+            <a-box id="box1" position="-2 0 -2" color="#4CC3D9"></a-box>
+            <a-box id="box2" position="2 0 -2" color="green"></a-box>
+
+
+            <a-box id="button1" position="-2 0 0" color="red" move="thing: #box1"></a-box>
+            <a-box id="button2" position="2 0 0" color="red" move="thing: #box2"></a-box>
+
+            <!--For the controllers-->
+            <a-entity id="rightHand" hand-controls="hand: right" laser-controls></a-entity>
+            <a-entity id="leftHand" hand-controls="hand: left"></a-entity>
+
+            <!--For computer or mobile-->
+            <a-camera>
+                <a-cursor></a-cursor>
+            </a-camera>
+
+        </a-scene>
+    </body>
+</html>
