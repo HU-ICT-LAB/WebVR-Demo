@@ -70,8 +70,9 @@
 <!--    <a-entity gltf-model="#Shrek" scale="0.025 0.025 0.025" position="0 0 -1.5"></a-entity>-->
 
     <!-- Robot Playermodel -->
-    <a-entity gltf-model="#Robot" scale="1 1 1" position="0 0 -1"></a-entity>
-
+    <a-entity gltf-model="#Robot" scale="0.007 0.01 0.01" position="0 0 -2"
+              animation="property: position; from: 0 0 -2; to: 0 0 -1; dur: 10000; easing: linear">
+    </a-entity>
 
     <a-entity wasd-controls id="rig" position="0 0 2">
         <a-entity id="camera" camera look-controls></a-entity>
