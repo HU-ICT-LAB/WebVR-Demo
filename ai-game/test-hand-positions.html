@@ -1,0 +1,26 @@
+<html>
+<head>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="scripts/hand-positions.js"></script>
+</head>
+<body>
+    <a-scene>
+        <a-entity id="rig" add_cords_to_hud>
+            <a-entity id="camera" camera look-controls>
+                <a-entity
+                        id="tekst"
+                        text="value: Hello, A-Frame!; color: #CC1313"
+                        position="0.35 -0.20 -0.5"
+                        rotation="0 -25 -10"
+                        scale="0.5 0.5 0.5">
+                </a-entity>
+            </a-entity>
+            <a-entity id="left_controller" oculus-touch-controls="hand: left"></a-entity>
+            <a-entity id="right_controller" oculus-touch-controls="hand: right"></a-entity>
+        </a-entity>
+
+        <a-sky color="#ECECEC"></a-sky>
+
+    </a-scene>
+</body>
+</html>
