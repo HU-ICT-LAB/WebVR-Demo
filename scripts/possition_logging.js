@@ -1,36 +1,14 @@
-
-const options = {
-    // Clean session
-    clean: true,
-    connectTimeout: 80000,
-    // Auth
-    rejectUnauthorized: false,
-    protocol: 'wss',
-    port: 8084,
-    path: "/mqtt"
-  }
-
-
-var client  = mqtt.connect('wss://'+"broker.emqx.io", options)
-var connected = false
-client.on('connect', function () {
-  console.log("i am connected")
-  connected = true
-})
-
-
-
-
 AFRAME.registerComponent('mqtt-logger', {
 
     init: function () {
         this.time = 0;
         this.con = false
     },
+    
     tick: function (time, timeDelta) {
         if (connected){
             if (!this.con){
-                client.on('message', function (topic, message) {
+                mqtt_add_topic_callback("", function (topic, message) {
                     // message is Buffer
                     console.log(message.toString())
                 })
@@ -88,7 +66,7 @@ AFRAME.registerComponent('mqtt-pos-setter', {
                 client.subscribe('hbo_ict_vr_game_player_stats')
 
                 this.con = true
-                client.on('message', function (topic, message) {
+                mqtt_add_topic_callback('hbo_ict_vr_game_player_stats', function (topic, message) {
                     var left_controller = document.querySelector("#left_hand")
                     var right_controller = document.querySelector("#right_hand")
                     var headset = document.querySelector("#head")
