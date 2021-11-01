@@ -1,136 +1,45 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://unpkg.com/aframe-simple-sun-sky@^1.2.2/simple-sun-sky.js"></script>
-    <script tree.object3D.position.x += 1;></script>
-    <script>
-      // define a custom component
-          AFRAME.registerComponent('thumbstick-logging',{
-              init: function () {
-                  this.el.addEventListener('thumbstickmoved', this.logThumbstick);
-  
-              },
-              logThumbstick: function (evt) {
-                  var rig = document.querySelector("#rig")
-                  var player = document.querySelector("#camera")
-                  var angle = player.getAttribute("rotation")
-                  var x = (-evt.detail.y)/25 * Math.cos(angle.y * Math.PI / 180)
-                  var y = (-evt.detail.y)/25 * Math.sin(angle.y * Math.PI / 180)
-                  var pos = rig.getAttribute("position")
-                  pos.x -= y;
-                  pos.z -= x;
-                  rig.setAttribute("position", pos);
-              }
-          });
-    </script>
+    <head>
+        <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+        <script src="https://unpkg.com/aframe-simple-sun-sky@^1.2.2/simple-sun-sky.js"></script>
+        <script tree.object3D.position.x += 1;></script>
+        <script src="scripts/movement.js" type="text/javascript"></script>
+        <script src="scripts/infinite_objects.js" type="text/javascript"></script>
 
-    <script>
-      // update position of trees 
-      AFRAME.registerComponent('update_trees',{
-          tick: function () {
-              var scene = document.querySelector('a-scene');
-              var objects = scene.querySelectorAll('#gentree')
-              var player = document.querySelector("#rig")
-              var pos = rig.getAttribute("position")
-              var len = 10*4
-              for (let i = 0; i < objects.length; i++){
-                  var boom_pos = objects[i].getAttribute('position');
-                  if (Math.abs(pos.x - boom_pos.x) > len /2){
-                      if (pos.x - boom_pos.x > 0){
-                          boom_pos.x += len
-                      }else{
-                          boom_pos.x -= len
-                      }
-                  }
-                  if (Math.abs(pos.z - boom_pos.z) > len /2){
-                      if (pos.z - boom_pos.z > 0){
-                          boom_pos.z += len
-                      }else{
-                          boom_pos.z -= len
-                      }
-                  }
-              }
-          },
-      });    
-  </script>
+    </head>   
+    <body>
+        <a-scene generate_trees update_trees fog="type: exponential; color: #AAA; density: 0.1">
+            <a-assets>
+            <a-asset-item id="house" src="assets\models\WoodHouse.glb"></a-asset-item>
+            <a-asset-item id="trees" src="assets\models\scene.gltf"></a-asset-item>
+            <a-asset-item id="tree" src="assets\models\dark_tree1.glb"></a-asset-item>
+            <a-asset-item id="tree2" src="assets\models\dark_tree1.glb"></a-asset-item>
+            <a-asset-item id="tree3" src="assets\models\dark_tree1.glb"></a-asset-item>
+            <a-asset-item id="tree4" src="assets\models\dark_tree1.glb"></a-asset-item>
+            <a-asset-item id="grass" src="assets\models\grass.gltf"></a-asset-item>
+            </a-assets>
 
-  <script>
-      // load the tree gltf-model
-      AFRAME.registerComponent('loaded_tree',{
-        init: function () {
-                this.el.setAttribute('gltf-model', "assets\\models\\dark_tree1.glb")
-                this.el.setAttribute('scale',"5 5 5")
-          },
-      });
-  </script>
+            <a-entity geometry="primitive: plane; height: 500; width: 500"
+                position="0 -0.5 0"
+                rotation="-90 0 0"
+                material="shader: flat; src: url(assets\\Textures\\grass2.png); repeat: 50 50"></a-entity>
+            <a-entity gltf-model="#house"
+                    position="-4 0.4 0"
+                    scale="2 2 2"></a-entity>
+                    
+            <a-entity gltf-model="#grass"
+                    scale="4 4 4"
+                    position="1 0 1">
+                    </a-entity>
+            <a-entity id="rig" wasd-controls>
+                    <a-entity id="camera" camera look-controls></a-entity>
+                    <a-entity oculus-touch-controls="hand: left" thumbstick-logging></a-entity>
+                    <a-entity oculus-touch-controls="hand: right" thumbstick-logging></a-entity>
+            </a-entity>
 
-  <script>
-      AFRAME.registerComponent('generate_trees',{
-        init: function () {
-            var scene = document.querySelector('a-scene');
-            for (let i = 0; i < 16; i++){
-                var tree = document.createElement('a-entity');
-                tree.setAttribute('loaded_tree','')
-                tree.setAttribute('id','gentree')
-                var pos = new THREE.Vector3();
-                pos.x = i %4*10;
-                pos.z = i /4*10;
-                pos.y = -0.6;
-                tree.setAttribute('position', pos);
-                scene.appendChild(tree);
-            }
-          },
-      });
-    </script>
-
-    <script>
-      // moving a tree
-      AFRAME.registerComponent('treemover',{
-          tick: function (time, timeDelta) {
-            var tree = document.querySelector("#boom1")
-            var pos = tree.getAttribute("position")
-            pos.x += 0.1;
-            tree.setAttribute("position", pos);
-          }
-      });
-    </script>
-
-
-  </head>   
-  <body>
-
-    <a-scene generate_trees update_trees fog="type: exponential; color: #AAA; density: 0.1">
-      <a-assets>
-        <a-asset-item id="house" src="assets\models\WoodHouse.glb"></a-asset-item>
-        <a-asset-item id="trees" src="assets\models\scene.gltf"></a-asset-item>
-        <a-asset-item id="tree" src="assets\models\dark_tree1.glb"></a-asset-item>
-        <a-asset-item id="tree2" src="assets\models\dark_tree1.glb"></a-asset-item>
-        <a-asset-item id="tree3" src="assets\models\dark_tree1.glb"></a-asset-item>
-        <a-asset-item id="tree4" src="assets\models\dark_tree1.glb"></a-asset-item>
-        <a-asset-item id="grass" src="assets\models\grass.gltf"></a-asset-item>
-      </a-assets>
-      <!--<a-simple-sun-sky sun-position="1 0.1 0"></a-simple-sun-sky>-->
-      <a-entity geometry="primitive: plane; height: 500; width: 500"
-          position="0 -0.5 0"
-          rotation="-90 0 0"
-          material="shader: flat; src: url(assets\\Textures\\grass2.png); repeat: 50 50"></a-entity>
-      <a-entity gltf-model="#house"
-                position="-4 0.4 0"
-                scale="2 2 2"></a-entity>
-                
-      <a-entity gltf-model="#grass"
-                scale="4 4 4"
-                position="1 0 1">
-                </a-entity>
-      <a-entity id="rig">
-                <a-entity id="camera" camera look-controls></a-entity>
-                <a-entity oculus-touch-controls="hand: left" thumbstick-logging></a-entity>
-                <a-entity oculus-touch-controls="hand: right" thumbstick-logging></a-entity>
-      </a-entity>
-
-      <a-sky color="AAAAAA"></a-sky>
-    </a-scene>
-  </body>
+            <a-sky color="AAAAAA"></a-sky>
+        </a-scene>
+    </body>
 </html>
 
