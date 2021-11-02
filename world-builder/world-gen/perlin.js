@@ -1,3 +1,4 @@
+// TODO: REPLACE WITH THREE JS VECTOR?
 class Vector2 {
 	constructor(x, y){
 		this.x = x;
@@ -8,7 +9,7 @@ class Vector2 {
 	}
 }
 
-function Shuffle(tab){
+function shuffle(tab){
 	for(let e = tab.length-1; e > 0; e--){
 		let index = Math.round(Math.random()*(e-1)),
 			temp  = tab[e];
@@ -18,21 +19,21 @@ function Shuffle(tab){
 	}
 }
 
-function MakePermutation(){
+function makePermutation(){
 	let P = [];
 	for(let i = 0; i < 256; i++){
 		P.push(i);
 	}
-	Shuffle(P);
+	shuffle(P);
 	for(let i = 0; i < 256; i++){
 		P.push(P[i]);
 	}
 	
 	return P;
 }
-let P = MakePermutation();
+let P = makePermutation();
 
-function GetConstantVector(v){
+function getConstantVector(v){
 	//v is the value from the permutation table
 	let h = v & 3;
 	if(h == 0)
@@ -45,15 +46,15 @@ function GetConstantVector(v){
 		return new Vector2(1.0, -1.0);
 }
 
-function Fade(t){
+function fade(t){
 	return ((6*t - 15)*t + 10)*t*t*t;
 }
 
-function Lerp(t, a1, a2){
+function lerp(t, a1, a2){
 	return a1 + t*(a2-a1);
 }
 
-function Noise2D(x, y){
+function noise2D(x, y){
 	let X = Math.floor(x) & 255;
 	let Y = Math.floor(y) & 255;
 
@@ -71,17 +72,17 @@ function Noise2D(x, y){
 	let valueBottomRight = P[P[X+1]+Y];
 	let valueBottomLeft = P[P[X]+Y];
 	
-	let dotTopRight = topRight.dot(GetConstantVector(valueTopRight));
-	let dotTopLeft = topLeft.dot(GetConstantVector(valueTopLeft));
-	let dotBottomRight = bottomRight.dot(GetConstantVector(valueBottomRight));
-	let dotBottomLeft = bottomLeft.dot(GetConstantVector(valueBottomLeft));
+	let dotTopRight = topRight.dot(getConstantVector(valueTopRight));
+	let dotTopLeft = topLeft.dot(getConstantVector(valueTopLeft));
+	let dotBottomRight = bottomRight.dot(getConstantVector(valueBottomRight));
+	let dotBottomLeft = bottomLeft.dot(getConstantVector(valueBottomLeft));
 	
-	let u = Fade(xf);
-	let v = Fade(yf);
+	let u = fade(xf);
+	let v = fade(yf);
 	
-	return Lerp(u,
-		Lerp(v, dotBottomLeft, dotTopLeft),
-		Lerp(v, dotBottomRight, dotTopRight)
+	return lerp(u,
+		lerp(v, dotBottomLeft, dotTopLeft),
+		lerp(v, dotBottomRight, dotTopRight)
 	);
 
 }
