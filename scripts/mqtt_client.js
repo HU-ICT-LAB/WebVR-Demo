@@ -22,11 +22,11 @@ client.on('connect', function () {
 var function_dict = {}
 
 function mqtt_callback(topic, message){
-    var functions = function_list[topic]
+    var functions = function_dict[topic]
     for(let i = 0; i < functions.length; i++){
         functions[i](topic, message)
     }
-    functions = function_list[""]
+    functions = function_dict[""]
     for(let i = 0; i < functions.length; i++){
         functions[i](topic, message)
     }
