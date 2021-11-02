@@ -55,15 +55,25 @@ AFRAME.registerComponent('headbob-movement',{
         this.x_rotation = queueAdder(this.x_rotation,this.length, player.getAttribute('rotation').x)
 
         if(getTotalDistance(this.x_positions) < 0.50 && getTotalDistance(this.z_positions) < 0.50 && getTotalDistance(this.x_rotation)/this.length < 10){
-            this.y_positions = queueAdder(this.y_positions,this.length, player.getAttribute('position').y)
+            if (getTotalDistance(this.x_rotation)/this.length < 1.5){
+                this.y_positions = queueAdder(this.y_positions,this.length, player.getAttribute('position').y)
 
-            var dist = getTotalDistance(this.y_positions)
-            var x = (dist)/5 * Math.cos(angle.y * Math.PI / 180)
-            var y = (dist)/5 * Math.sin(angle.y * Math.PI / 180)
-            var pos = rig.getAttribute("position")
-            pos.x -= y;
-            pos.z -= x;
-            rig.setAttribute("position", pos);
+                
+                var dist = getTotalDistance(this.y_positions)
+                if(dist/this.length < 0.01){
+                    if (dist/4 > 0.3){
+                        dis = 0.3*4
+                    }
+                    var x = (dist)/4 * Math.cos(angle.y * Math.PI / 180)
+                    var y = (dist)/4 * Math.sin(angle.y * Math.PI / 180)
+                    var pos = rig.getAttribute("position")
+                    pos.x -= y;
+                    pos.z -= x;
+                    rig.setAttribute("position", pos);
+                }
+            }else{
+                this.y_positions = queueAdder(this.y_positions,this.length, this.y_positions[0])
+            }
         }
     }
 });
