@@ -9,11 +9,25 @@ function sumObjects(obj1, obj2) {
 
 //Shows the coordinates of headset and controllers in the HUD
 AFRAME.registerComponent('add_cords_to_hud', {
+    init: function () {
+        //All code in the 'init' is to make an text entity
+        var headset = this.el.querySelector("#camera");
+        const textEntity = document.createElement('a-entity');
+
+        headset.appendChild(textEntity);
+
+        textEntity.setAttribute('position', '0.35 -0.20 -0.5');
+        textEntity.setAttribute('rotation', '0 -25 -10');
+        textEntity.setAttribute('scale', '0.5 0.5 0.5');
+        textEntity.setAttribute('text', 'color', '#be1f1f');
+        textEntity.setAttribute('id', 'tekst');
+    },
+
     tick: function () {
         var textEntity = document.querySelector('#tekst');
         var left_controller = this.el.querySelector("#left_controller")
         var right_controller = this.el.querySelector('#right_controller');
-        var headset = this.el.querySelector("#camera")
+        var headset = this.el.querySelector("#camera");
         var rig = this.el;
 
         //Gets coordinates of the rig
