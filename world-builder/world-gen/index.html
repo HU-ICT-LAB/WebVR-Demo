@@ -1,0 +1,21 @@
+<html>
+    <head>
+        <script src="perlin.js"></script>
+    </head>
+    <body>
+        <canvas id="mainCanvas" width="500" height="500" style="border:1px solid #d3d3d3;"></canvas>
+        <script>
+            let ctx = document.getElementById("mainCanvas").getContext("2d");
+            for (let y = 0; y < 500; y++) {
+                for (let x = 0; x < 500; x++) {
+                    let n = Noise2D(x * 0.01, y * 0.01);
+                    n += 1.0;
+                    n *= 0.5;
+                    let rgb = Math.round(255 * n);
+                    ctx.fillStyle = "rgba(" + rgb + "," + rgb + "," + rgb + ",1.0)";
+                    ctx.fillRect(x, y, 1, 1);
+                }
+            }
+        </script>
+    </body>
+</html>
