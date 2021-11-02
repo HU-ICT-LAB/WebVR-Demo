@@ -26,9 +26,11 @@ function mqtt_callback(topic, message){
     for(let i = 0; i < functions.length; i++){
         functions[i](topic, message)
     }
-    functions = function_dict[""]
-    for(let i = 0; i < functions.length; i++){
-        functions[i](topic, message)
+    if("" in function_dict){
+        functions = function_dict[""]
+        for(let i = 0; i < functions.length; i++){
+            functions[i](topic, message)
+        }
     }
 }
 
