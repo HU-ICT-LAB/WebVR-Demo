@@ -3,7 +3,6 @@
 AFRAME.registerComponent('update_trees',{
     tick: function () {
         var scene = document.querySelector('a-scene');
-        console.log(this.el)
         var objects = scene.querySelectorAll('#gentree')
         var player = document.querySelector("#rig")
         var pos = rig.getAttribute("position")

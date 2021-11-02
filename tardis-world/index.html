@@ -11,27 +11,17 @@
         <a-scene generate_trees update_trees fog="type: exponential; color: #AAA; density: 0.1">
             <a-assets>
             <a-asset-item id="house" src="assets\models\WoodHouse.glb"></a-asset-item>
-            <a-asset-item id="trees" src="assets\models\scene.gltf"></a-asset-item>
             <a-asset-item id="tree" src="assets\models\dark_tree1.glb"></a-asset-item>
-            <a-asset-item id="tree2" src="assets\models\dark_tree1.glb"></a-asset-item>
-            <a-asset-item id="tree3" src="assets\models\dark_tree1.glb"></a-asset-item>
-            <a-asset-item id="tree4" src="assets\models\dark_tree1.glb"></a-asset-item>
-            <a-asset-item id="grass" src="assets\models\grass.gltf"></a-asset-item>
             </a-assets>
 
             <a-entity geometry="primitive: plane; height: 500; width: 500"
                 position="0 -0.5 0"
                 rotation="-90 0 0"
-                material="shader: flat; src: url(assets\\Textures\\grass2.png); repeat: 50 50"></a-entity>
+                material="shader: flat; src: url(assets\textures\grass2.png); repeat: 50 50"></a-entity>
             <a-entity gltf-model="#house"
                     position="-4 0.4 0"
                     scale="2 2 2"></a-entity>
-                    
-            <a-entity gltf-model="#grass"
-                    scale="4 4 4"
-                    position="1 0 1">
-                    </a-entity>
-            <a-entity id="rig" wasd-controls>
+            <a-entity id="rig" wasd-controls headbob-movement>
                     <a-entity id="camera" camera look-controls></a-entity>
                     <a-entity oculus-touch-controls="hand: left" thumbstick-logging></a-entity>
                     <a-entity oculus-touch-controls="hand: right" thumbstick-logging></a-entity>
