@@ -1,4 +1,5 @@
 function sumObjects(obj1, obj2) {
+    //Sum up two objects
     let sum = {};
 
     Object.keys(obj1).forEach(key => {
@@ -8,7 +9,7 @@ function sumObjects(obj1, obj2) {
 }
 
 function getPositions(element) {
-    // var textEntity = document.querySelector('#tekst');
+    //Returns positions of the VR gear
     var left_controller = element.querySelector("#left_controller")
     var right_controller = element.querySelector('#right_controller');
     var headset = element.querySelector("#camera");
@@ -30,6 +31,7 @@ function getPositions(element) {
     return [obj_h, obj_rc, obj_lc]
 }
 
+//Shows the coordinates from 0.5 seconds ago
 AFRAME.registerComponent('show_last_cords', {
     init: function () {
         this.lastTick = 0;
@@ -49,6 +51,7 @@ AFRAME.registerComponent('show_last_cords', {
     },
 
     tick: function (time) {
+        //Shows coordinates of VR gear from 0.5 seconds time ago on the left side of the screen
         if (Math.round(time - this.lastTick) > 500) {
             this.lastTick = Math.round(time);
             console.log('tock: ', this.lastTick);
@@ -90,6 +93,7 @@ AFRAME.registerComponent('add_cords_to_hud', {
     },
 
     tick: function () {
+        //Shows real time coordinates of VR gear on right side of screen
         var textEntity = document.querySelector('#tekst');
 
         var list = getPositions(this.el);
