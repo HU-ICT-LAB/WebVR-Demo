@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Cursor Handler - A-Frame School</title>
+    <meta name="description" content="Cursor Handler - A-Frame School">
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-environment-component@1.0.0/dist/aframe-environment-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-event-set-component@4.0.1/dist/aframe-event-set-component.js"></script>
+    <script src="https://unpkg.com/aframe-aabb-collider-component@3.1.0/dist/aframe-aabb-collider-component.min.js"></script>
+    <script>
+
+        AFRAME.registerComponent('touch', {
+
+            init: function () {
+                this.el.addEventListener('hitstart', function(){
+                    console.log("Item touched");
+                    this.setAttribute('color', "#FF0000")
+                })
+                this.el.addEventListener('hitend', function(){
+                    console.log("Item exited");
+                    this.setAttribute('color', "#5e5e5e")
+                })
+                // el.setAttribute("material", "opacity", "0.5");
+                // el.setAttribute("material.opacity", "0.5");
+                // el.setAttribute("material", "opacity", 0.5);
+                // el.setAttribute("material.opacity", 0.5);
+
+            }
+        });
+    </script>
+<!--    console.log('This 2D element was clicked!');-->
+</head>
+<body>
+<a-scene>
+    <a-cylinder color="#5e5e5e" position="0 2 -4" handle-events aabb-collider touch></a-cylinder>
+    <a-box id="testbox" color="#5e5e5e" position="0 2 0" handle-events aabb-collider touch>
+<!--           animation="property: position; to: 0 2 -4; dur: 5000; easing: linear; loop: true">-->
+
+    </a-box>
+
+    <a-camera><a-cursor></a-cursor></a-camera>
+    <a-sky color="#333"></a-sky>
+    <a-plane color="#000" rotation="-90 0 0" width="500" height="500"></a-plane>
+
+    <a-entity  id="rig" touch>
+        <a-entity id="camera" wasd-controls camera look-controls touch></a-entity>
+        <a-entity id="lefthand" aabb-collider oculus-touch-controls="hand: left" thumbstick-logging></a-entity>
+        <a-entity id="righthand" aabb-collider oculus-touch-controls="hand: right" thumbstick-logging hit></a-entity>
+    </a-entity>
+</a-scene>
+</body>
+</html>
