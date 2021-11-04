@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.rawgit.com/donmccurdy/aframe-extras/v4.1.2/dist/aframe-extras.min.js"></script>
+    <!-- <script src="https://unpkg.com/super-hands@^3.0.1/dist/super-hands.min.js"></script> -->
+    <script src="../Js/addObjrcts.js"></script>
+</head>
+
+<body>
+    <a-scene>
+        <!-- add textures src -->
+        <a-assets>
+            <!-- ground texture -->
+            <img id="ground" src="../Assets/ground.jpg">
+            <!-- sky texture -->
+            <img id="sky" src="../Assets/sky.jpg">
+        </a-assets>
+
+        <!-- add ground -->
+        <a-plane src="#ground" class="collidable" rotation="-90 0 0" width="100" height="100"></a-plane>
+
+        <!-- add sky -->
+        <a-sky src="#sky" position="-200 0 0"></a-sky>
+
+        <!-- add camera -->
+
+        <a-box id="testBox" position="2 2 2" color="red"></a-box>
+
+
+
+        <a-entity position="0 0 0">
+            <a-entity camera position=" 0 1.5 1" look-controls></a-entity>
+            <a-entity id="leftHand" laser-controls="hand: left" raycaster="objects: .collidable; far: 5;"
+                line="color: #CCCCCC"></a-entity>
+            <a-entity id="rightHand" laser-controls="hand: right" raycaster="objects: .collidable; far: 5;"
+                line="color: #CCCCCC"></a-entity>
+        </a-entity>
+    </a-scene>
+    <script>
+        document.querySelector('#rightHand').addEventListener('click', function (evt) {
+            var sceneEl = document.querySelector('a-scene');
+            var newEl = document.createElement("a-box");
+            newEl.setAttribute('color', 'red');
+            console.log(newEl);
+            sceneEl.appendChild(newEl);
+            console.log(evt);
+            var position = evt.detail.intersection.point;
+            position.y = 0.5;
+            newEl.setAttribute('position', position);
+            document.getElementById("testBox").setAttribute('color', 'blue');
+        });
+    </script>
+</body>
+
+</html>
