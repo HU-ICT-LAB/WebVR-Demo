@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/WebVR-Demo.iml" filepath="$PROJECT_DIR$/.idea/WebVR-Demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../superframe/.idea/superframe.iml" filepath="$PROJECT_DIR$/../superframe/.idea/superframe.iml" />
     </modules>
   </component>
 </project>
