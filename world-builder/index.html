@@ -8,20 +8,27 @@
 </head>
 
 <body>
-    <a-scene>
+    <a-scene debug-key>
         <!-- add textures src -->
         <a-assets>
             <!-- ground texture -->
-            <img id="ground" src="../world-builder/assets/ground.jpg">
+            <!-- <img id="ground" src="../world-builder/assets/ground.jpg"> -->
             <!-- sky texture -->
-            <img id="sky" src="../world-builder/assets/sky.jpg">
+            <!-- <img id="sky" src="../world-builder/assets/sky.jpg"> -->
+
+
+      <a-mixin id="voxel"
+         geometry="primitive: box; height: 0.5; width: 0.5; depth: 0.5"
+      ></a-mixin>
         </a-assets>
 
         <!-- add ground -->
-        <a-plane src="#ground" class="collidable" rotation="-90 0 0" width="100" height="100"></a-plane>
+        <a-plane color="#00FF00" class="collidable" rotation="-90 0 0" width="100" height="100"></a-plane>
 
         <!-- add sky -->
         <a-sky src="#sky" position="-200 0 0"></a-sky>
+
+        <a-entity mixin="voxel" position="1 1 1"></a-entity>
 
         <!-- add controllers -->
         <a-entity position="0 0 0">
