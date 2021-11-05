@@ -31,10 +31,9 @@ AFRAME.registerGeometry('example', {
         let outArray = [];
         let max = 0;
         let min = 5;
-        let fadeRange = 10;
-        for (let y = 0; y < 256; y++) {
+        for (let y = 0; y < HEIGHT; y++) {
             let rowArray = [];
-            for (let x = 0; x < 256; x++) {
+            for (let x = 0; x < WIDTH; x++) {
                 let n = noise2D(x * 0.01, y * 0.01);
                 n += pv;
                 n *= kv;
@@ -55,6 +54,55 @@ AFRAME.registerGeometry('example', {
             outArray.push(rowArray);
         }
 
+        let = minPixelAroundFlatSpot = 1;
+        let y = 98
+        for (let x = 98; x < 158; x++) {
+            let pixelVal = outArray[y][x];
+            if (pixelVal < minPixelAroundFlatSpot) {
+                minPixelAroundFlatSpot = pixelVal
+            }
+        }
+
+        y = 158
+        for (let x = 98; x < 158; x++) {
+            let pixelVal = outArray[y][x];
+            if (pixelVal < minPixelAroundFlatSpot) {
+                minPixelAroundFlatSpot = pixelVal
+            }
+        }
+
+        let x = 98
+        for (let y = 98; y < 158; y++) {
+            let pixelVal = outArray[y][x];
+            if (pixelVal < minPixelAroundFlatSpot) {
+                minPixelAroundFlatSpot = pixelVal
+            }
+        }
+
+        x = 158
+        for (let y = 98; y < 158; y++) {
+            let pixelVal = outArray[y][x];
+            if (pixelVal < minPixelAroundFlatSpot) {
+                minPixelAroundFlatSpot = pixelVal
+            }
+        }
+
+        console.log(minPixelAroundFlatSpot);
+
+        for (let y = 99; y < 158; y++) {
+            for (let x = 99; x < 158; x++) {
+                n = minPixelAroundFlatSpot;
+                outArray[y][x] = n
+                let rgb = Math.round(255 * n);
+                ctx.fillStyle = "rgba(" + rgb + "," + rgb + "," + rgb + ",1.0)";
+                ctx.fillRect(x, y, 1, 1);
+            }
+        }
+
+        let flattenRange = 10
+
+
+
         
         // for (let y = 0; y < 256; y++) {
         //     for (let x = 0; x < 256; x++) {
@@ -74,9 +122,9 @@ AFRAME.registerGeometry('example', {
         // }
 
         
-        console.log(outArray);
-        console.log(outArray[0][0]);
-        console.log(outArray[100][100]);
+        // console.log(outArray);
+        // console.log(outArray[0][0]);
+        // console.log(outArray[100][100]);
         console.log('min: ' + min + ' max: ' + max);
 
       data = canv.getContext("2d").getImageData(0, 0, WIDTH, HEIGHT).data;
