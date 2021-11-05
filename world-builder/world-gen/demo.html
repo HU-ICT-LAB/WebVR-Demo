@@ -11,9 +11,9 @@
             let outArray = [];
             let max = 0;
             let min = 5;
-            for (let y = 0; y < 500; y++) {
+            for (let y = 0; y < 256; y++) {
                 let rowArray = [];
-                for (let x = 0; x < 500; x++) {
+                for (let x = 0; x < 256; x++) {
                     let n = noise2D(x * 0.01, y * 0.01);
                     n += pv;
                     n *= kv;
@@ -34,6 +34,15 @@
                 outArray.push(rowArray);
             }
             console.log('min: ' + min + ' max: '+ max);
+
+            // function blurImage(){
+            //     for (let y = 0; y < 256; y++) {
+            //         for (let x = 0; x < 256; x++) {
+
+            //         }
+            //     }
+            // }
+
         </script>
     </body>
 </html>

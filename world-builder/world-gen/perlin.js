@@ -86,3 +86,9 @@ function noise2D(x, y){
 	);
 
 }
+
+// function createBlurredImage(radius)
+
+// function g(x, y){
+
+// }

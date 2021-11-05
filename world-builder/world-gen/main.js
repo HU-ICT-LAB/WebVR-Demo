@@ -16,11 +16,12 @@ AFRAME.registerGeometry('example', {
     init: function (data) {
         let WIDTH = 256;
         let HEIGHT = 256;
-        let SIZE_AMPLIFIER = 4;
+        let SIZE_AMPLIFIER = 5;
         let HEIGHT_AMPLIFIER = 1;
       var plane = new THREE.PlaneBufferGeometry(WIDTH * SIZE_AMPLIFIER, HEIGHT * SIZE_AMPLIFIER, WIDTH - 1, HEIGHT - 1);
       var material = new THREE.MeshPhongMaterial({color: 0xFFFFFF, side: THREE.DoubleSide, shading: THREE.FlatShading});
       
+      // TODO remove canvas. Gen terrain without
         var canv = document.createElement('canvas');
         canv.width = "256"
         canv.height = "256"
@@ -43,9 +44,9 @@ AFRAME.registerGeometry('example', {
                 if (n < min) {
                     min = n;
                 }
-                // if ((y > 98 && y < 158) && (x > 98 && x < 158)){
-                //     n = 0;
-                // }
+                if ((y > 98 && y < 158) && (x > 98 && x < 158)){
+                    n = 0;
+                }
                 rowArray.push(n);
                 let rgb = Math.round(255 * n);
                 ctx.fillStyle = "rgba(" + rgb + "," + rgb + "," + rgb + ",1.0)";
@@ -120,10 +121,10 @@ function makePermutation(){
 	for(let i = 0; i < 256; i++){
 		P.push(i);
 	}
-	// shuffle(P);
-	// for(let i = 0; i < 256; i++){
-	// 	P.push(P[i]);
-	// }
+	shuffle(P);
+	for(let i = 0; i < 256; i++){
+		P.push(P[i]);
+	}
 	
 	return P;
 }
