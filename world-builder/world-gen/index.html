@@ -1,0 +1,55 @@
+<html>
+
+<head>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.rawgit.com/donmccurdy/aframe-extras/v4.1.2/dist/aframe-extras.min.js"></script>
+    <script src="main.js"></script>
+</head>
+
+<body>
+    <a-scene>
+        <a-entity geometry="primitive: example" position="0 -20 0" scale="0.1 0.1 0.1" rotation="-90 0 0 " color="#7BC8A4"></a-entity>
+        <!-- <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane> -->
+        <a-sky color="#ECECEC"></a-sky>
+
+        <a-entity position="0 0 0">
+            <a-entity camera position="0 3 1" wasd-controls look-controls></a-entity>
+            <a-entity id="leftHand" laser-controls="hand: left" raycaster="objects: .collidable; far: 5;"
+                line="color: #CCCCCC"></a-entity>
+            <a-entity id="rightHand" laser-controls="hand: right" raycaster="objects: .collidable; far: 5;"
+                line="color: #CCCCCC"></a-entity>
+        </a-entity>
+    </a-scene>
+
+    <!-- <canvas id="mainCanvas" width="256" height="256" style="border:1px solid #d3d3d3;"></canvas>
+     <script> 
+        let pv = 1.0
+        let kv = 0.5
+        let ctx = document.getElementById("mainCanvas").getContext("2d");
+        let outArray = [];
+        let max = 0;
+        let min = 5;
+        for (let y = 0; y < 256; y++) {
+            let rowArray = [];
+            for (let x = 0; x < 256; x++) {
+                let n = noise2D(x * 0.01, y * 0.01);
+                n += pv;
+                n *= kv;
+                if (n > max) {
+                    max = n;
+                }
+                if (n < min) {
+                    min = n;
+                }
+                rowArray.push(n);
+                let rgb = Math.round(255 * n);
+                ctx.fillStyle = "rgba(" + rgb + "," + rgb + "," + rgb + ",1.0)";
+                ctx.fillRect(x, y, 1, 1);
+            }
+            outArray.push(rowArray);
+        }
+        console.log('min: ' + min + ' max: ' + max);
+    </script>  -->
+</body>
+
+</html>
