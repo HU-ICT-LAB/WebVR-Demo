@@ -1,0 +1,19 @@
+<html>
+    <head>
+        <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+        <script src="scripts/hand-positions.js"></script>
+        <script src="scripts/trajectory.js"></script>
+    </head>
+    <body>
+        <a-scene id="main">
+            <a-entity id="rig" trajectory>
+                <a-entity id="camera" camera look-controls></a-entity>
+                <a-entity id="left_controller" oculus-touch-controls="hand: left"></a-entity>
+                <a-entity id="right_controller" oculus-touch-controls="hand: right"></a-entity>
+            </a-entity>
+
+        <!--    <a-sky color="#ECECEC"></a-sky>-->
+
+        </a-scene>
+    </body>
+</html>
