@@ -54,7 +54,6 @@ AFRAME.registerComponent('show_last_cords', {
         //Shows coordinates of VR gear from 0.5 seconds time ago on the left side of the screen
         if (Math.round(time - this.lastTick) > 500) {
             this.lastTick = Math.round(time);
-            console.log('tock: ', this.lastTick);
 
             var textEntity = document.querySelector('#prevCords');
 
