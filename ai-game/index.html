@@ -16,17 +16,7 @@
             var score = document.querySelector("#score");
             var currentscore = score.getAttribute('text').value;
             client.publish('request_updatescore', currentscore)
-            // mqtt_add_topic_callback('hbo_ict_vr_game_score', function (topic, message) {
-            //     var obj = JSON.parse(message);
-            //     console.log(obj)
-            //     this.newhighscore = "Top 10 leaderboard\n------------\n"
-            //     for (let x in obj) {
-            //         this.newhighscore = this.newhighscore + x + ": " + obj[x] + "\n"
-            //
-            //     }
-            //     console.log(this.newhighscore)
-            //     Highscoretext.setAttribute('text', 'value', this.newhighscore)
-            // })
+
         }
 
         AFRAME.registerComponent('timerdown', {
@@ -142,6 +132,38 @@
             }
         });
     </script>
+
+    <script>
+        //    When not testing, this needs need to be run after hit detected
+        AFRAME.registerComponent('modeldodgemovement', {
+            init: function () {
+                var predictedmove = document.querySelector("#testbox");
+                var middlepoint = document.querySelector("#middlepoint");
+                var robot = document.querySelector("#robotmodel");
+                currentpos = robot.getAttribute('position');
+                P = predictedmove.getAttribute('position');
+                M = middlepoint.getAttribute('position');
+                x_distance = M.x - P.x;
+                console.log("distance: " + x_distance)
+                var movemultiplier = 1/x_distance*0.2
+                var robotmove = movemultiplier
+                console.log(robotmove)
+                console.log(currentpos)
+
+                var animationMoveString = "property: position; from: "+ currentpos.x + " " + currentpos.y + " " + (currentpos.z-1) + "; to: " + robotmove + " " + currentpos.y + " " + (currentpos.z-1) + " dur: 10000; easing: linear"
+                console.log(animationMoveString)
+                robot.setAttribute("animation", animationMoveString)
+                // robot.setAttribute('position', {x:robotmove, y:currentpos.y, z:currentpos.z-1})
+                // console.log(robot.getAttribute('position'))
+
+
+            }
+            }
+
+        )
+
+
+    </script>
 </head>
 <body>
 <a-scene>
@@ -151,8 +173,8 @@
         <img id="Sky" src="assets/textures/background.jpg">
         <img id="Metal" src="assets/textures/Metal.png">
         <a-asset-item id="Robot" src="assets\models\Robot_gltf/scene.gltf"></a-asset-item>
-        <a-mixin id="head" geometry="primitive:box; height:50; width:40; depth:30;" material="opacity: 0.0; transparent: true" ></a-mixin>
-        <a-mixin id="body" geometry="primitive:box; height:70; width:60; depth:55;" material="opacity: 0.0; transparent: true" handle-events aabb-collider></a-mixin>
+        <a-mixin id="head" geometry="primitive:box; height:50; width:40; depth:30;" material="opacity: 0.3; transparent: true" ></a-mixin>
+        <a-mixin id="body" geometry="primitive:box; height:70; width:60; depth:55;" material="opacity: 0.3; transparent: true" handle-events aabb-collider></a-mixin>
 
     </a-assets>
 <!--     ScoreBoard-->
@@ -188,11 +210,23 @@
 
 
 
-    <!--             Robot Playermodel-->
-    <a-entity id="robotmodel" gltf-model="#Robot" scale="0.007 0.01 0.01" position="0 0 -1"
-              animation="property: position; from: 0 0 -1; to: 0 0 0; dur: 10000; easing: linear">
-        <a-hitbox color="#333333" position="0 2 0" ></a-hitbox>
-    </a-entity>
+    <!--             Robot Playermodel & Hitbox -->
+<!--    <a-entity id="robotmodel" gltf-model="#Robot" scale="0.007 0.01 0.01" position="0 0 -1"-->
+<!--              animation="property: position; from: 0 0 -1; to: 0 0 0; dur: 10000; easing: linear">-->
+<!--        <a-hitbox color="#333333" position="0 2 0" ></a-hitbox>-->
+<!--    </a-entity>-->
+
+    <!--             Only Visible Hitbox connected Playermodel-->
+    <a-hitbox id="robotmodel" color="#333333" scale="0.007 0.01 0.01" position="0 0 -1">
+        <a-circle
+            id="middlepoint" color="#000000" scale="5 3.5 50" position="0 140 0">
+        </a-circle>
+    </a-hitbox>
+
+    <!--             Test predicted movement box-->
+    <a-box
+        id="testbox" color="#808080" height="0.1" width="0.1" depth="0.1" position="-0.30 1.4 -1" modeldodgemovement>
+    </a-box>
 
 
 <!--    Camera and Oculus rift-->

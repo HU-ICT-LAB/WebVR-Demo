@@ -23,12 +23,18 @@ def on_connect(client, userdata, flags, rc):
 
 
 def updateleaderboard(new_score="5", new_name="anonymous"):
+    print(new_name + ":" + new_score)
     highscore_file = open("leaderboard.txt", "r")
     readable_highscores = json.loads(highscore_file.readline())
     if new_name in readable_highscores.keys():
         if readable_highscores[new_name] < new_score:
             readable_highscores[new_name] = new_score
-    readable_highscores = dict(sorted(readable_highscores.items(), key=operator.itemgetter(1), reverse=True))
+            readable_highscores = dict(sorted(readable_highscores.items(), key=operator.itemgetter(1), reverse=True))
+    else:
+        readable_highscores[new_name] = new_score
+        readable_highscores = dict(sorted(readable_highscores.items(), key=operator.itemgetter(1), reverse=True))
+        readable_highscores.popitem()
+
     fout = open("leaderboard.txt", "w")
     fout.write(json.dumps(readable_highscores))
     fout.close()
