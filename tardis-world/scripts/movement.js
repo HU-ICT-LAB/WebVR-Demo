@@ -43,6 +43,59 @@ function move_pos(start_pos, rotation, distance){
     return start_pos
 }
 
+var movement_multiplier = 10
+
+AFRAME.registerComponent('relative-movement',{
+    init: function() {
+        var head = document.querySelector("#camera")
+        this.current_position = head.getAttribute('position')
+        this.last_position = new THREE.Vector3();  
+        this.doing = false
+    },
+
+    tick: function() {
+        var rig = document.querySelector("#rig")
+        var head = document.querySelector("#camera")
+
+
+
+        this.current_position = head.getAttribute('position')
+
+
+        var ps = new THREE.Vector3();
+        ps.x = this.current_position.x
+        ps.y = this.current_position.y
+        ps.z = this.current_position.z
+        ps = move_pos(ps, head.getAttribute('rotation'), -0.09)
+
+
+
+
+        if(this.doing){
+            var diff = new THREE.Vector3();
+            diff.x = ps.x - this.last_position.x
+            diff.z = ps.z - this.last_position.z
+            diff.y = ps.y - this.last_position.y
+            var new_pos = rig.getAttribute('position')
+
+            var new_diff = new THREE.Vector3();
+            
+            new_diff.x = new_pos.x +(diff.x * movement_multiplier)
+            new_diff.z = new_pos.z +(diff.z * movement_multiplier)
+            new_diff.y = new_pos.y
+
+            rig.setAttribute('position', new_diff)
+            this.last_position.x = ps.x
+            this.last_position.z = ps.z
+            this.last_position.y = ps.y
+            
+        }
+        if(!this.doing){
+            this.doing = true
+        }
+    }
+})
+
 
 AFRAME.registerComponent('headbob-movement',{
     init: function() {
@@ -77,8 +130,12 @@ AFRAME.registerComponent('headbob-movement',{
                 posm.y = (posl.y + posr.y)/2
                 posm.z = (posl.z + posr.z)/2
                 var posh = player.getAttribute('position')
-                posh = move_pos(posh, player.getAttribute('rotation'), -0.08)
-                var dir = Math.atan2(posh.x - posm.x, posh.z - posm.z) * 180 / Math.PI;
+                var ps = new THREE.Vector3();
+                ps.x = posh.x
+                ps.y = posh.y
+                ps.z = posh.z
+                ps = move_pos(ps, player.getAttribute('rotation'), -0.08)
+                var dir = Math.atan2(ps.x - posm.x, ps.z - posm.z) * 180 / Math.PI;
 
                 var dist = getTotalDistance(this.y_positions)
                 if(dist/this.length > 0.003){

@@ -23,8 +23,8 @@
             <a-entity gltf-model="#house"
                     position="-4 0.4 0"
                     scale="2 2 2"></a-entity>
-            <a-entity id="rig" wasd-controls headbob-movement>
-                    <a-entity id="camera" camera look-controls>                    </a-entity>
+            <a-entity id="rig" headbob-movement relative-movement>
+                    <a-entity id="camera" wasd-controls camera look-controls>                    </a-entity>
                     <a-entity id="leftcontrl" oculus-touch-controls="hand: left" thumbstick-logging></a-entity>
                     <a-entity id="rightcontrl" oculus-touch-controls="hand: right" thumbstick-logging></a-entity>
             </a-entity>
