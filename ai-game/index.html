@@ -211,17 +211,21 @@
 
 
     <!--             Robot Playermodel & Hitbox -->
-<!--    <a-entity id="robotmodel" gltf-model="#Robot" scale="0.007 0.01 0.01" position="0 0 -1"-->
-<!--              animation="property: position; from: 0 0 -1; to: 0 0 0; dur: 10000; easing: linear">-->
-<!--        <a-hitbox color="#333333" position="0 2 0" ></a-hitbox>-->
-<!--    </a-entity>-->
+    <a-entity id="robotmodel" gltf-model="#Robot" scale="0.007 0.01 0.01" position="0 0 -1"
+              animation="property: position; from: 0 0 -1; to: 0 0 0; dur: 10000; easing: linear">
+        <a-hitbox color="#333333" position="0 2 0" >
+            <a-circle
+                    id="middlepoint" color="#000000" scale="5 3.5 50" position="0 140 0">
+            </a-circle>
+        </a-hitbox>
+    </a-entity>
 
     <!--             Only Visible Hitbox connected Playermodel-->
-    <a-hitbox id="robotmodel" color="#333333" scale="0.007 0.01 0.01" position="0 0 -1">
-        <a-circle
-            id="middlepoint" color="#000000" scale="5 3.5 50" position="0 140 0">
-        </a-circle>
-    </a-hitbox>
+<!--    <a-hitbox id="robotmodel" color="#333333" scale="0.007 0.01 0.01" position="0 0 -1">-->
+<!--        <a-circle-->
+<!--            id="middlepoint" color="#000000" scale="5 3.5 50" position="0 140 0">-->
+<!--        </a-circle>-->
+<!--    </a-hitbox>-->
 
     <!--             Test predicted movement box-->
     <a-box
