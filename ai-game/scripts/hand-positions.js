@@ -19,15 +19,15 @@ function getPositions(element) {
 
     //Gets coordinates of the headset
     var pos_h = sumObjects(headset.getAttribute('position'), pos_r);
-    var obj_h = {'x': pos_h.x.toPrecision(6), 'y': pos_h.y.toPrecision(6), 'z': pos_h.z.toPrecision(6)};
+    var obj_h = {'x': pos_h.x, 'y': pos_h.y, 'z': pos_h.z};
 
     //Gets coordinates of the right controller
     var pos_rc = sumObjects(right_controller.getAttribute('position'), pos_r);
-    var obj_rc = {'x': pos_rc.x.toPrecision(6), 'y': pos_rc.y.toPrecision(6), 'z': pos_rc.z.toPrecision(6)};
+    var obj_rc = {'x': pos_rc.x, 'y': pos_rc.y, 'z': pos_rc.z};
 
     //Gets coordinates of the left controller
     var pos_lc = sumObjects(left_controller.getAttribute('position'), pos_r);
-    var obj_lc = {'x': pos_lc.x.toPrecision(6), 'y': pos_lc.y.toPrecision(6), 'z': pos_lc.z.toPrecision(6)};
+    var obj_lc = {'x': pos_lc.x, 'y': pos_lc.y, 'z': pos_lc.z};
     return [obj_h, obj_rc, obj_lc]
 }
 
