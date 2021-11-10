@@ -15,3 +15,4 @@ AFRAME.registerComponent('thumbstick-logging',{
         rig.setAttribute("position", pos);
     }
 });
+

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+
+<!-- Simple physics
+  Using aframe-physics-system.
+  The camera does not go though objects in the scene, and is "sustained"
+  by the plane acting as a floor. But if you go beyond the borders of the
+  plane, you fall down (you know, gravity...)
+-->
+
+<html>
+  <head>
+    <script src="//aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://mixedreality.mozilla.org/ammo.js/builds/ammo.wasm.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/n5ro/aframe-physics-system@v4.0.1/dist/aframe-physics-system.min.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
+
+    <script>
+      AFRAME.registerComponent('collision-wire', {
+        schema: {
+          element: {type: 'string'}
+        },
+        init: function() {
+          let el = this.el;
+          let element = this.data.element;
+          var player = document.querySelector("#cam")
+          var camera = document.querySelector("#camera")
+          var pos = player.getAttribute('position')
+          var pos2 = camera.getAttribute('position')
+          pos2.x = pos.x + pos2.x
+          pos2.z = pos.z + pos2.z
+          pos2.y = pos.y + pos2.y
+
+          el.addEventListener("collidestart", function (event) {
+            if ( event.detail.targetEl.id === element) {
+              console.log('Collision started')
+              el.setAttribute('material', {'wireframe': true});
+            };
+          });
+          el.addEventListener("collideend", function (event) {
+            if ( event.detail.targetEl.id === element) {
+              console.log('Collision ended')
+              el.setAttribute('material', {'wireframe': false});
+            };
+          });
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <a-scene physics="driver: ammo; debug: true; debugDrawMode: 1;">
+      <!-- Static floor -->
+      <a-plane ammo-body="type: static" ammo-shape="type: box"
+          position="0 0 -4" rotation="-90 0 0" width="8" height="20"
+          color="yellow"></a-plane>
+      <!-- Static cylinder -->
+      <a-cylinder ammo-body="type: static; emitCollisionEvents: true;"
+          ammo-shape="type: cylinder"
+          collision-wire="element: cam"
+          position="0 1 -1" radius="1" height="3"
+          color="orange"></a-cylinder>
+      <!-- Dynamic box -->
+      <a-box ammo-body="type: dynamic" ammo-shape="type: box"
+          position="0 4 -2" width="3" height="2" depth="1"
+          color="red"></a-box>
+      <!-- Dynamic box -->
+      <a-box ammo-body="type: dynamic" ammo-shape="type: box"
+          position="2 10 0" width="1" height="1" depth="1"
+          color="blue"></a-box>
+
+      <!-- Camera rig, with a cylynder to give an idea of its "size"-->
+      <a-entity movement-controls="fly: false" position="0 0 5"
+          geometry="primitive: cylinder; height: 2; radius: 1,2"
+          material="color: green; wireframe: true"
+          id="cam" ammo-body="type: kinematic;" ammo-shape="type: cylinder">
+        <a-entity id="camera" camera position="0 1.6 0" look-controls></a-entity>    
+      </a-entity>
+
+    </a-scene>
+  </body>
+</html>

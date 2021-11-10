@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>A-Frame Physics Template</title>
+        <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+        <script src="https://mixedreality.mozilla.org/ammo.js/builds/ammo.wasm.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/n5ro/aframe-physics-system@v4.0.1/dist/aframe-physics-system.min.js"></script>
+        <script src="https://recast-api.donmccurdy.com/aframe-inspector-plugin-recast.js"></script>
+        <script>
+            AFRAME.registerComponent('foo', {
+              init: function() {
+                this.el.addEventListener('collide', function(e) {
+                  console.log('Player has collided with ', e.el);
+                  e.detail.target.el; // Original entity (playerEl).
+                  e.detail.ammo-body.el; // Other entity, which playerEl touched.
+
+                });
+              }
+            })
+      
+        </script>
+
+    </head>
+    <body>
+        <a-scene physics="driver: ammo;">
+            <!--Build our background and our floor-->
+            <a-plane ammo-body="type: static" ammo-shape="type: box" position="0 0 -4" rotation="-90 0 0" width="100" height="100" color="#7BC8A4"></a-plane>
+            <a-sky color="#ECECEC"></a-sky>
+            
+            <!--Build three obstacles as static bodies so we can stand on them-->
+            <a-box id="box" ammo-body="type: static" ammo-shape="type: box" position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
+            <a-cylinder id="cylinder" ammo-body="type: dynamic" ammo-shape="type: box" position="1 5 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
+            
+            <!--Build one dynamic body - a soccer ball we can play with-->
+            <a-sphere id="ball" ammo-body="type: dynamic" ammo-shape="type: box" position="4 50 -5" radius="0.5" color="tomato" mass="1"></a-sphere>
+            
+            <!--Make a player/camera entity, and give it the attributes we need it to have in order control camera with mouse, movement with WASD, and jump with spacebar-->
+            <a-entity  wasd-controls movement-controls="fly: false" position="0 0.5 5"
+                        geometry="primitive: cylinder; height: 2; radius: 0.8"
+                        id="cam" ammo-body="type: kinematic;" ammo-shape="type: cylinder" foo>
+                <a-entity camera position="0 1.6 0" look-controls foo ></a-entity>
+                <a-entity oculus-touch-controls="hand: left" thumbstick-logging></a-entity>
+                <a-entity oculus-touch-controls="hand: right" thumbstick-logging></a-entity>
+            </a-entity>
+        </a-scene>
+    </body>
+</html>
