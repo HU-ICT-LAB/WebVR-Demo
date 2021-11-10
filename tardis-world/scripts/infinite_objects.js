@@ -8,7 +8,6 @@ AFRAME.registerComponent('update_trees',{
          
 
         var player_pos = player.getAttribute('position')
-        console.log(player_pos)
         pos = rig.getAttribute("position")
         var world_pos = new THREE.Vector3();
         world_pos.x = player_pos.x + pos.x

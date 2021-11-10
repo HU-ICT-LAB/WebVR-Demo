@@ -51,9 +51,24 @@ AFRAME.registerComponent('relative-movement',{
         this.current_position = head.getAttribute('position')
         this.last_position = new THREE.Vector3();  
         this.doing = false
+        this.con = false
     },
 
     tick: function() {
+
+        if (connected){
+            if(!this.con){
+                client.subscribe('hbo-ict-walking-speed')
+                mqtt_add_topic_callback('hbo-ict-walking-speed', function(topic, message){
+                    console.log(JSON.parse(message))
+                    movement_multiplier = parseInt(JSON.parse(message), 10);
+                })
+                this.con = true
+
+            }
+        }
+
+
         var rig = document.querySelector("#rig")
         var head = document.querySelector("#camera")
 
