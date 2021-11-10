@@ -1,8 +1,17 @@
+/**
+ * A component to let the user move forward using the joysticks
+ */
 AFRAME.registerComponent('thumbstick-logging',{
+    //initialisation function of the component
     init: function () {
+        //set a event listener for this component
         this.el.addEventListener('thumbstickmoved', this.logThumbstick);
 
     },
+    /**
+     * Function that moves the player forward based on joystick movement.
+     * @param {any} evt 
+     */
     logThumbstick: function (evt) {
         var rig = document.querySelector("#rig")
         var player = document.querySelector("#camera")
@@ -16,6 +25,14 @@ AFRAME.registerComponent('thumbstick-logging',{
     }
 });
 
+/**
+ * This function adds a value to the front of a array, and pops the last item if the length of the array is longer than "length".
+ * It functions like a queue
+ * @param {Array} items 
+ * @param {Number} length 
+ * @param {number} item 
+ * @returns {Array} the new array with the added value
+ */
 function queueAdder(items, length, item){
     if (items.length < length){
         items.unshift(item)
@@ -27,6 +44,11 @@ function queueAdder(items, length, item){
 }
 
 
+/**
+ * This function returns the total value/distance of travel based on the positions in the vals array.
+ * @param {Array} vals 
+ * @returns {number} the total distance traveled
+ */
 function getTotalDistance(vals){
     var dist = 0
     for (let j = 1; j < vals.length-1; j++){
@@ -35,6 +57,13 @@ function getTotalDistance(vals){
     return dist
 }
 
+/**
+ * This function returns a new point made of a given point, this point is changed on the horizontal axises, the direction is based on rotation.
+ * It will move forward in the given direction unless the distance value is negative, it will then move backwards
+ * @param {Vector3} start_pos the starting position
+ * @param {Number} rotation the direction to move in
+ * @param {Number} distance the distance to move
+ */
 function move_pos(start_pos, rotation, distance){
     var x = distance * Math.cos(rotation.y * Math.PI / 180) 
     var y = distance * Math.sin(rotation.y * Math.PI / 180)
@@ -43,9 +72,16 @@ function move_pos(start_pos, rotation, distance){
     return start_pos
 }
 
-var movement_multiplier = 10
+//A mulitiplier used by the relative-movement component, it changed the speed of acceleration, 1 is doubled, 0 is no acceleration and negative slows you down after -1 you got backwards
+var movement_multiplier = 0
 
+/**
+ * A component that can influence the speed you walk with in the game. 
+ */
 AFRAME.registerComponent('relative-movement',{
+    /**
+     * Initialisation function of the component
+     */
     init: function() {
         var head = document.querySelector("#camera")
         this.current_position = head.getAttribute('position')
@@ -54,10 +90,14 @@ AFRAME.registerComponent('relative-movement',{
         this.con = false
     },
 
+    /**
+     * This function changes the acceleration and movement of the user
+     * By moving the camera rig that the player in the same or oposite direction we can change the players percieved speed.
+     */
     tick: function() {
-
         if (connected){
             if(!this.con){
+                //recieve the speed value from the mqtt server
                 client.subscribe('hbo-ict-walking-speed')
                 mqtt_add_topic_callback('hbo-ict-walking-speed', function(topic, message){
                     console.log(JSON.parse(message))
@@ -81,11 +121,11 @@ AFRAME.registerComponent('relative-movement',{
         ps.x = this.current_position.x
         ps.y = this.current_position.y
         ps.z = this.current_position.z
-        ps = move_pos(ps, head.getAttribute('rotation'), -0.09)
+        ps = move_pos(ps, head.getAttribute('rotation'), -0.09) //get the correct position of the player head and not the headset
 
 
 
-
+        //we want to wait one tick before we start changing the percieved movement, so we can get a "last_position" value first
         if(this.doing){
             var diff = new THREE.Vector3();
             diff.x = ps.x - this.last_position.x
@@ -97,7 +137,7 @@ AFRAME.registerComponent('relative-movement',{
             
             new_diff.x = new_pos.x +(diff.x * movement_multiplier)
             new_diff.z = new_pos.z +(diff.z * movement_multiplier)
-            new_diff.y = new_pos.y
+            new_diff.y = new_pos.y //we do not change the Y movement as this would break the imersion
 
             rig.setAttribute('position', new_diff)
             this.last_position.x = ps.x
@@ -112,27 +152,36 @@ AFRAME.registerComponent('relative-movement',{
 })
 
 
+/**
+ * A component to move the player forward in the world based on head movement
+ * If the player moves up and down but not sideways or forward we can conclude the player is jogging in place
+ * We can then move the player forward in the direction of the controlers so the player can still look arround.
+ */
 AFRAME.registerComponent('headbob-movement',{
     init: function() {
         this.y_positions = []
         this.x_positions = []
         this.z_positions = []
         this.x_rotation = []
-        this.length = 20
+        this.length = 20 //the maximum amount of values stored
     },
 
     tick: function () {
+        //get the objects needed to perform the calculations
         var rig = document.querySelector("#rig")
         var player = document.querySelector("#camera")
         var head = document.querySelector("#camera_head")
         var right = document.querySelector("#rightcontrl")
         var left = document.querySelector("#leftcontrl")
 
+        //add the positions of the headset to the lists
         this.z_positions = queueAdder(this.z_positions,this.length, player.getAttribute('position').z)
         this.x_positions = queueAdder(this.x_positions,this.length, player.getAttribute('position').x)
         this.x_rotation = queueAdder(this.x_rotation,this.length, player.getAttribute('rotation').x)
 
+        //check if the player has not moved too much on the x and z axis and if the rotation on the x axis is minimal.
         if(getTotalDistance(this.x_positions) < 0.50 && getTotalDistance(this.z_positions) < 0.50 && getTotalDistance(this.x_rotation)/this.length < 10){
+            //check if the distance rotated on the x axis is minimal
             if (getTotalDistance(this.x_rotation)/this.length < 1.5){
                 this.y_positions = queueAdder(this.y_positions,this.length, player.getAttribute('position').y)
                 
@@ -149,11 +198,12 @@ AFRAME.registerComponent('headbob-movement',{
                 ps.x = posh.x
                 ps.y = posh.y
                 ps.z = posh.z
-                ps = move_pos(ps, player.getAttribute('rotation'), -0.08)
-                var dir = Math.atan2(ps.x - posm.x, ps.z - posm.z) * 180 / Math.PI;
+                ps = move_pos(ps, player.getAttribute('rotation'), -0.08) //get the position of the player head in the headset
+                var dir = Math.atan2(ps.x - posm.x, ps.z - posm.z) * 180 / Math.PI; //find the angle between the head and the middle point of controllers
 
+                
                 var dist = getTotalDistance(this.y_positions)
-                if(dist/this.length > 0.003){
+                if(dist/this.length > 0.003){ //check if the distance traveled on the y axis is large enough
                     if (dist/4 > 0.3){
                         dist = 0.3*4
                     }
