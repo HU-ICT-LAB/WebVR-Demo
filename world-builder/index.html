@@ -27,7 +27,7 @@
         <a-sky src="#sky" position="-200 0 0"></a-sky>
 
         <!-- add controllers -->
-        <a-entity position="0 0 0">
+        <a-entity id="rig" position="0 0 0">
             <a-entity camera position=" 0 1.5 1" look-controls></a-entity>
             <a-entity id="leftHand" laser-controls="hand: left" raycaster="objects: .collidable; far: 5;"
                 line="color: #CCCCCC" delete-object></a-entity>
