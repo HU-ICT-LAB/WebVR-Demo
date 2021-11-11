@@ -48,6 +48,7 @@ def getleaderboard():
     '''
     receive the highscore from the leaderboard.txt and return it
     :rtype: returns the highscores from the leaderboard.txt
+
     '''
     highscore_file = open("leaderboard.txt", "r")
     highscorestring = ""
