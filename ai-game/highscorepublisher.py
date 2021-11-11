@@ -2,7 +2,7 @@ import paho.mqtt.client as paho
 import json
 import operator
 
-"broker server:"
+# broker server:
 broker = "broker.emqx.io"
 port = 1883
 
@@ -85,13 +85,13 @@ def on_message(client, userdata, msg):
         client1.publish('hbo_ict_vr_game_score', getleaderboard())
 
 
-"code to connect to the server and which message is connect to which function"
+# code to connect to the server and which message is connect to which function
 client1.on_publish = on_publish  # assign function to callback
 client1.on_connect = on_connect
 client1.on_message = on_message
 client1.connect(broker, port)  # establish connection
 
-"let is run until manual interruption"
+# let is run until manual interruption
 running = True
 while running:
     client1.loop()
