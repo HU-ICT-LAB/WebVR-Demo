@@ -8,48 +8,25 @@
 
 <body>
     <a-scene>
-        <a-entity geometry="primitive: example" position="0 -40 0" scale="0.2 0.2 0.2" rotation="-90 0 0 " color="#7BC8A4" set-p></a-entity>
-        <!-- <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane> -->
+
+        <a-assets>
+
+            <a-mixin id="voxel" geometry="primitive: box; height: 0.5; width: 0.5; depth: 0.5"
+                material="shader: standard; color: red" snap="offset: 0.25 0.25 0.25; snap: 0.5 0.5 0.5"></a-mixin>
+
+        </a-assets>
+        <a-entity geometry="primitive: terrain" position="0 -40 0" scale="0.2 0.2 0.2" rotation="-90 0 0 " color="green" set-p ></a-entity>
+        <!-- <a-plane color="green" class="collidable" rotation="-90 0 0" width="100" height="100"></a-plane> -->
         <a-sky color="#ECECEC"></a-sky>
 
         <a-entity position="0 0 0">
-            <a-entity camera position="0 3 1" wasd-controls look-controls></a-entity>
+            <a-entity camera position=" 0 1.5 1" look-controls></a-entity>
             <a-entity id="leftHand" laser-controls="hand: left" raycaster="objects: .collidable; far: 5;"
-                line="color: #CCCCCC"></a-entity>
+                line="color: #CCCCCC" delete-object></a-entity>
             <a-entity id="rightHand" laser-controls="hand: right" raycaster="objects: .collidable; far: 5;"
-                line="color: #CCCCCC"></a-entity>
+                line="color: #CCCCCC" add-object></a-entity>
         </a-entity>
     </a-scene>
-
-    <!-- <canvas id="mainCanvas" width="256" height="256" style="border:1px solid #d3d3d3;"></canvas>
-     <script> 
-        let pv = 1.0
-        let kv = 0.5
-        let ctx = document.getElementById("mainCanvas").getContext("2d");
-        let outArray = [];
-        let max = 0;
-        let min = 5;
-        for (let y = 0; y < 256; y++) {
-            let rowArray = [];
-            for (let x = 0; x < 256; x++) {
-                let n = noise2D(x * 0.01, y * 0.01);
-                n += pv;
-                n *= kv;
-                if (n > max) {
-                    max = n;
-                }
-                if (n < min) {
-                    min = n;
-                }
-                rowArray.push(n);
-                let rgb = Math.round(255 * n);
-                ctx.fillStyle = "rgba(" + rgb + "," + rgb + "," + rgb + ",1.0)";
-                ctx.fillRect(x, y, 1, 1);
-            }
-            outArray.push(rowArray);
-        }
-        console.log('min: ' + min + ' max: ' + max);
-    </script>  -->
 </body>
 
 </html>

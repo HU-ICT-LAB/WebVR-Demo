@@ -1,19 +1,19 @@
 AFRAME.registerComponent('add-object', {
   events: {
-    click: function (e) {
-      var scene = document.querySelector('a-scene');
-      var newEl = document.createElement('a-entity');
+      click: function (e) {
+          var scene = document.querySelector('a-scene');
+          var newEl = document.createElement('a-entity');
 
-      var position = e.detail.intersection.point;
+          var position = e.detail.intersection.point;
 
-      newEl.setAttribute('position', position);
+          newEl.setAttribute('position', position);
+          
+          newEl.setAttribute('mixin', 'voxel');
 
-      newEl.setAttribute('mixin', 'voxel');
-
-      newEl.setAttribute('class', 'collidable');
-
-      scene.appendChild(newEl);
-    }
+          newEl.setAttribute('class', 'collidable');
+          
+          scene.appendChild(newEl);
+      }
   }
 });
 
@@ -21,8 +21,8 @@ AFRAME.registerComponent('snap', {
   dependencies: ['position'],
 
   schema: {
-    offset: { type: 'vec3' },
-    snap: { type: 'vec3' }
+    offset: {type: 'vec3'},
+    snap: {type: 'vec3'}
   },
 
   init: function () {
@@ -43,7 +43,7 @@ AFRAME.registerComponent('snap', {
 
 AFRAME.registerComponent('delete-object', {
   events: {
-    click: function (e) {
+    click: function(e) {
       var scene = document.querySelector('a-scene');
       var obj = e.detail.intersection.object.el;
       obj.parentNode.removeChild(obj);

@@ -5,7 +5,7 @@
 </head>
 
 <body>
-    <canvas id="mainCanvas" width="256" height="256" style="border:1px solid #d3d3d3;"></canvas>
+    <canvas id="mainCanvas" width="500" height="500" style="border:1px solid #d3d3d3;"></canvas>
     <script>
         let pv = 1.0
         let kv = 0.5
@@ -13,9 +13,10 @@
         let outArray = [];
         let max = 0;
         let min = 5;
-        for (let y = 0; y < 256; y++) {
+        let wh = 500;
+        for (let y = 0; y < wh; y++) {
             let rowArray = [];
-            for (let x = 0; x < 256; x++) {
+            for (let x = 0; x < wh; x++) {
                 let n = noise2D(x * 0.01, y * 0.01);
                 n += pv;
                 n *= kv;
@@ -25,9 +26,9 @@
                 if (n < min) {
                     min = n;
                 }
-                if ((y > 98 && y < 158) && (x > 98 && x < 158)) {
-                    n = 0
-                }
+                // if ((y > 98 && y < 158) && (x > 98 && x < 158)) {
+                //     n = 0
+                // }
                 rowArray.push(n);
                 let rgb = Math.round(255 * n);
                 ctx.fillStyle = "rgba(" + rgb + "," + rgb + "," + rgb + ",1.0)";
