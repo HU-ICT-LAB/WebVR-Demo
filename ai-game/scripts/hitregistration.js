@@ -1,11 +1,15 @@
 let scoreagaindelay = 0;
 setInterval(function() {if (scoreagaindelay == 0) clearInterval(this)}, 1000);
+//This code is a timer that clears it's value every second to prevent scoring too fast
 
 
 AFRAME.registerComponent('hit', {
-
     init: function () {
-
+        /*
+        when hit is started there are 2 states: hitstart (when the object is collided) * hitend (when the object is not collided anymore)
+        when hitstart get the score and add increase the score with 1 only when the scoreagaindelay is 0 (to prevent too fast scoring)
+        when hitend print out that it's out the colliding zone.
+         */
         this.el.addEventListener('hitstart', function(){
             var scorenumber = document.querySelector("#score");
 

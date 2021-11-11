@@ -1,8 +1,16 @@
 AFRAME.registerComponent('sethighscore', {
     init: function() {
+        /*
+        sets default con value on false
+         */
         this.con = false},
 
     tick: function(){
+        /*
+        this function updates every tick (like a while loop)
+        if connected and con is still false, subscribe to topic and send request topic. If received then read the message and put
+        it's value in the highscoretext entity and set connected value to true
+         */
         if(connected && !this.con) {
             client.subscribe('hbo_ict_vr_game_score')
             client.publish('request_scoretopic', "{0}")
