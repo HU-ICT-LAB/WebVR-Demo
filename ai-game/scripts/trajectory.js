@@ -88,7 +88,7 @@ AFRAME.registerComponent('trajectory', {
     },
     tick: function (time) {
         //Runs every 2 seconds
-        if (Math.round(time - this.lastTick) > 2000) {
+        if (Math.round(time - this.lastTick) > 500) {
             this.lastTick = Math.round(time);
 
             const list = getPositions(this.el);
