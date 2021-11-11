@@ -101,7 +101,7 @@ AFRAME.registerComponent('relative-movement',{
                 client.subscribe('hbo-ict-walking-speed')
                 mqtt_add_topic_callback('hbo-ict-walking-speed', function(topic, message){
                     console.log(JSON.parse(message))
-                    movement_multiplier = parseInt(JSON.parse(message), 10);
+                    movement_multiplier = parseFloat(JSON.parse(message), 10);
                 })
                 this.con = true
 
