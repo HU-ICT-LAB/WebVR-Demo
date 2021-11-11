@@ -2,22 +2,27 @@ import paho.mqtt.client as paho
 import json
 import operator
 
+'''broker server:'''
 broker = "broker.emqx.io"
 port = 1883
 
-
 def on_publish(client, userdata, result):  # create function for callback
+    '''
+    when data is published, this function will be ran and print "data published" string
+    '''
     print("data published \n")
     pass
 
 client1 = paho.Client("gamemodespub")  # create client object
 
 def on_connect(client, userdata, flags, rc):
+    '''when connected to the server, subscribe to the topics'''
     client1.subscribe("request_scoretopic")
     client1.subscribe("request_updatescore")
 
 
 def updateleaderboard(new_score="5", new_name="anonymous"):
+    '''adds the new score and it's name to the leaderboard.txt and delete the lowest value and then overwrites it'''
     print(new_name + ":" + new_score)
     highscore_file = open("leaderboard.txt", "r")
     readable_highscores = json.loads(highscore_file.readline())
@@ -36,6 +41,7 @@ def updateleaderboard(new_score="5", new_name="anonymous"):
     print(readable_highscores)
 
 def getleaderboard():
+    '''receive the highscore from the leaderboard.txt and return it'''
     highscore_file = open("leaderboard.txt", "r")
     highscorestring = ""
     for score in highscore_file:
@@ -44,6 +50,7 @@ def getleaderboard():
     return highscorestring
 
 def on_message(client, userdata, msg):
+    '''when a message is received, checkout it's topic to run the correct functions'''
     if msg.topic == "request_scoretopic":
         client1.publish('hbo_ict_vr_game_score', getleaderboard())  # publish
     if msg.topic == "request_updatescore":
@@ -51,10 +58,13 @@ def on_message(client, userdata, msg):
         client1.publish('hbo_ict_vr_game_score', getleaderboard())
 
 
+'''code to connect to the server and which message is connect to which function'''
 client1.on_publish = on_publish  # assign function to callback
 client1.on_connect = on_connect
 client1.on_message = on_message
 client1.connect(broker, port)  # establish connection
+
+'''let is run until manual interruption'''
 running = True
 while running:
     client1.loop()
