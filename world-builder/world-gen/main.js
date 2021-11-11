@@ -1,3 +1,4 @@
+// Add objects to the scene by pressing right hand controller trigger.
 AFRAME.registerComponent('add-object', {
     events: {
         click: function (e) {
@@ -16,8 +17,10 @@ AFRAME.registerComponent('add-object', {
         }
     }
   });
-  
-  AFRAME.registerComponent('snap', {
+
+// Snaps objects together by getting the position of the an object and make a grid and add an object next to that object.
+
+AFRAME.registerComponent('snap', {
     dependencies: ['position'],
   
     schema: {
@@ -40,7 +43,7 @@ AFRAME.registerComponent('add-object', {
       this.el.setAttribute('position', pos);
     }
   });
-  
+  // delete object
   AFRAME.registerComponent('delete-object', {
     events: {
       click: function(e) {
@@ -54,6 +57,7 @@ AFRAME.registerComponent('add-object', {
 
 var GLOBALMIN = 1
 
+// Generate terrain
 AFRAME.registerGeometry('terrain', {
     init: function (data) {
         console.log(data);
@@ -86,6 +90,7 @@ AFRAME.registerGeometry('terrain', {
                 if (n < min) {
                     min = n;
                 }
+                // The flatspot.
                 if ((y > 98 && y < 158) && (x > 98 && x < 158)) {
                     n = 0;
                 }
@@ -97,6 +102,8 @@ AFRAME.registerGeometry('terrain', {
             outArray.push(rowArray);
         }
 
+
+        // Get the lowest surrounding pixel
         let minPixelAroundFlatSpot = 1;
         let y = 98
         for (let x = 98; x < 158; x++) {
@@ -132,6 +139,7 @@ AFRAME.registerGeometry('terrain', {
 
         console.log(minPixelAroundFlatSpot);
 
+        // Set the flat spot to the lowest surrounding terrain height.
         for (let y = 99; y < 158; y++) {
             for (let x = 99; x < 158; x++) {
                 n = minPixelAroundFlatSpot;
@@ -144,34 +152,9 @@ AFRAME.registerGeometry('terrain', {
 
         let flattenRange = 10
 
-
-
-
-        // for (let y = 0; y < 256; y++) {
-        //     for (let x = 0; x < 256; x++) {
-        //         n = outArray[y][x];
-        //         if ((y > 98 && y < 98+fadeRange) && (x > 98 && x < 158)){
-        //             n = outArray[y-1][x] -0.05;
-        //             // n = 1
-        //         } else if ((y > 158-fadeRange && y < 158) && (x > 98 && x < 158)){
-        //             n = outArray[y+1][x] + 0.05;
-        //             // n = 1
-        //         }
-        //         outArray[y][x] = n
-        //         let rgb = Math.round(255 * n);
-        //         ctx.fillStyle = "rgba(" + rgb + "," + rgb + "," + rgb + ",1.0)";
-        //         ctx.fillRect(x, y, 1, 1);
-        //     }
-        // }
-
-
-        // console.log(outArray);
-        // console.log(outArray[0][0]);
-        // console.log(outArray[100][100]);
-        console.log('min: ' + min + ' max: ' + max);
-
         data = canv.getContext("2d").getImageData(0, 0, WIDTH, HEIGHT).data;
 
+        // Generate the actual terrain.
         var vertices = plane.attributes.position.array;
         for (i = 0, j = 2; i < data.length; i += 4, j += 3) {
             vertices[j] = data[i] * HEIGHT_AMPLIFIER;
@@ -188,7 +171,7 @@ AFRAME.registerGeometry('terrain', {
     }
 });
 
-
+// Set the position of the terrain so it is on playable height.
 AFRAME.registerComponent('set-p', {
     dependencies: ['position'],
   
@@ -199,6 +182,7 @@ AFRAME.registerComponent('set-p', {
   });
 
 // TODO: REPLACE WITH THREE JS VECTOR?
+// Very simple class to create a vector
 class Vector2 {
     constructor(x, y) {
         this.x = x;
@@ -209,6 +193,7 @@ class Vector2 {
     }
 }
 
+// Shuffle the permutation table.
 function shuffle(tab) {
     for (let e = tab.length - 1; e > 0; e--) {
         let index = Math.round(Math.random() * (e - 1)),
@@ -219,6 +204,7 @@ function shuffle(tab) {
     }
 }
 
+// Make the permutation array.
 function makePermutation() {
     let P = [];
     for (let i = 0; i < 256; i++) {
@@ -233,8 +219,9 @@ function makePermutation() {
 }
 let P = makePermutation();
 
+// Contant vector for each value.
 function getConstantVector(v) {
-    //v is the value from the permutation table
+    //v is the value from the permutation table.
     let h = v & 3;
     if (h == 0)
         return new Vector2(1.0, 1.0);
@@ -254,6 +241,7 @@ function lerp(t, a1, a2) {
     return a1 + t * (a2 - a1);
 }
 
+// Puts all the function together.
 function noise2D(x, y) {
     let X = Math.floor(x) & 255;
     let Y = Math.floor(y) & 255;
@@ -266,7 +254,7 @@ function noise2D(x, y) {
     let bottomRight = new Vector2(xf - 1.0, yf);
     let bottomLeft = new Vector2(xf, yf);
 
-    //Select a value in the array for each of the 4 corners
+    //Select a value in the array for each of the 4 corners.
     let valueTopRight = P[P[X + 1] + Y + 1];
     let valueTopLeft = P[P[X] + Y + 1];
     let valueBottomRight = P[P[X + 1] + Y];

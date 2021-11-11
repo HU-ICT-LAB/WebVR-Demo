@@ -1,6 +1,7 @@
 <html>
 
 <head>
+    <!-- Script mports -->
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdn.rawgit.com/donmccurdy/aframe-extras/v4.1.2/dist/aframe-extras.min.js"></script>
     <script src="main.js"></script>
@@ -9,16 +10,24 @@
 <body>
     <a-scene>
 
+        <!-- add textures src -->
         <a-assets>
+            <!-- sky texture -->
+            <img id="sky" src="assets/sky.jpg">
 
             <a-mixin id="voxel" geometry="primitive: box; height: 0.5; width: 0.5; depth: 0.5"
                 material="shader: standard; color: red" snap="offset: 0.25 0.25 0.25; snap: 0.5 0.5 0.5"></a-mixin>
 
         </a-assets>
-        <a-entity geometry="primitive: terrain" position="0 -40 0" scale="0.2 0.2 0.2" rotation="-90 0 0 " color="green" set-p ></a-entity>
-        <a-plane color="green" class="collidable" rotation="-90 0 0" width="100" height="100"></a-plane>
-        <a-sky color="#ECECEC"></a-sky>
 
+        <!-- Add terrain -->
+        <a-entity geometry="primitive: terrain" position="0 -40 0" scale="0.2 0.2 0.2" rotation="-90 0 0 " color="green" set-p ></a-entity>
+        <!-- Add a plane -->
+        <a-plane color="green" class="collidable" rotation="-90 0 0" width="100" height="100"></a-plane>
+         <!-- add sky -->
+        <a-sky src="#sky" position="-200 0 0"></a-sky>
+
+        <!-- add controllers -->
         <a-entity position="0 0 0">
             <a-entity camera position=" 0 1.5 1" look-controls></a-entity>
             <a-entity id="leftHand" laser-controls="hand: left" raycaster="objects: .collidable; far: 5;"
