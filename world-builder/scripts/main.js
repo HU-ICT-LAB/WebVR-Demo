@@ -1,15 +1,13 @@
+// Add objects to the scene by pressing right hand controller trigger.
 AFRAME.registerComponent('add-object', {
   events: {
     click: function (e) {
       var scene = document.querySelector('a-scene');
       var newEl = document.createElement('a-entity');
-
       var position = e.detail.intersection.point;
 
       newEl.setAttribute('position', position);
-
       newEl.setAttribute('mixin', 'voxel');
-
       newEl.setAttribute('class', 'collidable');
 
       scene.appendChild(newEl);
@@ -17,6 +15,7 @@ AFRAME.registerComponent('add-object', {
   }
 });
 
+// Snaps objects together by getting the position of the an object and make a grid and add an object next to that object.
 AFRAME.registerComponent('snap', {
   dependencies: ['position'],
 
@@ -41,10 +40,10 @@ AFRAME.registerComponent('snap', {
   }
 });
 
+// delete object
 AFRAME.registerComponent('delete-object', {
   events: {
     click: function (e) {
-      var scene = document.querySelector('a-scene');
       var obj = e.detail.intersection.object.el;
       obj.parentNode.removeChild(obj);
     }
