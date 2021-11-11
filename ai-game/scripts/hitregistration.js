@@ -10,7 +10,6 @@ AFRAME.registerComponent('hit', {
             var scorenumber = document.querySelector("#score");
 
             console.log("Item touched");
-            this.setAttribute('color', "#FF0000");
             var currentscore = scorenumber.getAttribute('text').value;
             console.log(currentscore);
             if (scoreagaindelay === 0) {
@@ -28,7 +27,6 @@ AFRAME.registerComponent('hit', {
 
         this.el.addEventListener('hitend', function(){
             console.log("Item exited");
-            this.setAttribute('color', "#333333");
         })
 
     }
