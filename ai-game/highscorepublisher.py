@@ -10,11 +10,6 @@ def on_publish(client, userdata, result):  # create function for callback
     print("data published \n")
     pass
 
-
-
-
-
-
 client1 = paho.Client("gamemodespub")  # create client object
 
 def on_connect(client, userdata, flags, rc):
