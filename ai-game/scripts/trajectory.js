@@ -77,6 +77,7 @@ function checkIfGonnaHit(listOfTrajectory, corner1, corner2) {
 
 let savedPositions = [];
 
+//Calculate trajectory and moves targetBox if in its trajectory
 AFRAME.registerComponent('trajectory', {
     schema: {
         targetBox: {type: 'string'},
