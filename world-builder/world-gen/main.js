@@ -1,60 +1,3 @@
-// Add objects to the scene by pressing right hand controller trigger.
-AFRAME.registerComponent('add-object', {
-    events: {
-        click: function (e) {
-            var scene = document.querySelector('a-scene');
-            var newEl = document.createElement('a-entity');
-  
-            var position = e.detail.intersection.point;
-  
-            newEl.setAttribute('position', position);
-            
-            newEl.setAttribute('mixin', 'voxel');
-  
-            newEl.setAttribute('class', 'collidable');
-            
-            scene.appendChild(newEl);
-        }
-    }
-  });
-
-// Snaps objects together by getting the position of the an object and make a grid and add an object next to that object.
-
-AFRAME.registerComponent('snap', {
-    dependencies: ['position'],
-  
-    schema: {
-      offset: {type: 'vec3'},
-      snap: {type: 'vec3'}
-    },
-  
-    init: function () {
-      this.originalPos = this.el.getAttribute('position');
-    },
-  
-    update: function () {
-      const data = this.data;
-  
-      const pos = AFRAME.utils.clone(this.originalPos);
-      pos.x = Math.floor(pos.x / data.snap.x) * data.snap.x + data.offset.x;
-      pos.y = Math.floor(pos.y / data.snap.y) * data.snap.y + data.offset.y;
-      pos.z = Math.floor(pos.z / data.snap.z) * data.snap.z + data.offset.z;
-  
-      this.el.setAttribute('position', pos);
-    }
-  });
-  // delete object
-  AFRAME.registerComponent('delete-object', {
-    events: {
-      click: function(e) {
-        var scene = document.querySelector('a-scene');
-        var obj = e.detail.intersection.object.el;
-        obj.parentNode.removeChild(obj);
-      }
-    }
-  });
-
-
 var GLOBALMIN = 1
 
 // Generate terrain
@@ -174,7 +117,7 @@ AFRAME.registerGeometry('terrain', {
 // Set the position of the terrain so it is on playable height.
 AFRAME.registerComponent('set-p', {
     dependencies: ['position'],
-  
+    
     init: function () {
         pos = {'x': 0, 'y': -(GLOBALMIN * 5 * 10)-.2, 'z': 0}
         this.el.setAttribute('position', pos);
@@ -182,18 +125,34 @@ AFRAME.registerComponent('set-p', {
   });
 
 // TODO: REPLACE WITH THREE JS VECTOR?
-// Very simple class to create a vector
+// 
+/**
+ * Very simple class to create a vector
+ */
 class Vector2 {
+    /**
+     * 
+     * @param {number} x 
+     * @param {number} y 
+     */
     constructor(x, y) {
         this.x = x;
         this.y = y;
     }
+    /**
+     * 
+     * @param {Vector2} other 
+     * @returns Dot product.
+     */
     dot(other) {
         return this.x * other.x + this.y * other.y;
     }
 }
 
-// Shuffle the permutation table.
+/**
+ * Shuffle the permutation table.
+ * @param {number} tab 
+ */
 function shuffle(tab) {
     for (let e = tab.length - 1; e > 0; e--) {
         let index = Math.round(Math.random() * (e - 1)),
@@ -204,7 +163,10 @@ function shuffle(tab) {
     }
 }
 
-// Make the permutation array.
+/**
+ * Make the permutation array.
+ * @returns Permutation array.
+ */
 function makePermutation() {
     let P = [];
     for (let i = 0; i < 256; i++) {
@@ -219,7 +181,11 @@ function makePermutation() {
 }
 let P = makePermutation();
 
-// Contant vector for each value.
+/**
+ * Contant vector for each value.
+ * @param {number} v 
+ * @returns Vector2
+ */
 function getConstantVector(v) {
     //v is the value from the permutation table.
     let h = v & 3;
@@ -233,15 +199,32 @@ function getConstantVector(v) {
         return new Vector2(1.0, -1.0);
 }
 
+/**
+ * Fade curve
+ * @param {number} t 
+ * @returns number
+ */
 function fade(t) {
     return ((6 * t - 15) * t + 10) * t * t * t;
 }
 
+/**
+ * 
+ * @param {number} t 
+ * @param {number} a1 
+ * @param {number} a2 
+ * @returns number
+ */
 function lerp(t, a1, a2) {
     return a1 + t * (a2 - a1);
 }
 
-// Puts all the function together.
+/**
+ * Puts all the function together to generate some noise
+ * @param {number} x 
+ * @param {number} y 
+ * @returns {number} A random value
+ */
 function noise2D(x, y) {
     let X = Math.floor(x) & 255;
     let Y = Math.floor(y) & 255;
