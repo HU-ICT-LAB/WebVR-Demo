@@ -18,7 +18,7 @@ function dodgeMovement(bot, listOfHits) {
     const x_distance = botPosition.x - firstTouch.x;
     const moveMultiplier = 1/x_distance*0.2;
 
-    const animationMoveString = "property: position; from: "+ moveMultiplier.x + " " + moveMultiplier.y + " " + (moveMultiplier.z-1) + "; to: " + moveMultiplier + " " + moveMultiplier.y + " " + (moveMultiplier.z-1) + " dur: 10000; easing: linear";
+    const animationMoveString = "property: position; from: "+ botPosition.x + " " + botPosition.y + " " + (botPosition.z-1) + "; to: " + moveMultiplier + " " + botPosition.y + " " + (botPosition.z-1) + " dur: 10000; easing: linear";
 
     bot.setAttribute('animation', animationMoveString);
 }
