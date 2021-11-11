@@ -1,5 +1,10 @@
+/**
+ * This function sum up each item of the two objects
+ * @param obj1 Object 1
+ * @param obj2 Object 2
+ * @returns {{}} Object with the summed up items
+ */
 function sumObjects(obj1, obj2) {
-    //Sum up two objects
     let sum = {};
 
     Object.keys(obj1).forEach(key => {
@@ -8,6 +13,11 @@ function sumObjects(obj1, obj2) {
     return sum;
 }
 
+/**
+ * This function gets the life coordinates of the VR gear
+ * @param element The rig entity
+ * @returns {{x, y, z}[]} Array with the coordinates of the headset, left and right controller
+ */
 function getPositions(element) {
     //Returns positions of the VR gear
     var left_controller = element.querySelector("#left_controller")
