@@ -13,24 +13,23 @@ s.connect((HOST, PORT))
 
 def gripper_open():
     f = open("Gripper.script", "rb")  # Robotiq Gripper
-    # f = open ("setzero.script", "rb")  #Robotiq FT sensor
-
     l = f.read()
     while (l):
         s.send(l)
         l = f.read(1024)
     s.send(" rq_open()\nend".encode("utf8"))
+    s.send(" \n".encode("utf8"))
+    print("sending is done")
 
 
 def gripper_close():
     f = open("Gripper.script", "rb")  # Robotiq Gripper
-    # f = open ("setzero.script", "rb")  #Robotiq FT sensor
-
     l = f.read()
     while (l):
         s.send(l)
         l = f.read(1024)
     s.send(" rq_close()\nend".encode("utf8"))
+    s.send(" \n".encode("utf8"))
 
 
 
@@ -56,7 +55,7 @@ time.sleep(5)
 
 gripper_open()
 
-time.sleep(10)
+time.sleep(5)
 
 s.send((" movej(pose_trans(get_forward_kin(), p[0, 0, 0.08, 0, 0, 0]), a=1.2, v=1.05, t=0, r=0)"+"\n").encode("utf8"))
 
@@ -64,7 +63,7 @@ time.sleep(5)
 
 gripper_close()
 
-time.sleep(10)
+time.sleep(5)
 
 s.send((" movej(pose_trans(get_forward_kin(), p[0, 0, -0.08, 0, 0, 0]), a=1.2, v=1.05, t=0, r=0)"+"\n").encode("utf8"))
 
