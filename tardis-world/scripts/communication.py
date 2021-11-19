@@ -3,7 +3,7 @@ import socket
 import time
 
 # Ip adress and port of the robot arm
-HOST = "192.168.137.176"
+HOST = "192.168.1.106"
 PORT = 30002
 
 # create a socket connection to the robot arm
@@ -17,8 +17,7 @@ def gripper_open():
     while (l):
         s.send(l)
         l = f.read(1024)
-    s.send(" rq_open()\nend".encode("utf8"))
-    s.send(" \n".encode("utf8"))
+    s.send(" rq_open()\nend\n".encode("utf8"))
     print("sending is done")
 
 
@@ -28,8 +27,7 @@ def gripper_close():
     while (l):
         s.send(l)
         l = f.read(1024)
-    s.send(" rq_close()\nend".encode("utf8"))
-    s.send(" \n".encode("utf8"))
+    s.send(" rq_close()\nend\n".encode("utf8"))
 
 
 
