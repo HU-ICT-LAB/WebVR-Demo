@@ -10,26 +10,24 @@
 
     </head>   
     <body>
-        <a-scene generate_trees update_trees fog="type: exponential; color: #AAA; density: 0.1">
+        <a-scene generate_trees update_trees generate_floor update_floor fog="type: exponential; color: #AAA; density: 0.15">
             <a-assets>
             <a-asset-item id="house" src="assets\models\WoodHouse.glb"></a-asset-item>
             <a-asset-item id="tree" src="assets\models\dark_tree1.glb"></a-asset-item>
             </a-assets>
-
-            <a-entity geometry="primitive: plane; height: 500; width: 500"
-                position="0 -0.5 0"
-                rotation="-90 0 0"
-                material="shader: flat; src: url(assets\textures\grass2.png); repeat: 50 50"></a-entity>
             <a-entity gltf-model="#house"
                     position="-4 0.4 0"
                     scale="2 2 2"></a-entity>
             <a-entity id="rig" headbob-movement relative-movement>
-                    <a-entity id="camera" wasd-controls camera look-controls>                    </a-entity>
+                   
+                    <a-entity id="camera" wasd-controls camera look-controls>
+                        <a-sky color="AAAAAA"></a-sky>
+                    </a-entity>
                     <a-entity id="leftcontrl" oculus-touch-controls="hand: left" thumbstick-logging></a-entity>
                     <a-entity id="rightcontrl" oculus-touch-controls="hand: right" thumbstick-logging></a-entity>
             </a-entity>
 
-            <a-sky color="AAAAAA"></a-sky>
+            
         </a-scene>
     </body>
 </html>
