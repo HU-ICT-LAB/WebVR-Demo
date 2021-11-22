@@ -105,7 +105,7 @@ function executeCalculations(coordinate1, coordinate2, aiBot) {
 
     const trajectory = [coordinate1];
 
-    while (diff(coordinate1.x, trajectory[trajectory.length - 1].x) < 1 && diff(coordinate1.y, trajectory[trajectory.length - 1].y) < 1 && diff(coordinate1.z, trajectory[trajectory.length - 1].z) < 1) {
+    while (dif.x + dif.y + dif.z !== 0 && diff(coordinate1.x, trajectory[trajectory.length - 1].x) < 1 && diff(coordinate1.y, trajectory[trajectory.length - 1].y) < 1 && diff(coordinate1.z, trajectory[trajectory.length - 1].z) < 1) {
         const endpoint = new THREE.Vector3();
         endpoint.x = trajectory[trajectory.length - 1].x + dif.x;
         endpoint.y = trajectory[trajectory.length - 1].y + dif.y;
