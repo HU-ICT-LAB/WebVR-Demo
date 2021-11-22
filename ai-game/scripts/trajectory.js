@@ -1,5 +1,11 @@
+/**
+ * This function calculate the difference between pos1 and pos2 and
+ * devide it by 10 so you get tiny steps to calculate the trajectory.
+ * @param pos1 Position 1
+ * @param pos2 Position 2
+ * @returns {THREE.Vector3} The step
+ */
 function calculateSteps(pos1, pos2) {
-    //Calculate the steps between two positions and devide them by 10
     const vec1 = [pos1['x'], pos1['y'], pos1['z']]
     const vec2 = [pos2['x'], pos2['y'], pos2['z']]
 
@@ -10,8 +16,12 @@ function calculateSteps(pos1, pos2) {
     return step;
 }
 
+/**
+ * This function moves the bot so it dodges the coordinates in listOfHits
+ * @param bot Entity of bot
+ * @param listOfHits Array of hits
+ */
 function dodgeMovement(bot, listOfHits) {
-    //Moves the bot so it dodges the coordinates in listOfHits
     const botPosition = bot.getAttribute('position');
     const firstTouch = listOfHits[0];
 
@@ -23,8 +33,13 @@ function dodgeMovement(bot, listOfHits) {
     bot.setAttribute('animation', animationMoveString);
 }
 
+/**
+ * This function calculate the difference between two numbers
+ * @param num1 Number 1
+ * @param num2 Number 2
+ * @returns {number} Difference between number 1 en 2
+ */
 function diff (num1, num2) {
-    //Calculate the difference between two numbers
     if (num1 > num2) {
         return num1 - num2
     } else {
@@ -32,8 +47,12 @@ function diff (num1, num2) {
     }
 }
 
+/**
+ * This function calculate the two outer vertices of the given enitty
+ * @param aiEntity An entity
+ * @returns {THREE.Vector3[]} Two positions in an array
+ */
 function positionsOfBox(aiEntity) {
-    //Returns two positions of the given box that can be used to check if coordinates are inside the box
     const boxpos = aiEntity.getAttribute('position');
     const scale = aiEntity.getAttribute('scale');
     let width = aiEntity.getAttribute('width');
@@ -63,8 +82,14 @@ function positionsOfBox(aiEntity) {
     return [pos1, pos2];
 }
 
+/**
+ * This function filters the listOfTrajectory array to only contains the coordinates between the two given corners
+ * @param listOfTrajectory Array of coordinates
+ * @param corner1 Corner 1 of an entity
+ * @param corner2 Corner 2 of an entity
+ * @returns {*[]} Array with coordinates that are between the two corners
+ */
 function checkIfGonnaHit(listOfTrajectory, corner1, corner2) {
-    //Filters the listOfTrajectory array to only contains the coordinates between the two given corners
     const cordsBetweenCorners = [];
 
     for (let i = 0; i < listOfTrajectory.length; i++) {
@@ -75,7 +100,38 @@ function checkIfGonnaHit(listOfTrajectory, corner1, corner2) {
     return cordsBetweenCorners;
 }
 
-let savedPositions = [];
+function executeCalculations(coordinate1, coordinate2, aiBot) {
+    const dif = calculateSteps(coordinate1, coordinate2);
+
+    const trajectory = [coordinate1];
+
+    while (diff(coordinate1.x, trajectory[trajectory.length - 1].x) < 1 && diff(coordinate1.y, trajectory[trajectory.length - 1].y) < 1 && diff(coordinate1.z, trajectory[trajectory.length - 1].z) < 1) {
+        const endpoint = new THREE.Vector3();
+        endpoint.x = trajectory[trajectory.length - 1].x + dif.x;
+        endpoint.y = trajectory[trajectory.length - 1].y + dif.y;
+        endpoint.z = trajectory[trajectory.length - 1].z + dif.z;
+        trajectory.push(endpoint);
+    }
+
+    const botPos = positionsOfBox(aiBot);
+
+    const botHit = checkIfGonnaHit(trajectory, botPos[0], botPos[1]);
+
+    if (botHit.length > 0) {
+        dodgeMovement(aiBot, botHit);
+    }
+}
+
+function refineCoordinate(coordinate) {
+    const pos = new THREE.Vector3();
+    pos.x = coordinate['x'];
+    pos.y = coordinate['y'];
+    pos.z = coordinate['z'];
+    return pos
+}
+
+let positionsRight = [];
+let positionsLeft = [];
 
 //Calculate trajectory and moves targetBox if in its trajectory
 AFRAME.registerComponent('trajectory', {
@@ -85,6 +141,7 @@ AFRAME.registerComponent('trajectory', {
     init: function () {
         this.lastTick = 0;
 
+        //Select the opponent entity
         this.aiBot = document.querySelector("#"+this.data.targetBox)
     },
     tick: function (time) {
@@ -93,43 +150,23 @@ AFRAME.registerComponent('trajectory', {
             this.lastTick = Math.round(time);
 
             const list = getPositions(this.el);
-            const obj_rc = list[1];
+            const obj_rc = refineCoordinate(list[1]);
+            const obj_lc = refineCoordinate(list[2]);
 
-            const pos = new THREE.Vector3();
-            pos.x = obj_rc['x'];
-            pos.y = obj_rc['y'];
-            pos.z = obj_rc['z'];
-
-            savedPositions.push(pos);
+            positionsRight.push(obj_rc);
+            positionsLeft.push(obj_lc);
         }
 
-        if (savedPositions.length === 2) {
-            const box1 = savedPositions[0];
-            const box2 = savedPositions[1];
+        //Runs if there are two measured points of the hand
+        if (positionsRight.length === 2) {
+            executeCalculations(positionsRight[0], positionsRight[1], this.aiBot);
+            positionsRight = [];
 
-            const dif = calculateSteps(box1, box2);
+        }
 
-            const trajectory = [box1];
-
-            while (diff(box1.x, trajectory[trajectory.length - 1].x) < 1 && diff(box1.y, trajectory[trajectory.length - 1].y) < 1 && diff(box1.z, trajectory[trajectory.length - 1].z) < 1) {
-                const endpoint = new THREE.Vector3();
-                endpoint.x = trajectory[trajectory.length - 1].x + dif.x;
-                endpoint.y = trajectory[trajectory.length - 1].y + dif.y;
-                endpoint.z = trajectory[trajectory.length - 1].z + dif.z;
-                trajectory.push(endpoint);
-            }
-
-            const botPos = positionsOfBox(this.aiBot);
-
-            const botHit = checkIfGonnaHit(trajectory, botPos[0], botPos[1]);
-
-            if (botHit.length > 0) {
-                dodgeMovement(this.aiBot, botHit)
-            }
-
-            if (savedPositions.length >= 2) {
-                savedPositions = [];
-            }
+        if (positionsLeft.length === 2) {
+            executeCalculations(positionsLeft[0], positionsLeft[1], this.aiBot);
+            positionsLeft = [];
         }
     }
 })
