@@ -39,6 +39,8 @@ def updateleaderboard(new_score="5", new_name="anonymous"):
     :param new_score: the score that needs to be put in leaderboard
     :param new_name: the new_name that goes with the score as key of the dictionary
     """
+    if len(new_score) == 1:
+        new_score = "0" + new_score
     print(new_name + ":" + new_score)
     highscore_file = open("leaderboard.txt", "r")
     readable_highscores = json.loads(highscore_file.readline())
