@@ -28,6 +28,10 @@
 
         <!--    Player name-->
         <script src="scripts/username.js" type="text/javascript"></script>
+
+        <!--    Dodge algorithm    -->
+        <script src="scripts/hand-positions.js"></script>
+        <script src="scripts/trajectory.js"></script>
 </head>
 
 <body>
@@ -96,7 +100,7 @@
     </a-box>
 
     <!--    Camera and Oculus rift-->
-    <a-entity wasd-controls id="rig" position="0 0 2">
+    <a-entity wasd-controls id="rig" position="0 0 2" trajectory="targetBox: robotmodel">
         <a-entity id="camera" camera look-controls ></a-entity>
         <a-entity id="lefthand" aabb-collider="objects: a-box" oculus-touch-controls="hand: left" thumbstick-logging hit></a-entity>
         <a-entity id="righthand" aabb-collider="objects: a-box" oculus-touch-controls="hand: right" thumbstick-logging hit></a-entity>
