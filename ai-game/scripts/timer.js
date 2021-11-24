@@ -4,11 +4,12 @@ function updatescore() {
      */
 
     var score = document.querySelector("#score");
+    var username = document.querySelector("#username");
     var currentscore = (score.getAttribute('text').value).toString();
+    var currentname = (username.getAttribute('text').value);
     score.setAttribute('text', 'value', 0)
-    console.log(typeof currentscore)
-    console.log(currentscore)
-    client.publish('request_updatescore', currentscore)}
+    console.log((currentname.substr(14) + ":" + currentscore))
+    client.publish('request_updatescore', (currentname.substr(14) + ":" + currentscore))}
 
 AFRAME.registerComponent('timerdown', {
     init: function () {
@@ -23,8 +24,11 @@ AFRAME.registerComponent('timerdown', {
             if (sixtyseconds === 0){
                 sixtyseconds = 5
                 sixtytimer.setAttribute('text', 'value', "Added!")
-                // document.querySelector("#debug").setAttribute('text', 'value', "updatescore()");
+               var username = document.querySelector("#username");
                 updatescore()
+               getrandomizedname(username)
+                // document.querySelector("#debug").setAttribute('text', 'value', "updatescore()");
+
 
                 ;}
             else {
