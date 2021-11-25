@@ -8,6 +8,38 @@
         <script src="scripts/movement.js" type="text/javascript"></script>
         <script src="scripts/infinite_objects.js" type="text/javascript"></script>
         <script src="../scripts/push_button.js" type="text/javascript"></script>
+        <script>
+
+            AFRAME.registerComponent('robot_controller',{
+                init: function(){
+                    this.el.addEventListener('move_left', function(){
+                        client.publish('hbo_ict_robot_arm_controll', JSON.stringify({command: "move_left"}))
+                    });
+                    this.el.addEventListener('move_right', function(){
+                        client.publish('hbo_ict_robot_arm_controll', JSON.stringify({command: "move_right"}))
+                    });
+                    this.el.addEventListener('move_up', function(){
+                        client.publish('hbo_ict_robot_arm_controll', JSON.stringify({command: "move_up"}))
+                    });
+                    this.el.addEventListener('move_down', function(){
+                        client.publish('hbo_ict_robot_arm_controll', JSON.stringify({command: "move_down"}))
+                    });
+                    this.el.addEventListener('move_forward', function(){
+                        client.publish('hbo_ict_robot_arm_controll', JSON.stringify({command: "move_forward"}))
+                    });
+                    this.el.addEventListener('move_backward', function(){
+                        client.publish('hbo_ict_robot_arm_controll', JSON.stringify({command: "move_backward"}))
+                    });
+                    this.el.addEventListener('move_close', function(){
+                        client.publish('hbo_ict_robot_arm_controll', JSON.stringify({command: "move_close"}))
+                    });
+                    this.el.addEventListener('move_open', function(){
+                        client.publish('hbo_ict_robot_arm_controll', JSON.stringify({command: "move_open"}))
+                    });
+
+                }
+            })
+        </script>
 
     </head>   
     <body>
@@ -25,12 +57,22 @@
                     position="-4 0.4 0"
                     scale="2 2 2" button_listener="button_channel: all;" button_logger></a-entity>
             <a-entity id="rig" headbob-movement relative-movement>
-                    <a-entity id="camera" wasd-controls camera look-controls> </a-entity>
+                    <a-entity id="camera" wasd-controls camera look-controls></a-entity>
                     <a-entity class="hand" id="leftcontrl" oculus-touch-controls="hand: left" thumbstick-logging ></a-entity>
                     <a-entity class="hand" id="rightcontrl" oculus-touch-controls="hand: right" thumbstick-logging></a-entity>
+                    <a-entity id="left"     rotation="0 0 0" button="button_color: #AA0000; event_start: move_left" rotation="0 0 0"        position="-0.2 1  -1"></a-entity>
+                    <a-entity id="right"    rotation="0 0 0" button="button_color: #A00000; event_start: move_right" rotation="0 0 0"       position="0.2  1  -1"></a-entity>
+                    <a-entity id="up"       rotation="0 0 0" button="button_color: #A00A00; event_start: move_up" rotation="0 0 0"          position="0.5  1  -0.7"></a-entity>
+                    <a-entity id="down"     rotation="0 0 0" button="button_color: #000A00; event_start: move_down" rotation="0 0 0"        position="0.8  1  -0.2"></a-entity>
+                    <a-entity id="forward"  rotation="0 0 0" button="button_color: #00AA00; event_start: move_forward" rotation="0 0 0"     position="0.8  1  0.2"></a-entity>
+                    <a-entity id="backward" rotation="0 0 0" button="button_color: #00A000; event_start: move_backward" rotation="0 0 0"    position="0.5  1  0.7"></a-entity>
+                    <a-entity id="open"     rotation="0 0 0" button="button_color: #00A00A; event_start: move_open" rotation="0 0 0"        position="0.2  1    1"></a-entity>
+                    <a-entity id="close"    rotation="0 0 0" button="button_color: #0000AA; event_start: move_close" rotation="0 0 0"       position="-0.2 1     1"></a-entity>
             </a-entity>
 
-            <a-entity rotation="0 0 0"button="button_color: #AA0000" rotation="0 0 0" position="0 1 0"></a-entity>
+            <a-entity robot_controller button_listener></a-entity>
+
+
 
             <a-sky color="AAAAAA"></a-sky>
         </a-scene>
