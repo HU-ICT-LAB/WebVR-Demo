@@ -17,32 +17,53 @@ s.connect((HOST, ROBOT_PORT))
 
 
 def move_backwards():
+    """
+    Move the robot arm backward
+    """
     s.send((" movej(pose_trans(get_forward_kin(), p[0, -0.05, 0, 0, 0, 0]), a=1.2, v=1.05, t=0, r=0)"+"\n").encode("utf8"))
     time.sleep(2)
 
 def move_forwards():
+    """
+    Move the robot arm forward
+    """
     s.send((" movej(pose_trans(get_forward_kin(), p[0, 0.05, 0, 0, 0, 0]), a=1.2, v=1.05, t=0, r=0)"+"\n").encode("utf8"))
     time.sleep(2)
 
 def move_left():
+    """
+    Move the robot arm left
+    """
     s.send((" movej(pose_trans(get_forward_kin(), p[0.05, 0, 0, 0, 0, 0]), a=1.2, v=1.05, t=0, r=0)"+"\n").encode("utf8"))
     time.sleep(2)
 
 def move_right():
+    """
+    Move the robot arm right
+    """
     s.send((" movej(pose_trans(get_forward_kin(), p[-0.05, 0, 0, 0, 0, 0]), a=1.2, v=1.05, t=0, r=0)"+"\n").encode("utf8"))
     time.sleep(2)
 
 def move_up():
+    """
+    Move the robot arm up
+    """
     print("moving up")
     s.send((" movej(pose_trans(get_forward_kin(), p[0, 0, -0.05, 0, 0, 0]), a=1.2, v=1.05, t=0, r=0)"+"\n").encode("utf8"))
     time.sleep(2)
 
 def move_down():
+    """
+    Move the robot arm down
+    """
     s.send((" movej(pose_trans(get_forward_kin(), p[0, 0, 0.05, 0, 0, 0]), a=1.2, v=1.05, t=0, r=0)"+"\n").encode("utf8"))
     time.sleep(2)
 
 
 def move_open():
+    """
+    Open the robot arm gripper
+    """
     f = open("Gripper.script", "rb")  # Robotiq Gripper
     l = f.read()
     while (l):
@@ -51,7 +72,11 @@ def move_open():
     s.send(" rq_open()\nend\n".encode("utf8"))
     time.sleep(5)
 
+
 def move_close():
+    """
+    Close the robot arm gripper
+    """
     f = open("Gripper.script", "rb")  # Robotiq Gripper
     l = f.read()
     while (l):
@@ -72,6 +97,7 @@ client1 = paho.Client("ROBOT_Controller")  # create client object
 running = True
 moving = False
 
+# a queue for the movement commands
 movement_queue = queue.Queue()
 
 
@@ -87,7 +113,7 @@ def on_connect(client, userdata, flags, rc):
 
 def on_message(client, userdata, msg):
     """
-    when a message is received, checkout it's topic to run the correct functions
+    when a message is received, if its a movement command and we are currently not moving, send it to the movement thread
     :param client: the client object (client1 in our case)
     :param userdata: the detailed information about the user
     :param msg: message itself
@@ -102,6 +128,9 @@ def on_message(client, userdata, msg):
             moving = True
 
 def movement_thread():
+    """
+    A thread to process the movement commands recieved by the mqtt client
+    """
     print("started thread")
     while True:
         move = movement_queue.get()
@@ -138,7 +167,7 @@ if __name__ == "__main__":
     client1.on_message = on_message
     client1.connect(broker, port)  # establish connection
 
-    # let is run until manual interruption
+    # start the thread to process the movement commands
     x = threading.Thread(target=movement_thread, args=(), daemon=True)
     x.start()
 
