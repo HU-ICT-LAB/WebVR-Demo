@@ -11,19 +11,12 @@
         <script src="scripts/robot_controller.js" type="text/javascript"></script>
     </head>   
     <body>
-        <a-scene cursor="rayOrigin:mouse" generate_trees update_trees fog="type: exponential; color: #AAA; density: 0.1">
+        <a-scene cursor="rayOrigin:mouse" generate_trees update_trees  generate_floor update_floor fog="type: exponential; color: #AAA; density: 0.1">
             <a-assets>
             <a-asset-item id="house" src="assets\models\WoodHouse.glb"></a-asset-item>
             <a-asset-item id="tree" src="assets\models\dark_tree1.glb"></a-asset-item>
             </a-assets>
-
-            <a-entity geometry="primitive: plane; height: 500; width: 500"
-                position="0 -0.5 0"
-                rotation="-90 0 0"
-                material="shader: flat; src: url(assets\textures\grass2.png); repeat: 50 50">
-            </a-entity>
-
-            <a-entity id="huis" gltf-model="#house"
+            <a-entity gltf-model="#house"
                     position="-4 0.4 0"
                     scale="2 2 2">
             </a-entity>
@@ -32,7 +25,7 @@
                     <a-entity id="camera" wasd-controls camera look-controls>=</a-entity>
                     <a-entity class="hand" id="leftcontrl" oculus-touch-controls="hand: left" thumbstick-logging ></a-entity>
                     <a-entity class="hand" id="rightcontrl" oculus-touch-controls="hand: right" thumbstick-logging></a-entity>
-                    
+
             </a-entity>
 
             <a-entity id="button_panel" >
@@ -52,14 +45,14 @@
                     <a-entity id="backward" rotation="90 0 0" button="button_color: #6bfc03; event_start: move_backward" position="-0.175  -0.15  0.15">
                         <a-text value="backward" align="center" rotation="-90 0 0"  position="0 0 -0.07" scale="0.15 0.15 0.15"></a-text>
                     </a-entity>
-    
+
                     <a-entity id="up"       rotation="90 0 0" button="button_color: #fc037f; event_start: move_up"       position="0.2 0.15 0.15">
                         <a-text value="up" align="center"  rotation="-90 0 0" position="0 0 -0.07" scale="0.15 0.15 0.15"></a-text>
                     </a-entity>
                     <a-entity id="down"     rotation="90 0 0" button="button_color: #03fc8c; event_start: move_down"     position="0.2 0 0.15">
                         <a-text value="down" align="center"  rotation="-90 0 0" position="0 0 -0.07" scale="0.15 0.15 0.15"></a-text>
                     </a-entity>
-                   
+
                     <a-entity id="open"     rotation="90 0 0" button="button_color: #1e008a; event_start: move_open"     position="0.1  -0.15   0.15">
                         <a-text value="open" align="center" rotation="-90 0 0"  position="0 0 -0.07" scale="0.15 0.15 0.15"></a-text>
                     </a-entity>
@@ -70,7 +63,7 @@
                 <a-box width="0.05"  depth="0.15"   height="0.8"  position="0.425 -0.1 0"></a-box>
                 <a-box width="0.05"  depth="0.15"   height="0.8"  position="-0.425 -0.1 0"></a-box>
 
-                
+
 
 
 
