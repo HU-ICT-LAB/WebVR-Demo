@@ -69,6 +69,10 @@ function positionsOfBox(aiEntity) {
         depth = 1;
     }
 
+    console.log(boxpos);
+    console.log(width, height, depth);
+    console.log(scale.x, scale,y, scale,z);
+
     const pos1 = new THREE.Vector3();
     pos1.x = boxpos.x - (width/2) * scale.x;
     pos1.y = boxpos.y - (height/2) * scale.y;
@@ -162,6 +166,27 @@ AFRAME.registerComponent('trajectory', {
             executeCalculations(positionsRight[0], positionsRight[1], this.aiBot);
             positionsRight = [];
 
+            var botPos = positionsOfBox(this.aiBot);
+
+
+
+            var spawnEl2 = document.createElement('a-box');
+
+            spawnEl2.setAttribute('position', botPos[0]);
+            spawnEl2.setAttribute('scale', '0.025 0.025 0.025');
+            spawnEl2.setAttribute('id', 'drawBox');
+            spawnEl2.setAttribute('color', '#57fa08')
+
+            this.el.sceneEl.appendChild(spawnEl2);
+
+            var spawnEl1 = document.createElement('a-box');
+
+            spawnEl1.setAttribute('position', botPos[1]);
+            spawnEl1.setAttribute('scale', '0.025 0.025 0.025');
+            spawnEl1.setAttribute('id', 'drawBox');
+            spawnEl1.setAttribute('color', '#fa0808')
+
+            this.el.sceneEl.appendChild(spawnEl1);
         }
 
         if (positionsLeft.length === 2) {

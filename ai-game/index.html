@@ -48,18 +48,18 @@
     </a-assets>
 
     <!-- ScoreBoard-->
-    <a-box color="#FFFFFF" src=#Metal width="3" height="1.5" depth="0.1" position="0 4 -6">
-                    <a-circle color="#333333" side="double" position="1.3 0 0.08" radius="0.2"> </a-circle>
-                    <a-box color="#FFFFFF" src=#Metal width="10" height="0.5" depth="0.1" position="0 1 0" repeat="10 1"></a-box>
-                    <a-box color="#333333" src=#Metal width="8" height="0.5" depth="0.5" rotation="0 0 90" position="5.25 -2.25 0"></a-box>
-                    <a-box color="#333333" src=#Metal width="8" height="0.5" depth="0.5" rotation="0 0 90" position="-5.25 -2.25 0"></a-box>
-                    <a-text id="score" value= "0" position="-1.1 0 0.08" scale="7 7 7"> </a-text>
-                    <a-text id="timer" value= "60" position="-0.3 1 0.08" scale="2 2 2" timerdown> </a-text>
-                    <a-text id="username" position="-4.8 1 0.08" getnewname> </a-text>
-                    <a-box id="Highscoreboard" color="#A9A9A9" src=#Metal width="3.5" height="3" depth="0.1" position="-3.5 -0.75 0"  repeat="10 1">
-                        <a-entity id="Highscoretext" text="value: Top 10 Leaderboard\n------------\ndaan:--\nruben:--\nfloris:--\nshaun:--\ncharlie:--\npieter:--\nmanneke:--\nwit:--\nman:--\nvrouw:--; color: #FFFFFF" position="1.20 0 0.11" scale="5 5 5" sethighscore></a-entity>
-                    </a-box>
-                </a-box>
+<!--    <a-box color="#FFFFFF" src=#Metal width="3" height="1.5" depth="0.1" position="0 4 -6">-->
+<!--                    <a-circle color="#333333" side="double" position="1.3 0 0.08" radius="0.2"> </a-circle>-->
+<!--                    <a-box color="#FFFFFF" src=#Metal width="10" height="0.5" depth="0.1" position="0 1 0" repeat="10 1"></a-box>-->
+<!--                    <a-box color="#333333" src=#Metal width="8" height="0.5" depth="0.5" rotation="0 0 90" position="5.25 -2.25 0"></a-box>-->
+<!--                    <a-box color="#333333" src=#Metal width="8" height="0.5" depth="0.5" rotation="0 0 90" position="-5.25 -2.25 0"></a-box>-->
+<!--                    <a-text id="score" value= "0" position="-1.1 0 0.08" scale="7 7 7"> </a-text>-->
+<!--                    <a-text id="timer" value= "60" position="-0.3 1 0.08" scale="2 2 2" timerdown> </a-text>-->
+<!--                    <a-text id="username" position="-4.8 1 0.08" getnewname> </a-text>-->
+<!--                    <a-box id="Highscoreboard" color="#A9A9A9" src=#Metal width="3.5" height="3" depth="0.1" position="-3.5 -0.75 0"  repeat="10 1">-->
+<!--                        <a-entity id="Highscoretext" text="value: Top 10 Leaderboard\n&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;\ndaan:&#45;&#45;\nruben:&#45;&#45;\nfloris:&#45;&#45;\nshaun:&#45;&#45;\ncharlie:&#45;&#45;\npieter:&#45;&#45;\nmanneke:&#45;&#45;\nwit:&#45;&#45;\nman:&#45;&#45;\nvrouw:&#45;&#45;; color: #FFFFFF" position="1.20 0 0.11" scale="5 5 5" sethighscore></a-entity>-->
+<!--                    </a-box>-->
+<!--                </a-box>-->
 
     <!-- Sky -->
     <a-sky src="#Sky"
@@ -78,14 +78,15 @@
     </a-plane>
 
     <!--             Robot Playermodel & Hitbox -->
-    <a-entity id="robotmodel" gltf-model="#Robot" scale="0.007 0.01 0.01" position="0 0 -1"
-              animation="property: position; from: 0 0 -1; to: 0 0 0; dur: 10000; easing: linear">
-        <a-hitbox color="#333333" position="0 2 0" >
+    <a-entity id="robotmodel" gltf-model="#Robot" scale="0.007 0.01 0.01" position="0 0 -1">
+        <a-hitbox id="hitBox" color="#333333" position="0 2 0" >
             <a-circle
                     id="middlepoint" color="#000000" scale="5 3.5 50" position="0 140 0">
             </a-circle>
         </a-hitbox>
     </a-entity>
+
+<!--    <a-box id="testBot" position="0 1 -1" scale="1 2 1"></a-box>-->
 
     <!--             Only Visible Hitbox connected Playermodel-->
     <!--    <a-hitbox id="robotmodel" color="#333333" scale="0.007 0.01 0.01" position="0 0 -1">-->
@@ -95,12 +96,12 @@
     <!--    </a-hitbox>-->
 
     <!--             Test predicted movement box-->
-    <a-box
-        id="testbox" color="#808080" height="0.1" width="0.1" depth="0.1" position="-0.30 1.4 -1" modeldodgemovement>
-    </a-box>
+<!--    <a-box-->
+<!--        id="testbox" color="#808080" height="0.1" width="0.1" depth="0.1" position="-0.30 1.4 -1" modeldodgemovement>-->
+<!--    </a-box>-->
 
     <!--    Camera and Oculus rift-->
-    <a-entity wasd-controls id="rig" position="0 0 2" trajectory="targetBox: robotmodel">
+    <a-entity wasd-controls id="rig" position="0 1 2" trajectory="targetBox: hitBox">
         <a-entity id="camera" camera look-controls ></a-entity>
         <a-entity id="right_controller" aabb-collider="objects: a-box" oculus-touch-controls="hand: left" thumbstick-logging hit></a-entity>
         <a-entity id="left_controller" aabb-collider="objects: a-box" oculus-touch-controls="hand: right" thumbstick-logging hit></a-entity>
