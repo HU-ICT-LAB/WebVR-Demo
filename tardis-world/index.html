@@ -11,7 +11,7 @@
         <script src="scripts/robot_controller.js" type="text/javascript"></script>
     </head>   
     <body>
-        <a-scene cursor="rayOrigin:mouse" generate_trees update_trees  generate_floor update_floor fog="type: exponential; color: #AAA; density: 0.1">
+        <a-scene cursor="rayOrigin:mouse" generate_trees update_trees  generate_floor update_floor fog="type: exponential; color: #AAA; density: 0.15">
             <a-assets>
             <a-asset-item id="house" src="assets\models\WoodHouse.glb"></a-asset-item>
             <a-asset-item id="tree" src="assets\models\dark_tree1.glb"></a-asset-item>
@@ -22,7 +22,9 @@
             </a-entity>
 
             <a-entity id="rig" headbob-movement relative-movement>
-                    <a-entity id="camera" wasd-controls camera look-controls>=</a-entity>
+                    <a-entity id="camera"  wasd-controls camera look-controls>
+                        <a-sky color="AAAAAA"></a-sky>
+                    </a-entity>
                     <a-entity class="hand" id="leftcontrl" oculus-touch-controls="hand: left" thumbstick-logging ></a-entity>
                     <a-entity class="hand" id="rightcontrl" oculus-touch-controls="hand: right" thumbstick-logging></a-entity>
 
@@ -63,17 +65,13 @@
                 <a-box width="0.05"  depth="0.15"   height="0.8"  position="0.425 -0.1 0"></a-box>
                 <a-box width="0.05"  depth="0.15"   height="0.8"  position="-0.425 -0.1 0"></a-box>
 
-
-
-
-
             </a-entity>
 
             <a-entity robot_controller button_listener></a-entity>
 
 
 
-            <a-sky color="AAAAAA"></a-sky>
+            
         </a-scene>
     </body>
 </html>
