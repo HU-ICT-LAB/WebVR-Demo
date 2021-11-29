@@ -63,6 +63,11 @@ AFRAME.registerComponent('pushable',{
         this.home_position = new THREE.Vector3();
         this.el.addEventListener('hitstart', colliding.bind(this))
         this.el.addEventListener('hitend', collend.bind(this));
+        this.el.classList.add("clickable");
+
+        this.el.addEventListener("mousedown", colliding.bind(this))
+        this.el.addEventListener("mouseup", collend.bind(this))
+        this.el.addEventListener("mouseleave", collend.bind(this))
     }
 })
 

@@ -70,6 +70,7 @@ broker = "broker.emqx.io"
 port = 1883
 client1 = paho.Client("ROBOT_Controller")  # create client object
 running = True
+moving = False
 
 movement_queue = queue.Queue()
 
@@ -95,8 +96,10 @@ def on_message(client, userdata, msg):
     if msg.topic == "hbo_ict_robot_arm_controll":
         print("msg recieved")
         print(msg.payload)
-        payload = json.loads(msg.payload)
-        movement_queue.put( payload['command'])
+        if not moving:
+            payload = json.loads(msg.payload)
+            movement_queue.put( payload['command'])
+            moving = True
 
 def movement_thread():
     print("started thread")
@@ -124,6 +127,7 @@ def movement_thread():
             break
         else:
             pass
+        moving = False
 
 
 
