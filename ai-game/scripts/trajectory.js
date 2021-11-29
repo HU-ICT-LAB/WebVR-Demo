@@ -71,7 +71,7 @@ function positionsOfBox(aiEntity) {
 
     console.log(boxpos);
     console.log(width, height, depth);
-    console.log(scale.x, scale,y, scale,z);
+    console.log(scale.x, scale.y, scale.z);
 
     const pos1 = new THREE.Vector3();
     pos1.x = boxpos.x - (width/2) * scale.x;
