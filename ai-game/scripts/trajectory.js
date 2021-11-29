@@ -100,7 +100,50 @@ function checkIfGonnaHit(listOfTrajectory, corner1, corner2) {
     return cordsBetweenCorners;
 }
 
-let savedPositions = [];
+/**
+ * This function calculates the trajectory and
+ * calls other functions to check if the aiBot is going to be hit and moves the bot if necessary.
+ * @param coordinate1 The first coordinate of the punch
+ * @param coordinate2 The second coordinate of the punch
+ * @param aiBot The aiBot or opponent you are boxing against
+ */
+function executeCalculations(coordinate1, coordinate2, aiBot) {
+    const dif = calculateSteps(coordinate1, coordinate2);
+
+    const trajectory = [coordinate1];
+
+    while (dif.x + dif.y + dif.z !== 0 && diff(coordinate1.x, trajectory[trajectory.length - 1].x) < 1 && diff(coordinate1.y, trajectory[trajectory.length - 1].y) < 1 && diff(coordinate1.z, trajectory[trajectory.length - 1].z) < 1) {
+        const endpoint = new THREE.Vector3();
+        endpoint.x = trajectory[trajectory.length - 1].x + dif.x;
+        endpoint.y = trajectory[trajectory.length - 1].y + dif.y;
+        endpoint.z = trajectory[trajectory.length - 1].z + dif.z;
+        trajectory.push(endpoint);
+    }
+
+    const botPos = positionsOfBox(aiBot);
+
+    const botHit = checkIfGonnaHit(trajectory, botPos[0], botPos[1]);
+
+    if (botHit.length > 0) {
+        dodgeMovement(aiBot, botHit);
+    }
+}
+
+/**
+ * This function refines coordinates.
+ * @param coordinate The coordinate you want to refine
+ * @returns {*} The refined coordinate
+ */
+function refineCoordinate(coordinate) {
+    const pos = new THREE.Vector3();
+    pos.x = coordinate['x'];
+    pos.y = coordinate['y'];
+    pos.z = coordinate['z'];
+    return pos
+}
+
+let positionsRight = [];
+let positionsLeft = [];
 
 //Calculate trajectory and moves targetBox if in its trajectory
 AFRAME.registerComponent('trajectory', {
@@ -119,44 +162,23 @@ AFRAME.registerComponent('trajectory', {
             this.lastTick = Math.round(time);
 
             const list = getPositions(this.el);
-            const obj_rc = list[1];
+            const obj_rc = refineCoordinate(list[1]);
+            const obj_lc = refineCoordinate(list[2]);
 
-            const pos = new THREE.Vector3();
-            pos.x = obj_rc['x'];
-            pos.y = obj_rc['y'];
-            pos.z = obj_rc['z'];
-
-            savedPositions.push(pos);
+            positionsRight.push(obj_rc);
+            positionsLeft.push(obj_lc);
         }
 
         //Runs if there are two measured points of the hand
-        if (savedPositions.length === 2) {
-            const box1 = savedPositions[0];
-            const box2 = savedPositions[1];
+        if (positionsRight.length === 2) {
+            executeCalculations(positionsRight[0], positionsRight[1], this.aiBot);
+            positionsRight = [];
 
-            const dif = calculateSteps(box1, box2);
+        }
 
-            const trajectory = [box1];
-
-            while (diff(box1.x, trajectory[trajectory.length - 1].x) < 1 && diff(box1.y, trajectory[trajectory.length - 1].y) < 1 && diff(box1.z, trajectory[trajectory.length - 1].z) < 1) {
-                const endpoint = new THREE.Vector3();
-                endpoint.x = trajectory[trajectory.length - 1].x + dif.x;
-                endpoint.y = trajectory[trajectory.length - 1].y + dif.y;
-                endpoint.z = trajectory[trajectory.length - 1].z + dif.z;
-                trajectory.push(endpoint);
-            }
-
-            const botPos = positionsOfBox(this.aiBot);
-
-            const botHit = checkIfGonnaHit(trajectory, botPos[0], botPos[1]);
-
-            if (botHit.length > 0) {
-                dodgeMovement(this.aiBot, botHit)
-            }
-
-            if (savedPositions.length >= 2) {
-                savedPositions = [];
-            }
+        if (positionsLeft.length === 2) {
+            executeCalculations(positionsLeft[0], positionsLeft[1], this.aiBot);
+            positionsLeft = [];
         }
     }
 })
