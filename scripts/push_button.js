@@ -57,6 +57,7 @@ AFRAME.registerComponent('pushable',{
       },
     /**
      * Initialisation function of the component
+     * It adds the event listeners and makes sure the buttons are pressable
      */
     init: function(){
         this.collided = false
