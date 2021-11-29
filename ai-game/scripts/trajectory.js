@@ -100,6 +100,13 @@ function checkIfGonnaHit(listOfTrajectory, corner1, corner2) {
     return cordsBetweenCorners;
 }
 
+/**
+ * This function calculates the trajectory and
+ * calls other functions to check if the aiBot is going to be hit and moves the bot if necessary.
+ * @param coordinate1 The first coordinate of the punch
+ * @param coordinate2 The second coordinate of the punch
+ * @param aiBot The aiBot or opponent you are boxing against
+ */
 function executeCalculations(coordinate1, coordinate2, aiBot) {
     const dif = calculateSteps(coordinate1, coordinate2);
 
@@ -122,6 +129,11 @@ function executeCalculations(coordinate1, coordinate2, aiBot) {
     }
 }
 
+/**
+ * This function refines coordinates.
+ * @param coordinate The coordinate you want to refine
+ * @returns {*} The refined coordinate
+ */
 function refineCoordinate(coordinate) {
     const pos = new THREE.Vector3();
     pos.x = coordinate['x'];
