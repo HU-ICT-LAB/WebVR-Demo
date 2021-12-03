@@ -15,13 +15,14 @@
             <!-- sky texture -->
             <img id="sky" src="assets/sky.jpg">
 
-            <a-mixin id="voxel" geometry="primitive: box; height: 0.5; width: 0.5; depth: 0.5"
-                material="shader: standard; color: red" snap="offset: 0.25 0.25 0.25; snap: 0.5 0.5 0.5"></a-mixin>
+            <a-mixin id="voxel" geometry="primitive: box; height: 0.25; width: 0.25; depth: 0.25"
+                material="shader: standard" snap="offset: 0.15 0.15 0.15; snap: 0.25 0.25 0.25"></a-mixin>
 
         </a-assets>
 
         <!-- add ground -->
-        <a-plane color="green" class="collidable" rotation="-90 0 0" width="60" height="60"></a-plane>
+        <a-plane color="green" class="collidable" rotation="-90 0 0" width="60" height="60" material="opacity: 0.0; transparent: true"></a-plane>
+        <a-entity geometry="primitive: terrain" position="0 -40 0" scale="0.2 0.2 0.2" rotation="-90 0 0 " color="green" set-p></a-entity>
 
         <!-- add sky -->
         <a-sky src="#sky" position="-200 0 0"></a-sky>
