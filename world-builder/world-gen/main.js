@@ -4,8 +4,8 @@ var GLOBALMIN = 1
 AFRAME.registerGeometry('terrain', {
     init: function (data) {
         console.log(data);
-        let WIDTH = 256;
-        let HEIGHT = 256;
+        let WIDTH = 250;
+        let HEIGHT = 250;
         let SIZE_AMPLIFIER = 5;
         let HEIGHT_AMPLIFIER = 1;
         var plane = new THREE.PlaneBufferGeometry(WIDTH * SIZE_AMPLIFIER, HEIGHT * SIZE_AMPLIFIER, WIDTH - 1, HEIGHT - 1);
@@ -13,14 +13,17 @@ AFRAME.registerGeometry('terrain', {
 
         // TODO remove canvas. Gen terrain without
         var canv = document.createElement('canvas');
-        canv.width = "256"
-        canv.height = "256"
-        let pv = 1.0
-        let kv = 0.5
+        canv.width = "250"
+        canv.height = "250"
+        let pv = 1
+        let kv = 0.2
         let ctx = canv.getContext("2d");
-        let outArray = [];
+        let generalArray = [];
         let max = 0;
         let min = 5;
+        let totalInPlayableArea = 0;
+        let avgInPlayableArea = 0;
+        let c  = 0;
         for (let y = 0; y < HEIGHT; y++) {
             let rowArray = [];
             for (let x = 0; x < WIDTH; x++) {
@@ -34,66 +37,118 @@ AFRAME.registerGeometry('terrain', {
                     min = n;
                 }
                 // The flatspot.
-                if ((y > 98 && y < 158) && (x > 98 && x < 158)) {
+                if ((y > 75 && y < 175) && (x > 75 && x < 175)) {
+                    c += 1
+                    let n = noise2D(x * 0.01, y * 0.01);
+                    n += pv;
+                    n *= kv;
+                    totalInPlayableArea += n;
                     n = 0;
                 }
                 rowArray.push(n);
-                let rgb = Math.round(255 * n);
-                ctx.fillStyle = "rgba(" + rgb + "," + rgb + "," + rgb + ",1.0)";
+                
+            }
+            generalArray.push(rowArray);
+        }
+
+        avgInPlayableArea = totalInPlayableArea / c;
+        console.log('avg: '+ avgInPlayableArea);
+
+
+        let minN = 1;
+        y = 75
+        for (x = 75; x < 175; x++){
+            edgeN = generalArray[y][x];
+            if (edgeN <  minN){
+                minN = edgeN;
+            }
+        }
+        y = 175
+        for (x = 75; x < 175; x++){
+            edgeN = generalArray[y][x];
+            if (edgeN <  minN){
+                minN = edgeN;
+            }
+        }
+        x = 75
+        for (y = 75; y < 175; y++){
+            edgeN = generalArray[y][x];
+            if (edgeN <  minN){
+                minN = edgeN;
+            }
+        }
+        x = 175
+        for (y = 75; y < 75; y++){
+            edgeN = generalArray[y][x];
+            if (edgeN <  minN){
+                minN = edgeN;
+            }
+        }
+        console.log(minN);
+
+        for(let y = 75; y < 175; y++){
+            for(let x = 75; x < 175; x++){
+                generalArray[y][x] = minN;
+            }
+        }
+
+
+        let upperEdge = 75;
+        let rightEdge = 175;
+        let lowerEdge = 175;
+        let leftEdge = 75;
+
+        let smooth = false;
+
+        while (!smooth) {
+            for (let x = 75; x < 175; x++){
+                nextN = generalArray[upperEdge-1][x];
+                total = nextN + generalArray[upperEdge][x];
+                generalArray[upperEdge][x] = total / 2;
+
+            }
+
+            for (let y = 75; y < 175; y++){
+                nextN = generalArray[y][rightEdge+1];
+                total = nextN + generalArray[y][rightEdge];
+                generalArray[y][rightEdge] = total / 2;
+
+            }
+
+            for (let x = 75; x < 175; x++){
+                nextN = generalArray[lowerEdge+1][x];
+                total = nextN + generalArray[lowerEdge][x];
+                generalArray[lowerEdge][x] = total / 2;
+
+            }
+
+            for (let y = 75; y < 175; y++){
+                nextN = generalArray[y][leftEdge-1];
+                total = nextN + generalArray[y][leftEdge];
+                generalArray[y][leftEdge] = total / 2;
+
+            }
+            upperEdge++;
+            rightEdge--;
+            lowerEdge--;
+            leftEdge++;
+
+            if(upperEdge == 122){
+                smooth = true;
+            } 
+        }
+
+
+        for(let y = 0; y < 250; y++){
+            for(let x = 0; x < 250; x++){
+                let n = generalArray[y][x];
+                let rgb = Math.round(255*n);
+                ctx.fillStyle = "rgba("+rgb+","+rgb+","+rgb+",1.0)";
                 ctx.fillRect(x, y, 1, 1);
             }
-            outArray.push(rowArray);
         }
 
 
-        // Get the lowest surrounding pixel
-        let minPixelAroundFlatSpot = 1;
-        let y = 98
-        for (let x = 98; x < 158; x++) {
-            let pixelVal = outArray[y][x];
-            if (pixelVal < minPixelAroundFlatSpot) {
-                minPixelAroundFlatSpot = pixelVal
-            }
-        }
-
-        y = 158
-        for (let x = 98; x < 158; x++) {
-            let pixelVal = outArray[y][x];
-            if (pixelVal < minPixelAroundFlatSpot) {
-                minPixelAroundFlatSpot = pixelVal
-            }
-        }
-
-        let x = 98
-        for (let y = 98; y < 158; y++) {
-            let pixelVal = outArray[y][x];
-            if (pixelVal < minPixelAroundFlatSpot) {
-                minPixelAroundFlatSpot = pixelVal
-            }
-        }
-
-        x = 158
-        for (let y = 98; y < 158; y++) {
-            let pixelVal = outArray[y][x];
-            if (pixelVal < minPixelAroundFlatSpot) {
-                minPixelAroundFlatSpot = pixelVal
-            }
-        }
-
-        console.log(minPixelAroundFlatSpot);
-
-        // Set the flat spot to the lowest surrounding terrain height.
-        for (let y = 99; y < 158; y++) {
-            for (let x = 99; x < 158; x++) {
-                n = minPixelAroundFlatSpot;
-                outArray[y][x] = n
-                let rgb = Math.round(255 * n);
-                ctx.fillStyle = "rgba(" + rgb + "," + rgb + "," + rgb + ",1.0)";
-                ctx.fillRect(x, y, 1, 1);
-            }
-        }
-
-        let flattenRange = 10
 
         data = canv.getContext("2d").getImageData(0, 0, WIDTH, HEIGHT).data;
 
@@ -108,7 +163,7 @@ AFRAME.registerGeometry('terrain', {
         plane.computeFaceNormals();
         plane.computeVertexNormals();
 
-        GLOBALMIN = minPixelAroundFlatSpot
+        // GLOBALMIN = minPixelAroundFlatSpot
         console.log(plane);
         this.geometry = plane;
     }
