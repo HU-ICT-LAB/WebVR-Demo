@@ -13,7 +13,8 @@ AFRAME.registerComponent('teleporter',{
         this.home_position = new THREE.Vector3();
         this.el.setAttribute("button_listener", "button_channel: teleporter_" + this.data.teleporter_id)
         this.el.addEventListener('teleporter_pressed', this.teleportsequence.bind(this))
-        this.el.addEventListener("player_teleported", this.recievePlayer.bind(this))
+        this.el.addEventListener("player_teleported", this.end_animation.bind(this))
+        this.el.addEventListener("start_teleport", this.start_animation.bind(this))
 
         var tube = document.createElement("a-cylinder")
         tube.setAttribute("material","side: double; transparent: true; opacity: 0.3")
@@ -41,6 +42,13 @@ AFRAME.registerComponent('teleporter',{
         top.setAttribute("color", "#FFFFFF")
         this.el.appendChild(top)
 
+        var floor = document.createElement("a-cylinder")
+        floor.setAttribute("position", "0 0 0")
+        floor.setAttribute("height", "0.15")
+        floor.setAttribute("radius",  "1.2")
+        floor.setAttribute("color", "#FFFFFF")
+        this.el.appendChild(floor)
+
         var base = document.createElement("a-box")
         base.setAttribute("height", "1")
         base.setAttribute("width", "0.1")
@@ -49,31 +57,38 @@ AFRAME.registerComponent('teleporter',{
         base.setAttribute("position", "0 0.5 0")
         this.el.appendChild(base)
 
-        var button = document.createElement("a-entity")
-        button.setAttribute("button", "button_channel: teleporter_" + this.data.teleporter_id +"; event_start: teleporter_pressed;")
+        // var button = document.createElement("a-entity")
+        // button.setAttribute("button", "button_channel: teleporter_" + this.data.teleporter_id +"; event_start: teleporter_pressed;")
+        // button.setAttribute("position", "0 1.05 0")
+        // this.el.appendChild(button)
+
+        var button = document.createElement("a-button")
+        button.setAttribute("button_channel", "teleporter_" + this.data.teleporter_id)
+        button.setAttribute("event_start","teleporter_pressed")
         button.setAttribute("position", "0 1.05 0")
         this.el.appendChild(button)
 
     },
 
-    teleportsequence: function(){
-        if( !teleporting){
-            teleporting = true
+    start_animation: function(){
+        var tub = this.el.querySelector("#tube_"+ this.data.teleporter_id)
+        tub.emit("teleporter_initiated")
+        setTimeout(function() {
             var tub = this.el.querySelector("#tube_"+ this.data.teleporter_id)
-            tub.emit("teleporter_initiated")
-            setTimeout(function() {
-                var tub = this.el.querySelector("#tube_"+ this.data.teleporter_id)
-                tub.emit("teleporter_initiated_2")
-            }.bind(this), 2000);
-            //start transparency animation
-            //teleport player
-            setTimeout( function(){
-                this.teleportPlayer()
-            }.bind(this), 4500);
-        }
+            tub.emit("teleporter_initiated_2")
+        }.bind(this), 2000);
     },
 
-    teleportPlayer: function(){
+    end_animation: function(){
+        var tub = this.el.querySelector("#tube_"+ this.data.teleporter_id)
+        tub.emit("player_recieved")
+        setTimeout(function() {
+            tub.emit("player_recieved_2")
+            teleporting = false
+        }.bind(this), 2000);
+    },
+
+    teleportsequence: function(){
         var TeleporterList = this.el.sceneEl.querySelectorAll("[teleporter]")
         var Destteleporter
         for (i = 0; i <  TeleporterList.length; i++){
@@ -82,8 +97,20 @@ AFRAME.registerComponent('teleporter',{
                 break
             }
         }
+        if( !teleporting){
+            teleporting = true
+            this.start_animation()
+            Destteleporter.emit("start_teleport")
+
+            setTimeout( function() {
+                this.teleportPlayer(Destteleporter)
+            }.bind(this), 4500);
+        }
+    },
+
+    teleportPlayer: function(target){
         var cur_location = this.el.getAttribute('position').clone()
-        var dest_location = Destteleporter.getAttribute('position').clone()
+        var dest_location = target.getAttribute('position').clone()
         var dif = new THREE.Vector3
         dif.x = dest_location.x - cur_location.x
         dif.y = dest_location.y - cur_location.y
@@ -93,19 +120,24 @@ AFRAME.registerComponent('teleporter',{
         var pos = rig.getAttribute("position")
         pos.add(dif)
         rig.setAttribute("position", pos)
-        Destteleporter.emit("player_teleported")
-    },
-
-    recievePlayer: function(){
-        var tub = this.el.querySelector("#tube_"+ this.data.teleporter_id)
-        tub.emit("player_recieved")
-        console.log("player recieved")
-        setTimeout(function() {
-            tub.emit("player_recieved_2")
-            setTimeout(function() {
-                teleporting = false
-            },2000)
-        }.bind(this), 2000);
+        target.emit("player_teleported")
+        this.end_animation()
     }
       
 })
+
+
+AFRAME.registerPrimitive('a-teleporter', {
+    // Attaches the `ocean` component by default.
+    // Defaults the ocean to be parallel to the ground.
+    defaultComponents: {
+      teleporter: {},
+      position: {x:0, y:0, z:0}
+    },
+  
+    // Maps HTML attributes to the `ocean` component's properties.
+    mappings: {
+      teleporter_id: 'teleporter.teleporter_id',
+      target_id: 'teleporter.target_id'
+    }
+});
