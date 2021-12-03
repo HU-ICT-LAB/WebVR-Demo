@@ -1,3 +1,12 @@
+
+
+
+function sendLogToServer(msg){
+  client.publish("world-builder-debug", JSON.stringify(msg))
+}
+
+
+
 // Add objects to the a scene by pressing right hand controller trigger.
 AFRAME.registerComponent('add-object', {
   events: {
@@ -8,7 +17,7 @@ AFRAME.registerComponent('add-object', {
           
           newEl.setAttribute('position', position);
           newEl.setAttribute('mixin', 'voxel');
-          newEl.setAttribute('class', 'collidable');
+          newEl.setAttribute('class', 'collidable block');
           
           scene.appendChild(newEl);
       }
@@ -37,6 +46,10 @@ AFRAME.registerComponent('snap', {
     pos.y = Math.floor(pos.y / data.snap.y) * data.snap.y + data.offset.y;
     pos.z = Math.floor(pos.z / data.snap.z) * data.snap.z + data.offset.z;
 
+    if (pos.y < 0) {
+      pos.y = data.offset.y;
+    }
+
     this.el.setAttribute('position', pos);
   }
 });
@@ -45,7 +58,7 @@ AFRAME.registerComponent('snap', {
 AFRAME.registerComponent('delete-object', {
   events: {
     click: function(e) {
-      const obj = e.detail.intersection.object.el;
+      let obj = e.detail.intersection.object.el;
       obj.parentNode.removeChild(obj);
     }
   }
