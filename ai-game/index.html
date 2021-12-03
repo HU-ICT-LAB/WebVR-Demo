@@ -41,7 +41,7 @@
         <img id="floor" src="assets/textures/Carpet.jpg">
         <img id="Sky" src="assets/textures/background.jpg">
         <img id="Metal" src="assets/textures/Metal.png">
-        <a-asset-item id="Robot" src="assets\models\Robot_gltf/scene.gltf"></a-asset-item>
+        <a-asset-item id="Robot" src="assets\models\Robot_gltf/scene.glb"></a-asset-item>
         <a-mixin id="head" geometry="primitive:box; height:50; width:40; depth:30;" material="opacity: 0.3; transparent: true" ></a-mixin>
         <a-mixin id="body" geometry="primitive:box; height:70; width:60; depth:55;" material="opacity: 0.3; transparent: true" handle-events aabb-collider></a-mixin>
 
@@ -78,8 +78,9 @@
     </a-plane>
 
     <!--             Robot Playermodel & Hitbox -->
-    <a-entity id="robotmodel" gltf-model="#Robot" scale="0.007 0.01 0.01" position="0 0 -1"
-              animation="property: position; from: 0 0 -1; to: 0 0 0; dur: 10000; easing: linear">
+    <!--             Height is just a temporary change so we can use the model.
+                     Later on we want to use the hitboxes to check if the robotmodel will be hit.   -->
+    <a-entity id="robotmodel" gltf-model="#Robot" position="0 0 -1" height="4">
         <a-hitbox color="#333333" position="0 2 0" >
             <a-circle
                     id="middlepoint" color="#000000" scale="5 3.5 50" position="0 140 0">
