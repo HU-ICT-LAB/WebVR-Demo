@@ -154,7 +154,8 @@ AFRAME.registerComponent('trajectory', {
         this.lastTick = 0;
 
         //Select the opponent entity
-        this.aiBot = document.querySelector("#"+this.data.targetBox)
+        this.aiBot = document.querySelector("#"+this.data.targetBox);
+        this.hitboxes = this.aiBot.querySelectorAll('#hitbox');
     },
     tick: function (time) {
         //Runs every 2 seconds
@@ -169,15 +170,21 @@ AFRAME.registerComponent('trajectory', {
             positionsLeft.push(obj_lc);
         }
 
+        if (positionsRight.length === 2 || positionsLeft.length === 2) {
+            this.hitboxes.forEach(element => {
+                console.log(element.getAttribute('position'));
+            })
+        }
+
         //Runs if there are two measured points of the hand
         if (positionsRight.length === 2) {
-            executeCalculations(positionsRight[0], positionsRight[1], this.aiBot);
+            executeCalculations(positionsRight[0], positionsRight[1], this.aiBot, this.hitboxes);
             positionsRight = [];
 
         }
 
         if (positionsLeft.length === 2) {
-            executeCalculations(positionsLeft[0], positionsLeft[1], this.aiBot);
+            executeCalculations(positionsLeft[0], positionsLeft[1], this.aiBot, this.hitboxes);
             positionsLeft = [];
         }
     }
