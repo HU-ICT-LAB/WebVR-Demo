@@ -1,13 +1,23 @@
+//a variable to check if the player is already teleporting
 var teleporting = false
 
+/**
+ * A component to create a teleporter. This component generates a few primitives and a button. 
+ * By setting its id and target you can teleport between teleporters by pressing the button.
+ */
 AFRAME.registerComponent('teleporter',{
+    /**
+     * teleporter_id the id of this teleporter
+     * targer_id the id of the target teleporter/ to wich teleporter do you want to teleport.
+     */
     schema: {
         teleporter_id: {default: 0},
         target_id: {default: 1},
       },
     /**
      * Initialisation function of the component
-     * It adds the event listeners and makes sure the buttons are pressable
+     * This function adds the base, top, button, button pilar and tube as child entities to the entity. 
+     * It sets the properties of these entities and adds the correctt event listeners and animations
      */
     init: function(){
         this.home_position = new THREE.Vector3();
@@ -57,10 +67,6 @@ AFRAME.registerComponent('teleporter',{
         base.setAttribute("position", "0 0.5 0")
         this.el.appendChild(base)
 
-        // var button = document.createElement("a-entity")
-        // button.setAttribute("button", "button_channel: teleporter_" + this.data.teleporter_id +"; event_start: teleporter_pressed;")
-        // button.setAttribute("position", "0 1.05 0")
-        // this.el.appendChild(button)
 
         var button = document.createElement("a-button")
         button.setAttribute("button_channel", "teleporter_" + this.data.teleporter_id)
@@ -70,6 +76,9 @@ AFRAME.registerComponent('teleporter',{
 
     },
 
+    /**
+     * This function starts the multiple stages of the start animation: teleporter_initiated and teleporter_initiated2
+     */
     start_animation: function(){
         var tub = this.el.querySelector("#tube_"+ this.data.teleporter_id)
         tub.emit("teleporter_initiated")
@@ -79,6 +88,9 @@ AFRAME.registerComponent('teleporter',{
         }.bind(this), 2000);
     },
 
+    /**
+     * This function starts the multiple stages of the end animation: player_recieved and player_recieved2
+     */
     end_animation: function(){
         var tub = this.el.querySelector("#tube_"+ this.data.teleporter_id)
         tub.emit("player_recieved")
@@ -88,6 +100,10 @@ AFRAME.registerComponent('teleporter',{
         }.bind(this), 2000);
     },
 
+
+    /**
+     * This function starts the teleportation sequence. It finds the correct target teleporter using the target_id and starts the correct events at the right time.
+     */
     teleportsequence: function(){
         var TeleporterList = this.el.sceneEl.querySelectorAll("[teleporter]")
         var Destteleporter
@@ -108,6 +124,10 @@ AFRAME.registerComponent('teleporter',{
         }
     },
 
+    /**
+     * this function teleports the player. It gets the location of the current teleporter and the target teleporter. This difference is added onto the rig of the player.
+     * This way the player doesnt end up in the middle of the teleporter but on the same spot as the one he teleported from. 
+     */
     teleportPlayer: function(target){
         var cur_location = this.el.getAttribute('position').clone()
         var dest_location = target.getAttribute('position').clone()
@@ -126,16 +146,17 @@ AFRAME.registerComponent('teleporter',{
       
 })
 
-
+/**
+ * A wrapper around the teleporter component so you can use it as a entity.
+ */
 AFRAME.registerPrimitive('a-teleporter', {
-    // Attaches the `ocean` component by default.
-    // Defaults the ocean to be parallel to the ground.
+    // Attaches the `button` component by default..
     defaultComponents: {
       teleporter: {},
       position: {x:0, y:0, z:0}
     },
   
-    // Maps HTML attributes to the `ocean` component's properties.
+    // Maps HTML attributes to the `teleporter` component properties
     mappings: {
       teleporter_id: 'teleporter.teleporter_id',
       target_id: 'teleporter.target_id'
