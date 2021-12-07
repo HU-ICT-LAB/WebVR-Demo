@@ -30,7 +30,46 @@
                     <a-entity class="hand" id="rightcontrl" oculus-touch-controls="hand: right" thumbstick-logging></a-entity>
             </a-entity>
 
-            <a-entity rotation="0 0 0"button="button_color: #AA0000" rotation="0 0 0" position="0 1 0"></a-entity>
+            <a-entity id="button_panel" position="8 0.7 0" >
+                <a-box color="tomato" width="0.8" depth="0.2" height="0.5" rotation="-25 0 0" position="0 0.30 0">
+
+
+                    <a-entity id="left"    rotation="90 0 0" button="button_color: #fc6f03; event_start: move_left"     position="-0.3  0    0.15">
+                        <a-text value="left" align="center" rotation="-90 0 0" position="0 0 -0.07" scale="0.15 0.15 0.15"></a-text>
+                    </a-entity>
+                    <a-entity id="right"    rotation="90 0 0" button="button_color: #3003fc; event_start: move_right"    position="-0.05  0    0.15">
+                        <a-text value="right" align="center" rotation="-90 0 0" position="0 0 -0.07" scale="0.15 0.15 0.15"></a-text>
+                    </a-entity>
+
+                    <a-entity id="forward"  rotation="90 0 0" button="button_color: #fc0303; event_start: move_forward"  position="-0.175  0.15  0.15">
+                        <a-text value="foward" align="center" rotation="-90 0 0" position="0 0 -0.07" scale="0.15 0.15 0.15"></a-text>
+                    </a-entity>
+                    <a-entity id="backward" rotation="90 0 0" button="button_color: #6bfc03; event_start: move_backward" position="-0.175  -0.15  0.15">
+                        <a-text value="backward" align="center" rotation="-90 0 0"  position="0 0 -0.07" scale="0.15 0.15 0.15"></a-text>
+                    </a-entity>
+
+                    <a-entity id="up"       rotation="90 0 0" button="button_color: #fc037f; event_start: move_up"       position="0.2 0.15 0.15">
+                        <a-text value="up" align="center"  rotation="-90 0 0" position="0 0 -0.07" scale="0.15 0.15 0.15"></a-text>
+                    </a-entity>
+                    <a-entity id="down"     rotation="90 0 0" button="button_color: #03fc8c; event_start: move_down"     position="0.2 0 0.15">
+                        <a-text value="down" align="center"  rotation="-90 0 0" position="0 0 -0.07" scale="0.15 0.15 0.15"></a-text>
+                    </a-entity>
+
+                    <a-entity id="open"     rotation="90 0 0" button="button_color: #1e008a; event_start: move_open"     position="0.1  -0.15   0.15">
+                        <a-text value="open" align="center" rotation="-90 0 0"  position="0 0 -0.07" scale="0.15 0.15 0.15"></a-text>
+                    </a-entity>
+                    <a-entity id="close"    rotation="90 0 0" button="button_color: #8a8a00; event_start: move_close"    position="0.30  -0.15  0.15">
+                        <a-text value="close" align="center" rotation="-90 0 0" position="0 0 -0.07" scale="0.15 0.15 0.15"></a-text>
+                    </a-entity>
+                </a-box>
+                <a-box width="0.05"  depth="0.15"   height="0.8"  position="0.425 -0.1 0"></a-box>
+                <a-box width="0.05"  depth="0.15"   height="0.8"  position="-0.425 -0.1 0"></a-box>
+
+            </a-entity>
+
+            <a-entity robot_controller button_listener></a-entity>
+
+
 
             <a-sky color="AAAAAA"></a-sky>
         </a-scene>

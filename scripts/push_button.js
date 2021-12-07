@@ -77,11 +77,11 @@ AFRAME.registerComponent('pushable',{
  */
 AFRAME.registerComponent('button',{
     schema: {
-        button_color: {default: '#FFF'},
+        button_color: {default: '#FF0000'},
         base_color: {default: '#000'},
         event_start: {type: 'string', default: "buttonpressed"},
         event_stop: {type: 'string', default: "buttonreleased"},
-        button_channel: {type: 'string', default: "button"}
+        button_channel: {type: 'string', default: "channel_1"}
       },
     /**
      * Initialisation function of the component, it generates a base and button of the base. It sets their values and components and attaches them to the parent entity
@@ -117,6 +117,27 @@ AFRAME.registerComponent('button',{
  */
 AFRAME.registerComponent('button_listener',{
     schema: {
-        button_channel: {type: 'string', default: "button"}
+        button_channel: {type: 'string', default: "channel_1"}
     }
 })
+
+
+
+AFRAME.registerPrimitive('a-button', {
+    // Attaches the `ocean` component by default.
+    // Defaults the ocean to be parallel to the ground.
+    defaultComponents: {
+      button: {},
+      rotation: {x: 0, y: 0, z: 0},
+      position: {x:0, y:0, z:0}
+    },
+  
+    // Maps HTML attributes to the `ocean` component's properties.
+    mappings: {
+      button_channel: 'button.button_channel',
+      button_color: 'button.button_color',
+      base_color: 'button.base_color',
+      event_start: 'button.event_start',
+      event_end: 'button.event_end'
+    }
+});
