@@ -13,25 +13,60 @@ function updatescore() {
 
 AFRAME.registerComponent('timerdown', {
     init: function () {
+        var game_start = false;
+
         /*
         create the sixtyseconds value which be used in the setinterval function to decrease it's number with 1 every second
          */
-        var sixtytimer = document.querySelector("#timer");
-        var score = document.querySelector("#score");
-        let sixtyseconds = 5;
-        var first = true;
-        setInterval(function () { //this code will decrease the value number every second
-            if (sixtyseconds === 0){
-                sixtyseconds = 5
-                sixtytimer.setAttribute('text', 'value', "Added!")
-               var username = document.querySelector("#username");
-                updatescore()
-               getrandomizedname(username)
-                // document.querySelector("#debug").setAttribute('text', 'value', "updatescore()");
+        this.el.addEventListener("startbutton_pressed", function () {
+            if (game_start === false) {
+                game_start = true
+                var timer = document.querySelector("#timer");
+                var score = document.querySelector("#score");
+                var timeout = 1000
+                let warming_uptime = 5;
+                var first = true;
+                var warming_up_ended = false
+
+                setInterval(function () { //this code will decrease the value number every second
+                    if (warming_uptime === 0) {
+                        warming_up_ended = true
+                        warming_uptime = "GO!"
+                        timer.setAttribute('text', 'value', "GO!")
+                        this.el.emit("warming_up_ended")
+                    } else if (Number.isInteger(warming_uptime)) {
+                        // document.querySelector("#debug").setAttribute('text', 'value', "decrease")
+                        timer.setAttribute('text', 'value', (warming_uptime--));
+                    } else {
+                        // timer.setAttribute('text', 'value', "Go!")
+                        timeout = 100000000000000
+
+                    }
+                }.bind(this), timeout);
+            }
+        }.bind(this))
 
 
-                ;}
-            else {
-                // document.querySelector("#debug").setAttribute('text', 'value', "decrease")
-                sixtytimer.setAttribute('text', 'value', (sixtyseconds--));}
-        }, 1000);}}) //1000 milliseconds = 1 second timer
+                //Game start
+                this.el.addEventListener("warming_up_ended", function() {
+                    let gametime = 6;
+                    console.log("warming up ended")
+                    setInterval(function () { //this code will decrease the value number every second
+                        if (gametime === 0) {
+                            gametime = "Game over"
+                            timer.setAttribute('text', 'value', "Game Over")
+                            var username = document.querySelector("#username");
+                            updatescore()
+                            getrandomizedname(username)
+                            game_start = false
+                            ;
+                        } else if (Number.isInteger(gametime)) {
+
+                            timer.setAttribute('text', 'value', (gametime--));
+                        }
+                    }, 1000);
+
+                }
+            )}
+
+    }) //1000 milliseconds = 1 second timer

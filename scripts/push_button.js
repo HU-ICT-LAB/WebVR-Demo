@@ -17,7 +17,7 @@ function colliding() {
         for(let i = 0; i < objects.length; i++){
             let chan = objects[i].components.button_listener.data.button_channel
             
-            if (chan == this.data.button_channel || chan == "all"){
+            if (chan === this.data.button_channel || chan === "all"){
                 objects[i].emit(this.data.event_start, {}, false)
             }
         }
@@ -37,7 +37,7 @@ function collend(){
         for(let i = 0; i < objects.length; i++){
             let chan = objects[i].components.button_listener.data.button_channel
             
-            if (chan == this.data.button_channel || chan == "all"){
+            if (chan === this.data.button_channel || chan === "all"){
                 objects[i].emit(this.data.event_stop, {}, false)
             }
         }
