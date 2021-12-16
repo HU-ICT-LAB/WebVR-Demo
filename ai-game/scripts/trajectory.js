@@ -3,7 +3,7 @@
  * devide it by 10 so you get tiny steps to calculate the trajectory.
  * @param pos1 Position 1
  * @param pos2 Position 2
- * @returns {THREE.Vector3} The step
+ * @returns {THREE.Vector3} The size of one step
  */
 function calculateSteps(pos1, pos2) {
     const vec1 = [pos1['x'], pos1['y'], pos1['z']]
@@ -48,38 +48,65 @@ function diff (num1, num2) {
 }
 
 /**
- * This function calculate the two outer vertices of the given enitty
- * @param aiEntity An entity
- * @returns {THREE.Vector3[]} Two positions in an array
+ * Get the right positions and attributes for the calculateCorners function
+ * and calls that function to calculate the outer corners of a (box) entity
+ * @param childEntity The entity that you want the corners to be calculated from
+ * @param parentEntity The parent entity of the childEntity if there is one
+ * @returns {THREE.Vector3[]} The two positions of the corners of the childEntity
  */
-function positionsOfBox(aiEntity) {
-    const boxpos = aiEntity.getAttribute('position');
-    const scale = aiEntity.getAttribute('scale');
-    let width = aiEntity.getAttribute('width');
-    let height = aiEntity.getAttribute('height');
-    let depth = aiEntity.getAttribute('depth');
+function positionsOfBox(childEntity, parentEntity = null) {
+    if (parentEntity === null) {
+        const boxpos = childEntity.getAttribute('position');
+        const scale = childEntity.getAttribute('scale');
+        let width = childEntity.getAttribute('width');
+        let height = childEntity.getAttribute('height');
+        let depth = childEntity.getAttribute('depth');
 
-    if (width === null) {
-        width = 1;
-    }
-    if (height === null) {
-        height = 1;
-    }
-    if (depth === null) {
-        depth = 1;
-    }
+        if (width === null) {
+            width = 1;
+        }
+        if (height === null) {
+            height = 1;
+        }
+        if (depth === null) {
+            depth = 1;
+        }
 
+        return calculateCorners(boxpos, width, height, depth, scale);
+
+    } else {
+        const att = getWorldAttributes(childEntity, parentEntity);
+        const boxpos = att[0];
+        const scale = att[1];
+        let width = att[3];
+        let depth = att[4];
+        let height = att[5];
+
+        return calculateCorners(boxpos, width, height, depth, scale);
+    }
+}
+
+/**
+ * Calculates the two corner positions of an (box) entity
+ * @param position Position of the entity
+ * @param width The width of the entity
+ * @param height The height of the entity
+ * @param depth The depth of the entity
+ * @param scale The scale of the entity
+ * @returns {THREE.Vector3[]} The two corner positions of the entity
+ */
+function calculateCorners(position, width, height, depth, scale) {
     const pos1 = new THREE.Vector3();
-    pos1.x = boxpos.x - (width/2) * scale.x;
-    pos1.y = boxpos.y - (height/2) * scale.y;
-    pos1.z = boxpos.z - (depth/2) * scale.z;
+    pos1.x = position.x - (width / 2) * scale.x;
+    pos1.y = position.y - (height / 2) * scale.y;
+    pos1.z = position.z - (depth / 2) * scale.z;
 
     const pos2 = new THREE.Vector3();
-    pos2.x = boxpos.x + (width/2) * scale.x;
-    pos2.y = boxpos.y + (height/2) * scale.y;
-    pos2.z = boxpos.z + (depth/2) * scale.z;
+    pos2.x = position.x + (width / 2) * scale.x;
+    pos2.y = position.y + (height / 2) * scale.y;
+    pos2.z = position.z + (depth / 2) * scale.z;
 
-    return [pos1, pos2];
+    return [pos1, pos2]
 }
 
 /**
@@ -101,13 +128,13 @@ function checkIfGonnaHit(listOfTrajectory, corner1, corner2) {
 }
 
 /**
- * This function calculates the trajectory and
- * calls other functions to check if the aiBot is going to be hit and moves the bot if necessary.
+ * Calculates the trajectory, calls checkIfGonnaHit to check if the trajectory interferes with the aiBot and moves the bot using dodgeMovement if necessary.
  * @param coordinate1 The first coordinate of the punch
  * @param coordinate2 The second coordinate of the punch
- * @param aiBot The aiBot or opponent you are boxing against
+ * @param aiBot The bot or opponent you are boxing against
+ * @param hitBoxes The hit boxes of the aiBot
  */
-function executeCalculations(coordinate1, coordinate2, aiBot) {
+function executeCalculations(coordinate1, coordinate2, aiBot, hitBoxes) {
     const dif = calculateSteps(coordinate1, coordinate2);
 
     const trajectory = [coordinate1];
@@ -120,13 +147,13 @@ function executeCalculations(coordinate1, coordinate2, aiBot) {
         trajectory.push(endpoint);
     }
 
-    const botPos = positionsOfBox(aiBot);
+    hitBoxes.forEach(element => {
+        const botHit = checkIfGonnaHit(trajectory, element[0], element[1]);
 
-    const botHit = checkIfGonnaHit(trajectory, botPos[0], botPos[1]);
-
-    if (botHit.length > 0) {
-        dodgeMovement(aiBot, botHit);
-    }
+        if (botHit.length > 0) {
+            dodgeMovement(aiBot, botHit);
+        }
+    })
 }
 
 /**
@@ -142,6 +169,39 @@ function refineCoordinate(coordinate) {
     return pos
 }
 
+/**
+ * Calculates the 'world values' of an entities attributes.
+ * @param childEntity The entity where you want the 'world values' calculated of
+ * @param parentEntity The parent entity of the childEntity
+ * @returns {*[]} The calculated 'world values' of the childEntity
+ */
+function getWorldAttributes(childEntity, parentEntity) {
+    const returns = [];
+    const attributes = ['position', 'scale', 'rotation', 'width', 'depth', 'height'];
+
+    attributes.forEach(element => {
+        let childAtt = childEntity.getAttribute(element);
+        let parentAtt = parentEntity.getAttribute(element);
+
+        if (element === 'scale') {
+            returns.push(sumObjects(childAtt, parentAtt, true));
+        } else if (element === 'width' || element === 'depth' || element === 'height') {
+            if (childAtt === null) {
+                childAtt = 0;
+            }
+            if (parentAtt === null) {
+                parentAtt = 0;
+            }
+            returns.push(parseFloat(childAtt) + parseFloat(parentAtt));
+
+        } else {
+            returns.push(sumObjects(childAtt, parentAtt));
+        }
+    })
+
+    return returns
+}
+
 let positionsRight = [];
 let positionsLeft = [];
 
@@ -154,7 +214,8 @@ AFRAME.registerComponent('trajectory', {
         this.lastTick = 0;
 
         //Select the opponent entity
-        this.aiBot = document.querySelector("#"+this.data.targetBox)
+        this.aiBot = document.querySelector("#"+this.data.targetBox);
+        this.hitBoxes = this.aiBot.querySelectorAll('#hitbox');
     },
     tick: function (time) {
         //Runs every 2 seconds
@@ -169,15 +230,22 @@ AFRAME.registerComponent('trajectory', {
             positionsLeft.push(obj_lc);
         }
 
+        if (positionsRight.length === 2 || positionsLeft.length === 2) {
+            this.stor = [];
+            this.hitBoxes.forEach((element) => {
+                this.stor.push(positionsOfBox(element, this.aiBot));
+            })
+        }
+
         //Runs if there are two measured points of the hand
         if (positionsRight.length === 2) {
-            executeCalculations(positionsRight[0], positionsRight[1], this.aiBot);
+            executeCalculations(positionsRight[0], positionsRight[1], this.aiBot, this.stor);
             positionsRight = [];
 
         }
 
         if (positionsLeft.length === 2) {
-            executeCalculations(positionsLeft[0], positionsLeft[1], this.aiBot);
+            executeCalculations(positionsLeft[0], positionsLeft[1], this.aiBot, this.stor);
             positionsLeft = [];
         }
     }

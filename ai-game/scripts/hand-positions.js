@@ -1,15 +1,24 @@
 /**
- * This function sum up each item of the two objects
+ * This function adds or multiplies items of the two given objects
  * @param obj1 Object 1
  * @param obj2 Object 2
- * @returns {{}} Object with the summed up items
+ * @param multiply A boolean to determine if the objects need to be multiplied
+ * @returns {{}} Object with the added or multiplied items
  */
-function sumObjects(obj1, obj2) {
+function sumObjects(obj1, obj2, multiply = false) {
     let sum = {};
 
-    Object.keys(obj1).forEach(key => {
-        sum[key] = obj1[key] + obj2[key]
-    })
+    if (multiply) {
+        Object.keys(obj1).forEach(key => {
+            sum[key] = obj1[key] * obj2[key]
+        })
+    }
+
+    else {
+        Object.keys(obj1).forEach(key => {
+            sum[key] = obj1[key] + obj2[key]
+        })
+    }
     return sum;
 }
 
