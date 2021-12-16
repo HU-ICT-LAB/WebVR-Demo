@@ -4,7 +4,7 @@
 <head>
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdn.rawgit.com/donmccurdy/aframe-extras/v4.1.2/dist/aframe-extras.min.js"></script>
-    <script src="addbbject.js"></script>
+    <script src="scripts/main.js"></script>
 </head>
 
 <body>
@@ -20,24 +20,19 @@
         </a-assets>
 
         <!-- add ground -->
-        <a-plane color="green" class="collidable" rotation="-90 0 0" width="100" height="100"></a-plane>
+        <a-plane id="ground" color="green" class="collidable" rotation="-90 0 0" width="60" height="60" material="opacity: 0.0; transparent: true"></a-plane>
+        <a-entity geometry="primitive: terrain" position="0 -40 0" scale="0.2 0.2 0.2" rotation="-90 0 0 " color="green" set-p></a-entity>
 
         <!-- add sky -->
         <a-sky src="#sky" position="-200 0 0"></a-sky>
 
-        <!-- <a-entity mixin="voxel" material="color: red" position="0 0 -2"></a-entity> -->
-
-        <!-- frame -->
-        <!-- <a-entity camera="active: true"></a-entity> -->
-        <!-- <a-entity geometry="primitive: box; height: 0.25; width: 0.25; depth: 0.25"></a-entity> -->
-
         <!-- add controllers -->
         <a-entity position="0 0 0">
             <a-entity camera position=" 0 1.5 1" look-controls></a-entity>
-            <a-entity id="leftHand" laser-controls="hand: left" raycaster="objects: .collidable; far: 5;"
+            <a-entity id="leftHand" laser-controls="hand: left" raycaster="objects: .collidable.block; far: 5;"
                 line="color: #CCCCCC" delete-object></a-entity>
             <a-entity id="rightHand" laser-controls="hand: right" raycaster="objects: .collidable; far: 5;"
-                line="color: #CCCCCC" add-object></a-entity>
+                line="color: #CCCCCC" add-object change-color></a-entity>
         </a-entity>
     </a-scene>
 </body>
