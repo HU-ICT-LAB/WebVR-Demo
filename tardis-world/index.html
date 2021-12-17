@@ -13,13 +13,16 @@
     <body>
         <a-scene cursor="rayOrigin:mouse" generate_trees update_trees  generate_floor update_floor fog="type: exponential; color: #AAA; density: 0.15">
             <a-assets>
-            <a-asset-item id="house" src="assets\models\WoodHouse.glb"></a-asset-item>
-            <a-asset-item id="tree" src="assets\models\dark_tree1.glb"></a-asset-item>
+                <a-asset-item id="house" src="assets\models\WoodHouse.glb"></a-asset-item>
+                <a-asset-item id="tree" src="assets\models\dark_tree1.glb"></a-asset-item>
+                
             </a-assets>
             <a-entity gltf-model="#house"
                     position="-4 0.4 0"
                     scale="2 2 2">
             </a-entity>
+
+            <a-video  src="rtp://145.89.161.93:8087" playsinline width="16" height="9" position="0 4.5 -20"></a-video>
 
             <a-entity id="rig" headbob-movement relative-movement>
                     <a-entity id="camera"  wasd-controls camera look-controls>
@@ -68,9 +71,6 @@
             </a-entity>
 
             <a-entity robot_controller button_listener></a-entity>
-
-
-
             
         </a-scene>
     </body>
