@@ -13,19 +13,19 @@ function updatescore() {
 
 AFRAME.registerComponent('timerdown', {
     init: function () {
-        var game_start = false;
+        let game_start = false;
 
         /*
         create the sixtyseconds value which be used in the setinterval function to decrease it's number with 1 every second
          */
         this.el.addEventListener("startbutton_pressed", function () {
+            //preperation for the Game aka warming up
             if (game_start === false) {
                 game_start = true
                 var timer = document.querySelector("#timer");
-                var score = document.querySelector("#score");
+                timer.setAttribute('color', "#0D249B")
                 var timeout = 1000
                 let warming_uptime = 5;
-                var first = true;
                 var warming_up_ended = false
 
                 setInterval(function () { //this code will decrease the value number every second
@@ -46,14 +46,16 @@ AFRAME.registerComponent('timerdown', {
             }
         }.bind(this))
 
-
                 //Game start
                 this.el.addEventListener("warming_up_ended", function() {
+                    var timer = document.querySelector("#timer");
+                    timer.setAttribute('color', "#06CCCA")
                     let gametime = 6;
                     console.log("warming up ended")
                     setInterval(function () { //this code will decrease the value number every second
                         if (gametime === 0) {
                             gametime = "Game over"
+                            timer.setAttribute('color', "#CC0621")
                             timer.setAttribute('text', 'value', "Game Over")
                             var username = document.querySelector("#username");
                             updatescore()
