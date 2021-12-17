@@ -24,13 +24,12 @@ function calculateSteps(pos1, pos2) {
 function dodgeMovement(bot, listOfHits) {
     const botPosition = bot.getAttribute('position');
     const firstTouch = listOfHits[0];
+    const width = bot.getAttribute('width');
+    const diff = botPosition.x - firstTouch.x;
 
-    const x_distance = botPosition.x - firstTouch.x;
-    const moveMultiplier = 1/x_distance*0.2;
+    botPosition.x = diff - (width/2);
 
-    const animationMoveString = "property: position; from: "+ botPosition.x + " " + botPosition.y + " " + (botPosition.z-1) + "; to: " + moveMultiplier + " " + botPosition.y + " " + (botPosition.z-1) + " dur: 10000; easing: linear";
-
-    bot.setAttribute('animation', animationMoveString);
+    bot.setAttribute('position', botPosition);
 }
 
 /**
