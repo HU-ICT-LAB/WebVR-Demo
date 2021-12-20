@@ -5,7 +5,7 @@ var teleporting = false
  * A component to create a teleporter. This component generates a few primitives and a button. 
  * By setting its id and target you can teleport between teleporters by pressing the button.
  */
-AFRAME.registerComponent('teleporter',{
+AFRAME.registerComponent('web_teleporter',{
     /**
      * teleporter_id the id of this teleporter
      * targer_id the id of the target teleporter/ to wich teleporter do you want to teleport.
@@ -13,6 +13,7 @@ AFRAME.registerComponent('teleporter',{
     schema: {
         teleporter_id: {default: 0},
         target_id: {default: 1},
+        target_link: {default: ""}
       },
     /**
      * Initialisation function of the component
@@ -23,7 +24,7 @@ AFRAME.registerComponent('teleporter',{
         this.home_position = new THREE.Vector3();
         this.el.setAttribute("button_listener", "button_channel: teleporter_" + this.data.teleporter_id)
         this.el.addEventListener('teleporter_pressed', this.teleportsequence.bind(this))
-        this.el.addEventListener("player_teleported", this.end_animation.bind(this))
+        //this.el.addEventListener("player_teleported", this.end_animation.bind(this))
         this.el.addEventListener("start_teleport", this.start_animation.bind(this))
 
         var tube = document.createElement("a-cylinder")
@@ -88,38 +89,29 @@ AFRAME.registerComponent('teleporter',{
         }.bind(this), 2000);
     },
 
-    /**
-     * This function starts the multiple stages of the end animation: player_recieved and player_recieved2
-     */
-    end_animation: function(){
-        var tub = this.el.querySelector("#tube_"+ this.data.teleporter_id)
-        tub.emit("player_recieved")
-        setTimeout(function() {
-            tub.emit("player_recieved_2")
-            teleporting = false
-        }.bind(this), 2000);
-    },
+    // /**
+    //  * This function starts the multiple stages of the end animation: player_recieved and player_recieved2
+    //  */
+    // end_animation: function(){
+    //     var tub = this.el.querySelector("#tube_"+ this.data.teleporter_id)
+    //     tub.emit("player_recieved")
+    //     setTimeout(function() {
+    //         tub.emit("player_recieved_2")
+    //         teleporting = false
+    //     }.bind(this), 2000);
+    // },
 
 
     /**
      * This function starts the teleportation sequence. It finds the correct target teleporter using the target_id and starts the correct events at the right time.
      */
     teleportsequence: function(){
-        var TeleporterList = this.el.sceneEl.querySelectorAll("[teleporter]")
-        var Destteleporter
-        for (i = 0; i <  TeleporterList.length; i++){
-            if(TeleporterList[i].components.teleporter.data.teleporter_id == this.data.target_id){
-                Destteleporter = TeleporterList[i]
-                break
-            }
-        }
         if( !teleporting){
             teleporting = true
             this.start_animation()
-            Destteleporter.emit("start_teleport")
 
             setTimeout( function() {
-                this.teleportPlayer(Destteleporter)
+                this.teleportPlayer()
             }.bind(this), 4500);
         }
     },
@@ -128,24 +120,10 @@ AFRAME.registerComponent('teleporter',{
      * this function teleports the player. It gets the location of the current teleporter and the target teleporter. This difference is added onto the rig of the player.
      * This way the player doesnt end up in the middle of the teleporter but on the same spot as the one he teleported from. 
      */
-    teleportPlayer: function(target){
-        var cur_location = new THREE.Vector3();
-        var dest_location = new THREE.Vector3();
-        cur_location.setFromMatrixPosition(this.el.object3D.matrixWorld);
-        dest_location.setFromMatrixPosition(target.object3D.matrixWorld);
-
-
-        var dif = new THREE.Vector3
-        dif.x = dest_location.x - cur_location.x
-        dif.y = dest_location.y - cur_location.y
-        dif.z = dest_location.z - cur_location.z
-
-        var rig = this.el.sceneEl.querySelector("#rig")
-        var pos = rig.getAttribute("position")
-        pos.add(dif)
-        rig.setAttribute("position", pos)
-        target.emit("player_teleported")
-        this.end_animation()
+    teleportPlayer: function(){
+        console.log(this.data.target_link)
+        window.location.href = this.data.target_link;
+        teleporting=false;
     }
       
 })
@@ -153,16 +131,89 @@ AFRAME.registerComponent('teleporter',{
 /**
  * A wrapper around the teleporter component so you can use it as a entity.
  */
-AFRAME.registerPrimitive('a-teleporter', {
+AFRAME.registerPrimitive('a-web-teleporter', {
     // Attaches the `button` component by default..
     defaultComponents: {
-      teleporter: {},
+      web_teleporter: {},
       position: {x:0, y:0, z:0}
     },
   
     // Maps HTML attributes to the `teleporter` component properties
     mappings: {
-      teleporter_id: 'teleporter.teleporter_id',
-      target_id: 'teleporter.target_id'
+      teleporter_id: 'web_teleporter.teleporter_id',
+      target_id: 'web_teleporter.target_id',
+      target_link: 'web_teleporter.target_link'
+    }
+});
+
+AFRAME.registerComponent('link_selector',{
+    schema: {
+        links: {
+            type: 'string',
+            default: [""],
+            parse: function (value) {
+                return value.split(',');
+            },
+        },
+        teleporter_id: {default: 0},
+        button_color: {default: "#0000FD"},
+        base_color: {default: "#DDDDFF"},
+        changer_id: {default: 0}
+    },
+
+    init: function(){
+        this.index = 0
+
+        this.el.setAttribute("button_listener", "button_channel:  web_teleporter_links_"+ this.data.changer_id)
+        this.el.addEventListener("web_teleporter_linkchange", this.change_portal.bind(this))
+
+        var button = document.createElement("a-button")
+        button.setAttribute("button_color", this.data.button_color)
+        button.setAttribute("base_color", this.data.base_color)
+        button.setAttribute("button_channel", "web_teleporter_links_"+ this.data.changer_id)
+        button.setAttribute("event_start", "web_teleporter_linkchange")
+        this.el.appendChild(button)
+
+
+    },
+
+    change_portal: function(){
+        var TeleporterList = this.el.sceneEl.querySelectorAll("[web_teleporter]")
+        var Destteleporter
+        for (i = 0; i <  TeleporterList.length; i++){
+            if(TeleporterList[i].components.web_teleporter.data.teleporter_id == this.data.teleporter_id){
+                Destteleporter = TeleporterList[i]
+                break
+            }
+        }
+        console.log(this.data.links)
+
+        Destteleporter.setAttribute("web_teleporter", "target_link: "+ this.data.links[this.index])
+        
+        this.index += 1
+        if (this.index == this.data.links.length){
+            this.index = 0
+        }
+    }
+
+})
+
+/**
+ * A wrapper around the link_selector component so you can use it as a entity.
+ */
+AFRAME.registerPrimitive('a-webtel-linkselector', {
+    // Attaches the `button` component by default..
+    defaultComponents: {
+      link_selector: {},
+      position: {x:0, y:0, z:0}
+    },
+  
+    // Maps HTML attributes to the `teleporter` component properties
+    mappings: {
+      teleporter_id: 'link_selector.teleporter_id',
+      links: 'link_selector.links',
+      button_color: 'link_selector.button_color',
+      base_color: 'link_selector.base_color',
+      changer_id: 'link_selector.changer_id'
     }
 });
