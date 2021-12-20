@@ -33,21 +33,25 @@ def on_connect(client, userdata, flags, rc):
     client1.subscribe("request_updatescore")
 
 
-def updateleaderboard(new_score="5", new_name="anonymous"):
+def updateleaderboard(new_score="5"):
     """
     adds the new score and it's name to the leaderboard.txt and delete the lowest value and then overwrites it
     :param new_score: the score that needs to be put in leaderboard
     :param new_name: the new_name that goes with the score as key of the dictionary
     """
-    print(new_name + ":" + new_score)
+    new_scorenumber = new_score.split(":")[1]
+    new_name=new_score.split(":")[0]
+    if len(new_scorenumber) == 1:
+        new_scorenumber = "0" + new_scorenumber
+    print(new_name + ":" + new_scorenumber)
     highscore_file = open("leaderboard.txt", "r")
     readable_highscores = json.loads(highscore_file.readline())
     if new_name in readable_highscores.keys():
-        if readable_highscores[new_name] < new_score:
-            readable_highscores[new_name] = new_score
+        if readable_highscores[new_name] < new_scorenumber:
+            readable_highscores[new_name] = new_scorenumber
             readable_highscores = dict(sorted(readable_highscores.items(), key=operator.itemgetter(1), reverse=True))
     else:
-        readable_highscores[new_name] = new_score
+        readable_highscores[new_name] = new_scorenumber
         readable_highscores = dict(sorted(readable_highscores.items(), key=operator.itemgetter(1), reverse=True))
         readable_highscores.popitem()
 

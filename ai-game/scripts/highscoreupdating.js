@@ -12,9 +12,11 @@ AFRAME.registerComponent('sethighscore', {
         it's value in the highscoretext entity and set connected value to true
          */
         if(connected && !this.con) {
+
             client.subscribe('hbo_ict_vr_game_score')
             client.publish('request_scoretopic', "{0}")
             mqtt_add_topic_callback('hbo_ict_vr_game_score', function (topic, message) {
+                // document.querySelector("#debug").setAttribute('text', 'value', "connected")
                 var obj = JSON.parse(message);
                 console.log(obj)
                 this.newhighscore = "Top 10 leaderboard\n------------\n"

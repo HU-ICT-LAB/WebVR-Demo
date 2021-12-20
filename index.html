@@ -1,18 +1,45 @@
-<!DOCTYPE html>
 <html>
-    <head>
-    </head>   
-    <body>
-        <h2>Game Links</h2>
-        <p><a href="ai-game/index.html">AI-Game</a></p>
-        <p><a href="tardis-world/index.html">Tardis-World</a></p>
-        <p><a href="world-builder/index.html">World-Builder</a></p>
+  <head>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-environment-component/dist/aframe-environment-component.min.js"></script>
+    <script src="../scripts/browserMqtt.js" type="text/javascript"></script>
+    <script src="../scripts/mqtt_client.js" type="text/javascript"></script>
+    <script src="https://unpkg.com/super-hands@^3.0.1/dist/super-hands.min.js"></script>
+    <script src="https://unpkg.com/aframe-aabb-collider-component@3.1.0/dist/aframe-aabb-collider-component.min.js"></script>
+    <script src="tardis-world/scripts/movement.js" type="text/javascript"></script>
+    <script src="scripts/push_button.js"></script>
+    <script src="scripts/teleporter.js"></script>
+    <script src="scripts/teleporter_web.js"></script>
+  </head>
 
-        <h2>Other Links</h2>
-        <p><a href="vr-logging.html">Logger</a></p>
-        <p><a href="vr-player-clone.html">Player Clone</a></p>
-        <p><a href="tardis-world/speed_control.html">Player Clone</a></p>
 
-    </body>
+
+  <body>
+    <a-scene cursor="rayOrigin:mouse">
+        <a-assets>
+            <img id="tardis_image" src="assets/360tardis.png">
+          </a-assets>
+        <a-sky color="#FFF"></a-sky>
+
+        <a-box material="side: double; opacity: 0.3"  position="0 4 0"height="8" width="12" depth="12" color="#0000FD"></a-box>
+
+        <a-box height="1" depth="0.1" width="0.1" position="-0.8 0.5 0.2" color="#FFFFFF"></a-box>
+        <a-box height="1" depth="0.1" width="0.1" position="0 0.5 0" color="#FFFFFF"></a-box>
+        <a-box height="1" depth="0.1" width="0.1" position="0.8 0.5 0.2" color="#FFFFFF"></a-box>
+
+
+        <a-web-teleporter position="0 0 -1.5" teleporter_id="1" target_link="/tardis-world/index.html"></a-web-teleporter>
+
+        <a-webtel-linkselector changer_id="0" position="-0.8 1.05 0.2" teleporter_id="1" links="/ai-game/index.html"></a-webtel-linkselector>
+        <a-webtel-linkselector changer_id="1" position="0 1.05 0" teleporter_id="1" links="/tardis-world/index.html"></a-webtel-linkselector>
+        <a-webtel-linkselector changer_id="2" position="0.8 1.05 0.2" teleporter_id="1" links="/world-builder/index.html"></a-webtel-linkselector>
+
+        <a-entity id="rig" headbob-movement relative-movement position="0 1.6 0">
+            <a-entity id="camera" wasd-controls camera look-controls>                    </a-entity>
+            <a-entity id="leftcontrl"  class="hand" oculus-touch-controls="hand: left" thumbstick-logging></a-entity>
+            <a-entity id="rightcontrl" class="hand" oculus-touch-controls="hand: right" thumbstick-logging></a-entity>
+        </a-entity>
+        
+    </a-scene>
+  </body>
 </html>
-

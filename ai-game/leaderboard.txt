@@ -1,1 +1,1 @@
-{"daan": "999", "ruben": "998", "floris": "997", "shaun": "63", "charlie": "42", "ducky": "33", "pieter": "31", "alex": "16", "duck": "14", "anonymous": "0"}
+{"Snow-Chinchilla": "44", "Beige-Pony": "14", "Beige-Rook": "14", "Black-Parrot": "13", "Linen-Alligator": "12", "White-Jay": "11", "Teal-Raccoon": "10", "Tomato-Crocodile": "10", "Cyan-Partridge": "10", "Almond-Crab": "09"}

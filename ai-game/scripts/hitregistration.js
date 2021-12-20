@@ -29,9 +29,9 @@ AFRAME.registerComponent('hit', {
             }
         })
 
-        this.el.addEventListener('hitend', function(){
-            console.log("Item exited");
-        })
+         this.el.addEventListener('hitend', function(){
+             console.log("Item exited");
+         })
 
     }
 });
