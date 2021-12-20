@@ -129,8 +129,12 @@ AFRAME.registerComponent('teleporter',{
      * This way the player doesnt end up in the middle of the teleporter but on the same spot as the one he teleported from. 
      */
     teleportPlayer: function(target){
-        var cur_location = this.el.getAttribute('position').clone()
-        var dest_location = target.getAttribute('position').clone()
+        var cur_location = new THREE.Vector3();
+        var dest_location = new THREE.Vector3();
+        cur_location.setFromMatrixPosition(this.el.object3D.matrixWorld);
+        dest_location.setFromMatrixPosition(target.object3D.matrixWorld);
+
+
         var dif = new THREE.Vector3
         dif.x = dest_location.x - cur_location.x
         dif.y = dest_location.y - cur_location.y
