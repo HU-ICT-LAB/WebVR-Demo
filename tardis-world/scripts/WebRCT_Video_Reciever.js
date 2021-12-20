@@ -20,7 +20,8 @@ AFRAME.registerComponent('webrct_stream', {
     schema: {
         source_link: {default: ""},
         width: {default: 16},
-        height: {default: 9}
+        height: {default: 9},
+        apply_fog: {default: "True"}
     },
 
     /**
@@ -31,6 +32,10 @@ AFRAME.registerComponent('webrct_stream', {
         var avideo = document.createElement("a-video") //create the a-video component
         avideo.setAttribute("width", this.data.width)
         avideo.setAttribute("height", this.data.height)
+        if(this.data.apply_fog == "True"){
+        }else{
+            avideo.setAttribute('material', 'fog: false');
+        }
 
 
 
@@ -94,7 +99,8 @@ AFRAME.registerPrimitive('a-webrct-stream', {
     mappings: {
       src: 'webrct_stream.source_link',
       width: 'webrct_stream.width',
-      height: 'webrct_stream.height'
+      height: 'webrct_stream.height',
+      apply_fog: 'webrct_stream.apply_fog'
     }
 });
 

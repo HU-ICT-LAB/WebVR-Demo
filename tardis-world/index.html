@@ -3,12 +3,15 @@
     <head>
         <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
         <script src="https://unpkg.com/aframe-aabb-collider-component@3.1.0/dist/aframe-aabb-collider-component.min.js"></script>
-        <script src="../scripts/browserMqtt.js" type="text/javascript"></script>
-        <script src="../scripts/mqtt_client.js" type="text/javascript"></script>
-        <script src="scripts/movement.js" type="text/javascript"></script>
-        <script src="scripts/infinite_objects.js" type="text/javascript"></script>
-        <script src="../scripts/push_button.js" type="text/javascript"></script>
-        <script src="scripts/robot_controller.js" type="text/javascript"></script>
+        <script src="https://cdn.jsdelivr.net/npm/ovenplayer/dist/ovenplayer.js"></script>
+        <script src="scripts/WebRCT_Video_Reciever.js"  type="text/javascript"></script>
+        <script src="../scripts/browserMqtt.js"         type="text/javascript"></script>
+        <script src="../scripts/mqtt_client.js"         type="text/javascript"></script>
+        <script src="scripts/movement.js"               type="text/javascript"></script>
+        <script src="scripts/infinite_objects.js"       type="text/javascript"></script>
+        <script src="../scripts/push_button.js"         type="text/javascript"></script>
+        <script src="scripts/robot_controller.js"       type="text/javascript"></script>
+        <script src="../scripts/teleporter.js"          type="text/javascript"></script>
     </head>   
     <body>
         <a-scene cursor="rayOrigin:mouse" generate_trees update_trees  generate_floor update_floor fog="type: exponential; color: #AAA; density: 0.15">
@@ -30,47 +33,64 @@
                     </a-entity>
                     <a-entity class="hand" id="leftcontrl" oculus-touch-controls="hand: left" thumbstick-logging ></a-entity>
                     <a-entity class="hand" id="rightcontrl" oculus-touch-controls="hand: right" thumbstick-logging></a-entity>
-
             </a-entity>
 
-            <a-entity id="button_panel" >
-                <a-box color="tomato" width="0.8" depth="0.2" height="0.5" rotation="-25 0 0" position="0 0.30 0">
 
-
-                    <a-entity id="left"    rotation="90 0 0" button="button_color: #fc6f03; event_start: move_left"     position="-0.3  0    0.15">
-                        <a-text value="left" align="center" rotation="-90 0 0" position="0 0 -0.07" scale="0.15 0.15 0.15"></a-text>
-                    </a-entity>
-                    <a-entity id="right"    rotation="90 0 0" button="button_color: #3003fc; event_start: move_right"    position="-0.05  0    0.15">
-                        <a-text value="right" align="center" rotation="-90 0 0" position="0 0 -0.07" scale="0.15 0.15 0.15"></a-text>
-                    </a-entity>
-
-                    <a-entity id="forward"  rotation="90 0 0" button="button_color: #fc0303; event_start: move_forward"  position="-0.175  0.15  0.15">
-                        <a-text value="foward" align="center" rotation="-90 0 0" position="0 0 -0.07" scale="0.15 0.15 0.15"></a-text>
-                    </a-entity>
-                    <a-entity id="backward" rotation="90 0 0" button="button_color: #6bfc03; event_start: move_backward" position="-0.175  -0.15  0.15">
-                        <a-text value="backward" align="center" rotation="-90 0 0"  position="0 0 -0.07" scale="0.15 0.15 0.15"></a-text>
-                    </a-entity>
-
-                    <a-entity id="up"       rotation="90 0 0" button="button_color: #fc037f; event_start: move_up"       position="0.2 0.15 0.15">
-                        <a-text value="up" align="center"  rotation="-90 0 0" position="0 0 -0.07" scale="0.15 0.15 0.15"></a-text>
-                    </a-entity>
-                    <a-entity id="down"     rotation="90 0 0" button="button_color: #03fc8c; event_start: move_down"     position="0.2 0 0.15">
-                        <a-text value="down" align="center"  rotation="-90 0 0" position="0 0 -0.07" scale="0.15 0.15 0.15"></a-text>
-                    </a-entity>
-
-                    <a-entity id="open"     rotation="90 0 0" button="button_color: #1e008a; event_start: move_open"     position="0.1  -0.15   0.15">
-                        <a-text value="open" align="center" rotation="-90 0 0"  position="0 0 -0.07" scale="0.15 0.15 0.15"></a-text>
-                    </a-entity>
-                    <a-entity id="close"    rotation="90 0 0" button="button_color: #8a8a00; event_start: move_close"    position="0.30  -0.15  0.15">
-                        <a-text value="close" align="center" rotation="-90 0 0" position="0 0 -0.07" scale="0.15 0.15 0.15"></a-text>
-                    </a-entity>
-                </a-box>
-                <a-box width="0.05"  depth="0.15"   height="0.8"  position="0.425 -0.1 0"></a-box>
-                <a-box width="0.05"  depth="0.15"   height="0.8"  position="-0.425 -0.1 0"></a-box>
-
-            </a-entity>
 
             <a-entity robot_controller button_listener></a-entity>
+
+            <a-teleporter teleporter_id="0" target_id="1" position="5 -0.6 0"></a-teleporter>
+
+            <!-- This is in the controll panel room -->
+            <a-entity id="controll_room" position="0 -12 0">
+
+                <a-webrct-stream apply_fog="false" src='ws://192.168.2.13:3333/app/stream' position="0 0 -9.9" width=16 height="9"></a-webrct-stream>
+                
+                <a-box material="side: double; fog: false"  position="0 0 0"height="12" width="20" depth="20" color="#0a0a0a"></a-box>
+
+                <a-teleporter teleporter_id="1" target_id="0" position="0 -6 5"></a-teleporter>
+
+                <a-entity id="button_panel" position="0 -5.5 0" >
+                    <a-box color="tomato" width="0.8" depth="0.2" height="0.5" rotation="-25 0 0" position="0 0.30 0">
+
+                        <a-entity id="left"    rotation="90 0 0" button="button_color: #fc6f03; event_start: move_left"     position="-0.3  0    0.15">
+                            <a-text value="left" align="center" rotation="-90 0 0" position="0 0 -0.07" scale="0.15 0.15 0.15"></a-text>
+                        </a-entity>
+
+                        <a-entity id="right"    rotation="90 0 0" button="button_color: #3003fc; event_start: move_right"    position="-0.05  0    0.15">
+                            <a-text value="right" align="center" rotation="-90 0 0" position="0 0 -0.07" scale="0.15 0.15 0.15"></a-text>
+                        </a-entity>
+
+                        <a-entity id="forward"  rotation="90 0 0" button="button_color: #fc0303; event_start: move_forward"  position="-0.175  0.15  0.15">
+                            <a-text value="foward" align="center" rotation="-90 0 0" position="0 0 -0.07" scale="0.15 0.15 0.15"></a-text>
+                        </a-entity>
+                        <a-entity id="backward" rotation="90 0 0" button="button_color: #6bfc03; event_start: move_backward" position="-0.175  -0.15  0.15">
+                            <a-text value="backward" align="center" rotation="-90 0 0"  position="0 0 -0.07" scale="0.15 0.15 0.15"></a-text>
+                        </a-entity>
+
+                        <a-entity id="up"       rotation="90 0 0" button="button_color: #fc037f; event_start: move_up"       position="0.2 0.15 0.15">
+                            <a-text value="up" align="center"  rotation="-90 0 0" position="0 0 -0.07" scale="0.15 0.15 0.15"></a-text>
+                        </a-entity>
+                        <a-entity id="down"     rotation="90 0 0" button="button_color: #03fc8c; event_start: move_down"     position="0.2 0 0.15">
+                            <a-text value="down" align="center"  rotation="-90 0 0" position="0 0 -0.07" scale="0.15 0.15 0.15"></a-text>
+                        </a-entity>
+
+                        <a-entity id="open"     rotation="90 0 0" button="button_color: #1e008a; event_start: move_open"     position="0.1  -0.15   0.15">
+                            <a-text value="open" align="center" rotation="-90 0 0"  position="0 0 -0.07" scale="0.15 0.15 0.15"></a-text>
+                        </a-entity>
+
+                        <a-entity id="close"    rotation="90 0 0" button="button_color: #8a8a00; event_start: move_close"    position="0.30  -0.15  0.15">
+                            <a-text value="close" align="center" rotation="-90 0 0" position="0 0 -0.07" scale="0.15 0.15 0.15"></a-text>
+                        </a-entity>
+                    </a-box>
+
+                    <a-box width="0.05"  depth="0.15"   height="0.8"  position="0.425 -0.1 0"></a-box>
+                    <a-box width="0.05"  depth="0.15"   height="0.8"  position="-0.425 -0.1 0"></a-box>
+                </a-entity>
+            </a-entity>
+
+
+
             
         </a-scene>
     </body>
