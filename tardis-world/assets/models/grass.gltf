@@ -137,10 +137,10 @@
   ],
   "images": [
     {
-      "uri": "textures/grassMat_baseColor.png"
+      "uri": "assets/textures/grassMat_baseColor.png"
     },
     {
-      "uri": "textures/grassMat_normal.png"
+      "uri": "assets/textures/grassMat_normal.png"
     }
   ],
   "materials": [
