@@ -25,8 +25,6 @@
                     scale="2 2 2">
             </a-entity>
 
-            <a-video  src="rtp://145.89.161.93:8087" playsinline width="16" height="9" position="0 4.5 -20"></a-video>
-
             <a-entity id="rig" headbob-movement relative-movement>
                     <a-entity id="camera"  wasd-controls camera look-controls>
                         <a-sky color="AAAAAA"></a-sky>
@@ -44,7 +42,7 @@
             <!-- This is in the controll panel room -->
             <a-entity id="controll_room" position="0 -12 0">
 
-                <a-webrct-stream apply_fog="false" src='ws://192.168.2.13:3333/app/stream' position="0 0 -9.9" width=16 height="9"></a-webrct-stream>
+                <a-webrct-stream apply_fog="false" src='wss://florisvideler.nl:3334/app/stream' position="0 0 -9.9" width=16 height="9"></a-webrct-stream>
                 
                 <a-box material="side: double; fog: false"  position="0 0 0"height="12" width="20" depth="20" color="#0a0a0a"></a-box>
 
