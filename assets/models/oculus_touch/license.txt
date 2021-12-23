@@ -1,0 +1,11 @@
+Model Information:
+* title:	Oculus touch
+* source:	https://sketchfab.com/3d-models/oculus-touch-33f27976ebbb4cd0a61ff5536722ccef
+* author:	Lonk-plus (https://sketchfab.com/lonkplus)
+
+Model License:
+* license type:	CC-BY-ND-4.0 (http://creativecommons.org/licenses/by-nd/4.0/)
+* requirements:	Author must be credited. Modified versions can not be distributed. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Oculus touch" (https://sketchfab.com/3d-models/oculus-touch-33f27976ebbb4cd0a61ff5536722ccef) by Lonk-plus (https://sketchfab.com/lonkplus) licensed under CC-BY-ND-4.0 (http://creativecommons.org/licenses/by-nd/4.0/)

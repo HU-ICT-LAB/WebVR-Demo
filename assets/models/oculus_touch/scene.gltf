@@ -1,0 +1,242 @@
+{
+  "accessors": [
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 52916,
+      "max": [
+        45.46022033691406,
+        72.75536346435547,
+        24.77058982849121
+      ],
+      "min": [
+        -45.46131896972656,
+        -53.281951904296875,
+        -90.57579040527344
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 634992,
+      "componentType": 5126,
+      "count": 52916,
+      "max": [
+        0.9999936819076538,
+        1.0,
+        0.9999695420265198
+      ],
+      "min": [
+        -1.0,
+        -1.0,
+        -0.9999994039535522
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 52916,
+      "max": [
+        1.2082864046096802,
+        0.9295831918716431
+      ],
+      "min": [
+        2.1313428078428842e-05,
+        0.005472302436828613
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "componentType": 5125,
+      "count": 187488,
+      "type": "SCALAR"
+    }
+  ],
+  "asset": {
+    "extras": {
+      "author": "Lonk-plus (https://sketchfab.com/lonkplus)",
+      "license": "CC-BY-ND-4.0 (http://creativecommons.org/licenses/by-nd/4.0/)",
+      "source": "https://sketchfab.com/3d-models/oculus-touch-33f27976ebbb4cd0a61ff5536722ccef",
+      "title": "Oculus touch"
+    },
+    "generator": "Sketchfab-11.71.0",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 749952,
+      "name": "floatBufferViews",
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 423328,
+      "byteOffset": 749952,
+      "byteStride": 8,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 1269984,
+      "byteOffset": 1173280,
+      "byteStride": 12,
+      "name": "floatBufferViews",
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 2443264,
+      "uri": "assets/models/oculus_touch/scene.bin"
+    }
+  ],
+  "extensionsUsed": [
+    "KHR_materials_clearcoat"
+  ],
+  "materials": [
+    {
+      "doubleSided": true,
+      "extensions": {
+        "KHR_materials_clearcoat": {
+          "clearcoatFactor": 0.00779022186551873,
+          "clearcoatRoughnessFactor": 0.04
+        }
+      },
+      "name": "material",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.0037336063331083673,
+          0.0037336063331083673,
+          0.0037336063331083673,
+          1.0
+        ],
+        "metallicFactor": 0.0,
+        "roughnessFactor": 0.5489256334020393
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Right_Controller_for_Quest_and_Rift_S_����������������_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TEXCOORD_0": 2
+          },
+          "indices": 3,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "matrix": [
+        0.0020741578191518784,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        7.9410556476202355e-19,
+        -0.0020741578191518784,
+        0.0,
+        0.0,
+        0.0020741578191518784,
+        7.9410556476202355e-19,
+        0.0,
+        0.0,
+        -5.3290705182007514e-15,
+        -1.1832913578315177e-30,
+        1.0
+      ],
+      "name": "Sketchfab_model"
+    },
+    {
+      "children": [
+        2
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        -1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "f658420d6f1f4e389fa1e726abf78c93.fbx"
+    },
+    {
+      "children": [
+        3,
+        5
+      ],
+      "name": "RootNode"
+    },
+    {
+      "children": [
+        4
+      ],
+      "matrix": [
+        -0.7425925140877672,
+        -0.2881962681340892,
+        0.6045653554863968,
+        0.0,
+        -0.22349497913610689,
+        0.9575713608048144,
+        0.18195351952453953,
+        0.0,
+        -0.6313527954493907,
+        1.8041124150158794e-16,
+        -0.7754957431722238,
+        0.0,
+        264.9967956542969,
+        134.12643432617188,
+        -279.8974609375,
+        1.0
+      ],
+      "name": "������_Cinema_4D"
+    },
+    {
+      "name": "Object_4"
+    },
+    {
+      "children": [
+        6
+      ],
+      "name": "Right_Controller_for_Quest_and_Rift_S"
+    },
+    {
+      "mesh": 0,
+      "name": "Right_Controller_for_Quest_and_Rift_S_����������������_0"
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Sketchfab_Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ]
+}

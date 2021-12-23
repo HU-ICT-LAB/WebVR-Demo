@@ -90,6 +90,10 @@ AFRAME.registerComponent('mqtt-pos-setter', {
                 this.con = true
                 //The setting of locations isnt actualy a component function but a mqtt claback function, that is why this is only called once, but it is in the tick function as we can only set this once the mqtt client is connected.
                 mqtt_add_topic_callback('hbo_ict_vr_game_player_stats', function (topic, message) {
+                    var postable = document.getElementById('LocationTable');
+                    var rottable = document.getElementById('RotationTable');
+
+
                     var left_controller = document.querySelector("#left_hand")
                     var right_controller = document.querySelector("#right_hand")
                     var headset = document.querySelector("#head")
@@ -102,12 +106,18 @@ AFRAME.registerComponent('mqtt-pos-setter', {
                         pos.y = set.y;
                         pos.z = set.z;
                         left_controller.setAttribute('position', pos)
+                        postable.rows[2].cells[1].innerHTML = pos.x
+                        postable.rows[2].cells[2].innerHTML = pos.y
+                        postable.rows[2].cells[3].innerHTML = pos.z
 
                         set = obj['right_controller_pos']
                         pos.x = set.x;
                         pos.y = set.y;
                         pos.z = set.z;
                         right_controller.setAttribute('position', pos)
+                        postable.rows[3].cells[1].innerHTML = pos.x
+                        postable.rows[3].cells[2].innerHTML = pos.y
+                        postable.rows[3].cells[3].innerHTML = pos.z
 
 
                         set = obj['headset_pos']
@@ -115,6 +125,9 @@ AFRAME.registerComponent('mqtt-pos-setter', {
                         pos.y = set.y;
                         pos.z = set.z;
                         headset.setAttribute('position', pos)
+                        postable.rows[1].cells[1].innerHTML = pos.x
+                        postable.rows[1].cells[2].innerHTML = pos.y
+                        postable.rows[1].cells[3].innerHTML = pos.z
 
 
                         set = obj['left_controller_rot']
@@ -122,6 +135,9 @@ AFRAME.registerComponent('mqtt-pos-setter', {
                         pos.y = set.y;
                         pos.z = set.z;
                         left_controller.setAttribute('rotation', pos)
+                        rottable.rows[2].cells[1].innerHTML = pos.x
+                        rottable.rows[2].cells[2].innerHTML = pos.y
+                        rottable.rows[2].cells[3].innerHTML = pos.z
 
 
                         set = obj['right_controller_rot']
@@ -129,12 +145,18 @@ AFRAME.registerComponent('mqtt-pos-setter', {
                         pos.y = set.y;
                         pos.z = set.z;
                         right_controller.setAttribute('rotation', pos)
+                        rottable.rows[3].cells[1].innerHTML = pos.x
+                        rottable.rows[3].cells[2].innerHTML = pos.y
+                        rottable.rows[3].cells[3].innerHTML = pos.z
 
                         set = obj['headset_rot']
                         pos.x = set.x;
                         pos.y = set.y;
                         pos.z = set.z;
                         headset.setAttribute('rotation', pos)
+                        rottable.rows[1].cells[1].innerHTML = pos.x
+                        rottable.rows[1].cells[2].innerHTML = pos.y
+                        rottable.rows[1].cells[3].innerHTML = pos.z
                     //log the recieved positions and rotations to the console
                     console.log(message.toString())
                   })
