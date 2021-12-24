@@ -21,7 +21,7 @@ AFRAME.registerComponent('mqtt-logger', {
             if (!this.con){
                 mqtt_add_topic_callback("", function (topic, message) {
                     // message is Buffer
-                    console.log(message.toString())
+                    //console.log(message.toString())
                 })
                 this.con = true
             }
@@ -150,6 +150,7 @@ AFRAME.registerComponent('mqtt-pos-setter', {
                         rottable.rows[3].cells[3].innerHTML = pos.z
 
                         set = obj['headset_rot']
+                        console.log(set)
                         pos.x = set.x;
                         pos.y = set.y;
                         pos.z = set.z;
@@ -158,7 +159,7 @@ AFRAME.registerComponent('mqtt-pos-setter', {
                         rottable.rows[1].cells[2].innerHTML = pos.y
                         rottable.rows[1].cells[3].innerHTML = pos.z
                     //log the recieved positions and rotations to the console
-                    console.log(message.toString())
+                    // console.log(message.toString())
                   })
             }
         }
