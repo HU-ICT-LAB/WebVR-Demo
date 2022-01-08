@@ -92,8 +92,8 @@ function sendLogToServer(msg) {
       // Some start variables
       let WIDTH = 250;
       let HEIGHT = 250;
-      let SIZE_AMPLIFIER = 3.7;
-      let HEIGHT_AMPLIFIER = 1;
+      let SIZE_AMPLIFIER = 3.9;
+      let HEIGHT_AMPLIFIER = .6;
       var plane = new THREE.PlaneBufferGeometry(WIDTH * SIZE_AMPLIFIER, HEIGHT * SIZE_AMPLIFIER, WIDTH - 1, HEIGHT - 1);
       var material = new THREE.MeshPhongMaterial({ color: 0xFFFFFF, side: THREE.DoubleSide, shading: THREE.FlatShading });
   
@@ -139,6 +139,9 @@ function sendLogToServer(msg) {
   
       avgInPlayableArea = totalInPlayableArea / c;
       console.log('avg: ' + avgInPlayableArea);
+
+      let minX = -1;
+      let minY = -1;
   
   
       // Find the global min height.
@@ -148,6 +151,8 @@ function sendLogToServer(msg) {
         edgeN = generalArray[y][x];
         if (edgeN < minN) {
           minN = edgeN;
+          minX = x;
+          minY = y;
         }
       }
       y = 175
@@ -155,6 +160,8 @@ function sendLogToServer(msg) {
         edgeN = generalArray[y][x];
         if (edgeN < minN) {
           minN = edgeN;
+          minX = x;
+          minY = y;
         }
       }
       x = 75
@@ -162,6 +169,8 @@ function sendLogToServer(msg) {
         edgeN = generalArray[y][x];
         if (edgeN < minN) {
           minN = edgeN;
+          minX = x;
+          minY = y;
         }
       }
       x = 175
@@ -169,6 +178,8 @@ function sendLogToServer(msg) {
         edgeN = generalArray[y][x];
         if (edgeN < minN) {
           minN = edgeN;
+          minX = x;
+          minY = y;
         }
       }
   
@@ -180,63 +191,8 @@ function sendLogToServer(msg) {
           generalArray[y][x] = minN;
         }
       }
-  
-  
-      // do some light smoothing
-      let upperEdge = 75;
-      let rightEdge = 175;
-      let lowerEdge = 175;
-      let leftEdge = 75;
-  
-      let smooth = false;
-  
-      while (!smooth) {
-        for (let x = 75; x < 175; x++) {
-          nextN = generalArray[upperEdge - 1][x];
-          total = nextN + generalArray[upperEdge][x];
-          generalArray[upperEdge][x] = total / 2;
-  
-        }
-  
-        for (let y = 75; y < 175; y++) {
-          nextN = generalArray[y][rightEdge + 1];
-          total = nextN + generalArray[y][rightEdge];
-          generalArray[y][rightEdge] = total / 2;
-  
-        }
-  
-        for (let x = 75; x < 175; x++) {
-          nextN = generalArray[lowerEdge + 1][x];
-          total = nextN + generalArray[lowerEdge][x];
-          generalArray[lowerEdge][x] = total / 2;
-  
-        }
-  
-        for (let y = 75; y < 175; y++) {
-          nextN = generalArray[y][leftEdge - 1];
-          total = nextN + generalArray[y][leftEdge];
-          generalArray[y][leftEdge] = total / 2;
-  
-        }
-        upperEdge++;
-        rightEdge--;
-        lowerEdge--;
-        leftEdge++;
-  
-        if (upperEdge == 122) {
-          smooth = true;
-        }
-      }
-  
-      // Fill in the canvas.
-      for (let y = 0; y < 250; y++) {
-        for (let x = 0; x < 250; x++) {
-          let n = generalArray[y][x];
-          let rgb = Math.round(255 * n);
-          ctx.fillStyle = "rgba(" + rgb + "," + rgb + "," + rgb + ",1.0)";
-          ctx.fillRect(x, y, 1, 1);
-        }
-      }
+
+      console.log(minN, minX, minY, generalArray[minY][minX]);
   
   
   
