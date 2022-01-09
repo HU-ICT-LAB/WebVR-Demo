@@ -102,7 +102,7 @@ function sendLogToServer(msg) {
       canv.width = WIDTH
       canv.height = HEIGHT
       let pv = 1
-      let kv = 0.2
+      let kv = 0.15
       let ctx = canv.getContext("2d");
       let generalArray = [];
       let max = 0;
@@ -193,6 +193,18 @@ function sendLogToServer(msg) {
       }
 
       console.log(minN, minX, minY, generalArray[minY][minX]);
+
+  
+  
+      // Fill in the canvas.
+      for (let y = 0; y < 250; y++) {
+        for (let x = 0; x < 250; x++) {
+          let n = generalArray[y][x];
+          let rgb = Math.round(255 * n);
+          ctx.fillStyle = "rgba(" + rgb + "," + rgb + "," + rgb + ",1.0)";
+          ctx.fillRect(x, y, 1, 1);
+        }
+      }
   
   
   
@@ -353,3 +365,51 @@ function sendLogToServer(msg) {
     );
   
   }
+
+  function getRndInteger(min, max) {
+    return Math.floor(Math.random() * (max - min) ) + min;
+  }
+
+  AFRAME.registerComponent('loaded_tree',{
+    init: function () {
+            this.el.setAttribute('gltf-model', "assets\\models\\dark_tree1.glb")
+            this.el.setAttribute('scale',"5 5 5")
+      },
+  });
+
+  AFRAME.registerComponent('generate_trees',{
+    init: function () {
+        var scene = document.querySelector('a-scene');
+
+        // var tree = document.createElement('a-entity');
+        //     tree.setAttribute('loaded_tree','')
+        //     tree.setAttribute('id','gentree')
+        //     var pos = new THREE.Vector3();
+        //     pos.x = -90;
+        //     pos.z = -90;
+        //     pos.y = -0.6;
+        //     tree.setAttribute('position', pos);
+        //     scene.appendChild(tree);
+
+        for (let i = 0; i < 100; i++){
+            var tree = document.createElement('a-entity');
+            tree.setAttribute('loaded_tree','')
+            tree.setAttribute('id','gentree')
+            var pos = new THREE.Vector3();
+            let x = getRndInteger(-90, 90);
+            let y = getRndInteger(-90, 90);
+            while((x > -30 && x < 30) && (y > -30 && y < 30)){
+              x = getRndInteger(-90, 90);
+              y = getRndInteger(-90, 90);
+              console.log(x, y);
+              console.log(x < 20 || x > -20);
+            }
+            
+            pos.x = x
+            pos.z = y
+            pos.y = -4;
+            tree.setAttribute('position', pos);
+            scene.appendChild(tree);
+        }
+      },
+  });

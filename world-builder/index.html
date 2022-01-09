@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    <a-scene>
+    <a-scene generate_trees>
         <!-- add textures src -->
         <a-assets>
             <!-- sky texture -->
@@ -17,6 +17,10 @@
             <a-mixin id="voxel" geometry="primitive: box; height: 0.25; width: 0.25; depth: 0.25"
                 material="shader: standard;" snap="offset: 0.15 0.15 0.15; snap: 0.25 0.25 0.25"></a-mixin>
 
+                <a-asset-item id="tree1" src="assets\models\dark_tree1.glb"></a-asset-item>
+                <a-asset-item id="tree2" src="assets\models\dark_tree1.glb"></a-asset-item>
+                <a-asset-item id="tree3" src="assets\models\dark_tree1.glb"></a-asset-item>
+                <a-asset-item id="tree4" src="assets\models\dark_tree1.glb"></a-asset-item>
         </a-assets>
 
         <!-- add ground -->
