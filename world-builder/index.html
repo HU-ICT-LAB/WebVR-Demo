@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    <a-scene generate_trees>
+    <a-scene generate_trees generate_textures>
         <!-- add textures src -->
         <a-assets>
             <!-- sky texture -->
@@ -21,11 +21,19 @@
                 <a-asset-item id="tree2" src="assets\models\dark_tree1.glb"></a-asset-item>
                 <a-asset-item id="tree3" src="assets\models\dark_tree1.glb"></a-asset-item>
                 <a-asset-item id="tree4" src="assets\models\dark_tree1.glb"></a-asset-item>
+
+                <canvas id="red-canvas" crossorigin="anonymous"></canvas>
+                <canvas id="green-canvas" crossorigin="anonymous"></canvas>
+                <canvas id="blue-canvas" crossorigin="anonymous"></canvas>
+                <canvas id="yellow-canvas" crossorigin="anonymous"></canvas>
+                <canvas id="lightblue-canvas" crossorigin="anonymous"></canvas>
+                <canvas id="purple-canvas" crossorigin="anonymous"></canvas>
         </a-assets>
 
         <!-- add ground -->
         <a-plane id="ground" color="green" class="collidable" rotation="-90 0 0" width="60" height="60" material="opacity: 0.0; transparent: true"></a-plane>
         <a-entity geometry="primitive: terrain" position="0 -40 0" scale="0.2 0.2 0.2" rotation="-90 0 0 " color="green" set-p></a-entity>
+        <a-entity mixin="voxel" class="collidable block" material="src: #red-canvas" ></a-entity>
 
         <!-- add sky -->
         <a-sky src="#sky" position="-200 0 0"></a-sky>
