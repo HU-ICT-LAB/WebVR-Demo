@@ -19,16 +19,16 @@
 <body>
 	<a-scene cursor="rayOrigin:mouse">
 		<a-assets>
-			<a-asset-item id="forest" src="assets\models\vr_alien_forest_with_download\scene.gltf"></a-asset-item>
 			<a-asset-item id="fire" src="assets\models\lowpoly_campfire\scene.gltf"></a-asset-item>
 			<a-asset-item id="tent" src="assets\models\low-poly_survival_tent\scene.gltf"></a-asset-item>
 			<a-asset-item id="table" src="assets\models\low_poly_picnic_table\scene.gltf"></a-asset-item>
 			<a-asset-item id="log" src="assets\models\log_low-poly_3d_model\scene.gltf"></a-asset-item>
 			<a-asset-item id="chair" src="assets\models\beach_chair\scene.gltf"></a-asset-item>
 		</a-assets>
-		<a-sky color="#FFF"></a-sky>
+		<a-sky color="#FAFAFF"></a-sky>
+		<a-entity environment="preset:forest; dressingScale:2; dressingAmount: 100; playArea: 1; groundYScale: 3" ></a-entity>
 
-		<a-entity gltf-model="#forest" position="4 0 -3" scale="1 1 1"> 
+		<a-entity position="4 0 -3" scale="1 1 1"> 
 			<a-entity id="portal_holder" position="-3 0 2">
 				<a-box height="1" depth="0.1" width="0.1" position="-2.3 0.5 -0.6" color="#FFFFFF"></a-box>
 				<a-box height="1" depth="0.1" width="0.1" position="-2.8 0.5 0" color="#FFFFFF"></a-box>
@@ -60,14 +60,14 @@
 
 				<a-entity gltf-model="#fire" position="-4.22 0 3.435" scale="0.3 0.3 0.3"></a-entity>
 				<a-entity gltf-model="#tent" position="-6.83 0 2.313" scale="0.3 0.47 0.4" rotation="0 60 0"></a-entity>
-				<a-entity gltf-model="#table" position="-12 0 7.1" scale="0.5 0.5 0.5" rotation="0 127 0"></a-entity>
-				<a-entity gltf-model="#log" position="-4.22 0 5" scale="0.01 0.008 0.008"></a-entity>
+				<a-entity gltf-model="#table" position="-7 0 6.1" scale="0.5 0.5 0.5" rotation="0 40 0"></a-entity>
+				<a-entity gltf-model="#log" position="-1.22 0 5" scale="0.01 0.008 0.008" rotation="0 35 0"></a-entity>
 				<a-entity gltf-model="#chair" position="-5.14 0.747 0.571" scale="0.28 0.28 0.28" rotation="0 27 0"></a-entity>
 			</a-entity>
 		</a-entity>
 
 
-		<a-entity id="rig" relative-movement position="0 1.6 0">
+		<a-entity id="rig" relative-movement position="0 0 0">
 			<a-entity id="camera" wasd-controls camera look-controls> </a-entity>
 			<a-entity id="leftcontrl" class="hand" oculus-touch-controls="hand: left" thumbstick-logging></a-entity>
 			<a-entity id="rightcontrl" class="hand" oculus-touch-controls="hand: right" thumbstick-logging></a-entity>
@@ -77,5 +77,3 @@
 </body>
 
 </html>
-
-<!-- "VR Alien Forest (with download)" (https://skfb.ly/6BBoH) by FDU_oficial is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/). -->
