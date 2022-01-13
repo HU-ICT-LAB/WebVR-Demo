@@ -89,18 +89,6 @@ AFRAME.registerComponent('web_teleporter',{
         }.bind(this), 2000);
     },
 
-    // /**
-    //  * This function starts the multiple stages of the end animation: player_recieved and player_recieved2
-    //  */
-    // end_animation: function(){
-    //     var tub = this.el.querySelector("#tube_"+ this.data.teleporter_id)
-    //     tub.emit("player_recieved")
-    //     setTimeout(function() {
-    //         tub.emit("player_recieved_2")
-    //         teleporting = false
-    //     }.bind(this), 2000);
-    // },
-
 
     /**
      * This function starts the teleportation sequence. It finds the correct target teleporter using the target_id and starts the correct events at the right time.
