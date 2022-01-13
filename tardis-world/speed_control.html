@@ -52,14 +52,29 @@
         </div>
 
         <script>
+
+
             var slider = document.getElementById("sliderRange");
             var output = document.getElementById("slidervalue");
             output.innerHTML = slider.value;
+            
+            
+
 
             slider.oninput = function() {
                 output.innerHTML = this.value;
                 client.publish("hbo-ict-walking-speed", (this.value/100).toString())
+                console.log("hahahahaha")
             }
+
+            client.subscribe("hbo-ict-walking-speed")
+            mqtt_add_topic_callback("hbo-ict-walking-speed", function(topic, message) {
+                console.log(JSON.parse(message))
+                if(output.innerHTML != JSON.parse(message)*100){
+                    output.innerHTML = JSON.parse(message)*100;
+                    slider.value = JSON.parse(message)*100
+                }
+            })
         </script>
 
     </body>

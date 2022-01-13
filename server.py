@@ -7,7 +7,12 @@
 import http.server
 import ssl
 
+class CORSRequestHandler (http.server.SimpleHTTPRequestHandler):
+    def end_headers (self):
+        self.send_header('Access-Control-Allow-Origin', '*')
+        http.server.SimpleHTTPRequestHandler.end_headers(self)
+
 print("running sevrer")
-httpd = http.server.HTTPServer(('0.0.0.0', 8000), http.server.SimpleHTTPRequestHandler)
+httpd = http.server.HTTPServer(('0.0.0.0', 8000), CORSRequestHandler)
 httpd.socket = ssl.wrap_socket(httpd.socket, certfile='./server.pem', server_side=True)
 httpd.serve_forever()

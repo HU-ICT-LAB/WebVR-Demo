@@ -51,8 +51,21 @@ function queueAdder(items, length, item){
  */
 function getTotalDistance(vals){
     var dist = 0
-    for (let j = 1; j < vals.length-1; j++){
-        dist += Math.abs(vals[j] - vals[j+1])
+    for (let j = 0; j < vals.length-1; j++){
+        dist += Math.abs(vals[j] - vals[j+1]) //calculate the diffrence and add it
+    }
+    return dist
+}
+
+/**
+ * This function returns the total value/distance of travel based on the positions in the vals array.
+ * @param {Array} vals 
+ * @returns {number} the total distance traveled
+ */
+function getSummedDistance(vals){
+    var dist = 0
+    for (let j = 0; j < vals.length-1; j++){
+        dist += vals[j] - vals[j+1] //calculate the diffrence and add it
     }
     return dist
 }
@@ -157,6 +170,34 @@ AFRAME.registerComponent('relative-movement',{
  * If the player moves up and down but not sideways or forward we can conclude the player is jogging in place
  * We can then move the player forward in the direction of the controlers so the player can still look arround.
  */
+var headbobmoving_value = 0
+
+AFRAME.registerComponent('x-button-listener', {
+    init: function () {
+        this.el.addEventListener('xbuttondown', function () {
+            headbobmoving_value += 1
+        }.bind(this));
+        this.el.addEventListener('xbuttonup', function () {
+            headbobmoving_value -= 1
+        }.bind(this));
+    }
+  });
+
+  AFRAME.registerComponent('a-button-listener', {
+    init: function () {
+        this.el.addEventListener('abuttondown', function () {
+            headbobmoving_value += 1
+        }.bind(this));
+        this.el.addEventListener('abuttonup', function () {
+            headbobmoving_value -= 1
+        }.bind(this));
+    }
+  });
+
+
+
+
+
 AFRAME.registerComponent('headbob-movement',{
     init: function() {
         this.y_positions = []
@@ -179,8 +220,12 @@ AFRAME.registerComponent('headbob-movement',{
         this.x_positions = queueAdder(this.x_positions,this.length, player.getAttribute('position').x)
         this.x_rotation = queueAdder(this.x_rotation,this.length, player.getAttribute('rotation').x)
 
+
+        // if( getTotalDistance(this.y_positions)/this.length > 0.003 && getSumDistance(this.y_positions) < 0.2){
+
+        // }
         //check if the player has not moved too much on the x and z axis and if the rotation on the x axis is minimal.
-        if(getTotalDistance(this.x_positions) < 0.50 && getTotalDistance(this.z_positions) < 0.50 && getTotalDistance(this.x_rotation)/this.length < 10){
+        if(headbobmoving_value > 0 && getTotalDistance(this.x_positions) < 0.50 && getTotalDistance(this.z_positions) < 0.50 && getTotalDistance(this.x_rotation)/this.length < 10){
             //check if the distance rotated on the x axis is minimal
             if (getTotalDistance(this.x_rotation)/this.length < 1.5){
                 this.y_positions = queueAdder(this.y_positions,this.length, player.getAttribute('position').y)
