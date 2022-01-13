@@ -12,7 +12,7 @@ AFRAME.registerComponent('sethighscore', {
         it's value in the highscoretext entity and set connected value to true
          */
         if(connected && !this.con) {
-
+            var Highscoretext = document.querySelector("#Highscoretext");
             client.subscribe('hbo_ict_vr_game_score')
             client.publish('request_scoretopic', "{0}")
             mqtt_add_topic_callback('hbo_ict_vr_game_score', function (topic, message) {
@@ -24,5 +24,8 @@ AFRAME.registerComponent('sethighscore', {
                     this.newhighscore = this.newhighscore + x + ": " + obj[x] + "\n"}
                 console.log(this.newhighscore)
                 Highscoretext.setAttribute('text', 'value', this.newhighscore)})
+                // Highscoretext.setAttribute('text', 'value', "test")})
+
             this.con = true
+
         }}});

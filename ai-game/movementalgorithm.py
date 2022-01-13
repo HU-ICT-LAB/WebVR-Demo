@@ -34,7 +34,15 @@ def on_connect(client, userdata, flags, rc):
 
 
 def updatedataboard(new_data="5"):
-    print(new_data)
+    file_object = open('datafiles/lastmovement.txt', 'w+')
+    file = open("datafiles/lastmovement.txt")
+    if not (new_data in file.read()):
+        file_object.write(new_data)
+
+    # Close the file
+    file_object.close()
+    # print("new data:", new_data)
+
     # new_scorenumber = new_score.split(":")[1]
     # new_name=new_score.split(":")[0]
     # if len(new_scorenumber) == 1:
@@ -63,11 +71,11 @@ def getdataboard():
     :rtype: returns the highscores from the leaderboard.txt
 
     """
-    highscore_file = open("databoard.txt", "r")
+    highscore_file = open("datafiles/lastmovement.txt", "r")
     highscorestring = ""
     for score in highscore_file:
         highscorestring = highscorestring + score
-    print("data:" + highscorestring)
+    print("data to be send:" + highscorestring)
     return highscorestring
 
 
@@ -79,11 +87,13 @@ def on_message(client, userdata, msg):
     :param msg: message itself
     """
     if msg.topic == "hbo_ict_vr_game_player_stats":
+        print("request1 received")
         updatedataboard(msg.payload.decode("utf-8"))
         # client2.publish('hbo_ict_vr_game_score', getdataboard())  # publish
 
-    if msg.topic == "request_simple_move_data":
-        client2.publish('hbo_ict_vr_game_score', getdataboard())
+    if msg.topic == "hbo_ict_vr_request_data":
+        print("request2 received")
+        client2.publish('hbo_ict_vr_request_simplified_data', getdataboard())
 
 
 # code to connect to the server and which message is connect to which function

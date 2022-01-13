@@ -11,22 +11,28 @@ AFRAME.registerComponent('hit', {
         when hitend print out that it's out the colliding zone.
          */
         this.el.addEventListener('hitstart', function(){
-            var scorenumber = document.querySelector("#score");
 
-            console.log("Item touched");
-            var currentscore = scorenumber.getAttribute('text').value;
-            console.log(currentscore);
-            if (scoreagaindelay === 0) {
-                scorenumber.setAttribute('text', 'value', +currentscore + 1);
+            // if (warming_up_ended){ //meaning the game has started
+                var scorenumber = document.querySelector("#score");
 
-                //TODO code that the robot moves away after the punch
-                // var robot = document.querySelector("#robotmodel");
-                // var currentposition= robot.getAttribute('position')
-                // currentposition.z = currentposition.z + 0.1
-                // robot.setAttribute('position', currentposition)
-                // console.log("Dodged!")
-                // scoreagaindelay = 1;
-            }
+                console.log("Item touched");
+
+
+                var currentscore = scorenumber.getAttribute('text').value;
+                console.log(currentscore);
+                if (scoreagaindelay === 0) {
+                    scorenumber.setAttribute('text', 'value', +currentscore + 1);
+                    // scorenumber.setAttribute('text', 'value', 3);
+
+                    //TODO code that the robot moves away after the punch
+                    // var robot = document.querySelector("#robotmodel");
+                    // var currentposition= robot.getAttribute('position')
+                    // currentposition.z = currentposition.z + 0.1
+                    // robot.setAttribute('position', currentposition)
+                    // console.log("Dodged!")
+                    // scoreagaindelay = 1;
+                }
+            // }
         })
 
          this.el.addEventListener('hitend', function(){
@@ -45,6 +51,8 @@ AFRAME.registerComponent("hitbox", {
         body.setAttribute("mixin", "body");
         head.setAttribute("position", "0 70 0");
         head.setAttribute("mixin", "head");
+        body.setAttribute("color", "#FF0000")
+        head.setAttribute("color", "#FF0000")
         body.appendChild(head)
         this.el.appendChild(body);}})
 

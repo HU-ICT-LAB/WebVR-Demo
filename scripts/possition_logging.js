@@ -1,4 +1,5 @@
 
+
 /**
  * A component that can be attached to the camera rig. it loggs the information of the headset and controllers over mqtt
  * This information can then be used on another webpage or device.
@@ -58,6 +59,9 @@ AFRAME.registerComponent('mqtt-logger', {
                 obj = {'x': pos.x.toPrecision(8), 'y': pos.y.toPrecision(8), 'z': pos.z.toPrecision(8)};
                 packet['headset_rot'] = obj
                 client.publish('hbo_ict_vr_game_player_stats', JSON.stringify(packet))
+
+                // client.subscribe('hbo_ict_vr_request_simplified_data')
+                client.publish('hbo_ict_vr_request_data', JSON.stringify(packet))
             }
         }
 
