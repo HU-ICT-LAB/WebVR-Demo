@@ -1,0 +1,11 @@
+Model Information:
+* title:	Low-poly Survival Tent
+* source:	https://sketchfab.com/3d-models/low-poly-survival-tent-f3f5283fa07a47e798017bc3c055fe88
+* author:	simonaskLDE (https://sketchfab.com/simonaskLDE)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Low-poly Survival Tent" (https://sketchfab.com/3d-models/low-poly-survival-tent-f3f5283fa07a47e798017bc3c055fe88) by simonaskLDE (https://sketchfab.com/simonaskLDE) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

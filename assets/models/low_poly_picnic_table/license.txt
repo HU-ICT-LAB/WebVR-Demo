@@ -1,0 +1,11 @@
+Model Information:
+* title:	Low Poly Picnic Table
+* source:	https://sketchfab.com/3d-models/low-poly-picnic-table-c5f659049a4548559af2b6a75e23a858
+* author:	Kelly Liang (https://sketchfab.com/kellyliang)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Low Poly Picnic Table" (https://sketchfab.com/3d-models/low-poly-picnic-table-c5f659049a4548559af2b6a75e23a858) by Kelly Liang (https://sketchfab.com/kellyliang) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
