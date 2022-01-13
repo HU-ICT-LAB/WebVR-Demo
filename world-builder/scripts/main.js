@@ -118,6 +118,11 @@ AFRAME.registerComponent('add-object', {
       // newEl.setAttribute('material', 'color: ' + GLOBALCOLOR);
       newEl.setAttribute('material', 'src: #' + GLOBALCOLOR + '-canvas');
       newEl.setAttribute('draw-canvas', '' + GLOBALCOLOR + '-canvas');
+      // sendLogToServer("DOUBLLEEE0");
+      // newEl.getAttribute("material").side = THREE.DoubleSide;
+
+      // sendLogToServer("DOUBLLEEE1");
+      // sendLogToServer(newEl.getAttribute("material"));
 
       scene.appendChild(newEl);
     }
@@ -136,15 +141,45 @@ AFRAME.registerComponent('snap', {
 
   init: function () {
     this.originalPos = this.el.getAttribute('position');
+    this.test = this.el.getAttribute("material");
+    this.test.side = THREE.DoubleSide;
+    // sendLogToServer(this.test);
+    this.el.setAttribute("material", this.test);
+    // sendLogToServer(this.test);
   },
 
   update: function () {
     const data = this.data;
-    const pos = AFRAME.utils.clone(this.originalPos);
+    let pos = AFRAME.utils.clone(this.originalPos);
 
-    pos.x = Math.floor(pos.x / data.snap.x) * data.snap.x + data.offset.x;
-    pos.y = Math.floor(pos.y / data.snap.y) * data.snap.y + data.offset.y;
-    pos.z = Math.floor(pos.z / data.snap.z) * data.snap.z + data.offset.z;
+
+
+
+    let allBlocks = document.querySelectorAll(".collidable.block");
+    sendLogToServer(allBlocks.length);
+
+    for (let i = 0; i < allBlocks.length; i++) {
+      otherBlockPosition = allBlocks[i].getAttribute('position');
+      pos.x = Math.floor(pos.x / data.snap.x) * data.snap.x + data.offset.x;
+      pos.y = Math.floor(pos.y / data.snap.y) * data.snap.y + data.offset.y;
+      pos.z = Math.floor(pos.z / data.snap.z) * data.snap.z + data.offset.z;
+      // sendLogToServer({"otherBlock": otherBlockPosition});
+      sendLogToServer({ "desiredSnap": pos });
+      if (pos.x == otherBlockPosition.x && pos.y == otherBlockPosition.y && pos.z == otherBlockPosition.z) {
+        sendLogToServer("YOOOOOO");
+        pos = AFRAME.utils.clone(this.originalPos);
+        sendLogToServer({ "realPos": pos });
+        pos.x = Math.ceil(pos.x / data.snap.x) * data.snap.x - data.offset.x;
+        pos.y = Math.ceil(pos.y / data.snap.y) * data.snap.y - data.offset.y;
+        pos.z = Math.ceil(pos.z / data.snap.z) * data.snap.z - data.offset.z;
+        sendLogToServer({ "newSnap": pos });
+        break;
+      }
+    }
+
+    // pos.x = Math.floor(pos.x / data.snap.x) * data.snap.x + data.offset.x;
+    // pos.y = Math.floor(pos.y / data.snap.y) * data.snap.y + data.offset.y;
+    // pos.z = Math.floor(pos.z / data.snap.z) * data.snap.z + data.offset.z;
 
 
     if (pos.y < 0) {
@@ -152,9 +187,33 @@ AFRAME.registerComponent('snap', {
     };
 
     this.el.setAttribute('position', pos);
+    sendLogToServer({ "positionSet": pos });
   }
 });
 
+// AFRAME.registerComponent('snap', {
+//   dependencies: ['position'],
+
+//   schema: {
+//       offset: {type: 'vec3'},
+//       snap: {type: 'vec3'}
+//   },
+
+//   init: function () {
+//       this.originalPos = this.el.getAttribute('position');
+//   },
+
+//   update: function () {
+//       const data = this.data;
+
+//       const pos = AFRAME.utils.clone(this.originalPos);
+//       pos.x = Math.ceil(pos.x / data.snap.x) * data.snap.x - data.offset.x;
+//       pos.y = Math.ceil(pos.y / data.snap.y) * data.snap.y - data.offset.y;
+//       pos.z = Math.ceil(pos.z / data.snap.z) * data.snap.z - data.offset.z;
+
+//       this.el.setAttribute('position', pos);
+//   }
+// });
 // delete object
 AFRAME.registerComponent('delete-object', {
   events: {
