@@ -216,11 +216,11 @@ AFRAME.registerComponent('link_selector',{
         text_entity.setAttribute("value", this.data.texts[this.text_index])
 
         this.text_index += 1
-        if (this.list_index == this.data.texts.length){
+        if (this.text_index >= this.data.texts.length){
             this.text_index = 0
         }
         this.index += 1
-        if (this.index == this.data.links.length){
+        if (this.index >= this.data.links.length){
             this.index = 0
         }
     }
