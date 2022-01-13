@@ -24,10 +24,34 @@ function calculateSteps(pos1, pos2) {
 function dodgeMovement(bot, listOfHits) {
     const botPosition = bot.getAttribute('position');
     const firstTouch = listOfHits[0];
-    const width = bot.getAttribute('width');
-    const diff = botPosition.x - firstTouch.x;
+    const lastTouch = listOfHits[listOfHits.length - 1];
 
-    botPosition.x = diff - (width/2);
+    const diffX = Math.abs(firstTouch.x - lastTouch.x);
+    const diffY = Math.abs(firstTouch.y - lastTouch.y);
+    const diffZ = Math.abs(firstTouch.z - lastTouch.z);
+
+    const biggestDiff = Math.max(diffX, diffY, diffZ);
+
+    if (biggestDiff === diffZ) {
+        const width = bot.getAttribute('width');
+        const leftSide = botPosition.x - (width/2);
+        const rightSide = botPosition.x + (width/2);                  
+        const disFromLeft = Math.min(Math.abs(lastTouch.x - leftSide), Math.abs(firstTouch.x - leftSide));
+        const disFromRight = Math.min(Math.abs(lastTouch.x - rightSide), Math.abs(firstTouch.x - rightSide));
+
+        if (disFromLeft < disFromRight) {
+            botPosition.x = botPosition.x + disFromLeft;
+        } else {
+            botPosition.x = botPosition.x - disFromRight;
+        }
+
+    } else {
+        const depth = bot.getAttribute('depth');
+        const frontSide = botPosition.z - (depth/2);
+        const rightSide = botPosition.z + (depth/2);
+        const disFromBack = Math.min(Math.abs(firstTouch.z - rightSide), Math.abs(lastTouch.z - frontSide));
+        botPosition.z = botPosition.z - disFromBack;
+    }
 
     bot.setAttribute('position', botPosition);
 }
@@ -63,12 +87,15 @@ function positionsOfBox(childEntity, parentEntity = null) {
 
         if (width === null) {
             width = 1;
+            childEntity.setAttribute('width', width);
         }
         if (height === null) {
             height = 1;
+            childEntity.setAttribute('height', height);
         }
         if (depth === null) {
             depth = 1;
+            childEntity.setAttribute('depth', depth);
         }
 
         return calculateCorners(boxpos, width, height, depth, scale);
@@ -186,12 +213,14 @@ function getWorldAttributes(childEntity, parentEntity) {
             returns.push(sumObjects(childAtt, parentAtt, true));
         } else if (element === 'width' || element === 'depth' || element === 'height') {
             if (childAtt === null) {
-                childAtt = 0;
+                childAtt = 1;
+                childEntity.setAttribute(element, childAtt);
             }
             if (parentAtt === null) {
-                parentAtt = 0;
+                parentAtt = 1;
+                parentEntity.setAttribute(element, parentAtt);
             }
-            returns.push(parseFloat(childAtt) + parseFloat(parentAtt));
+            returns.push(parseFloat(childAtt) * parseFloat(parentAtt));
 
         } else {
             returns.push(sumObjects(childAtt, parentAtt));
