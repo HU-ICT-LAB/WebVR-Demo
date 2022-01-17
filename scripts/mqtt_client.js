@@ -32,6 +32,7 @@ var function_dict = {}
  * @param {String} message the message recieved by the client
  */
 function mqtt_callback(topic, message){
+    console.log(JSON.parse(message))
     var functions = function_dict[topic]
     for(let i = 0; i < functions.length; i++){
         functions[i](topic, message)
