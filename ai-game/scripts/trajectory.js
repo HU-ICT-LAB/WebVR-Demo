@@ -249,7 +249,7 @@ AFRAME.registerComponent('trajectory', {
         this.hitBoxes = this.aiBot.querySelectorAll('#hitbox');
     },
     tick: function (time) {
-        //Runs every 2 seconds
+        //Runs every 50 ticks
         if (Math.round(time - this.lastTick) > 50) {
             this.lastTick = Math.round(time);
 
