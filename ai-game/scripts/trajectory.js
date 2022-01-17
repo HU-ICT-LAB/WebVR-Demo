@@ -275,9 +275,9 @@ AFRAME.registerComponent('trajectory', {
 
         }
 
-        // if (positionsLeft.length === 2) {
-        //     executeCalculations(positionsLeft[0], positionsLeft[1], this.aiBot, this.stor);
-        //     positionsLeft = [];
-        // }
+        if (positionsLeft.length === 2) {
+            executeCalculations(positionsLeft[0], positionsLeft[1], this.aiBot, this.stor);
+            positionsLeft = [];
+        }
     }
 })
