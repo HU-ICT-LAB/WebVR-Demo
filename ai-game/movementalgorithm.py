@@ -1,6 +1,7 @@
 import paho.mqtt.client as paho
 import json
 import operator
+import ast
 
 # broker server:
 broker = "broker.emqx.io"
@@ -96,14 +97,15 @@ def on_message(client, userdata, msg):
     :param msg: message itself
     """
     if msg.topic == "hbo_ict_vr_data_last_movement":
+        print("data:", ast.literal_eval(msg.payload.decode("utf-8"))[1][1:])
         updatelastmovement(msg.payload.decode("utf-8"))
         # client2.publish('hbo_ict_vr_game_score', getdataboard())  # publish
 
     if msg.topic == "hbo_ict_vr_request_data":
-        pass
+
         # getlastmovement()
         print('send simply data')
-        client2.publish('hbo_ict_vr_request_simplified_lastmovement', getlastmovement())
+        # client2.publish('hbo_ict_vr_request_simplified_lastmovement', getlastmovement())
 
 
 # code to connect to the server and which message is connect to which function

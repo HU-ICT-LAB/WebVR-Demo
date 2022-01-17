@@ -26,10 +26,12 @@ AFRAME.registerComponent('lastmovement-logger', {
                 })
                 this.con = true
             }
-            var packet = getPositions(this.el) //runs the function with the element (camera) and gets from hand-positions, the positions
-            client.publish('hbo_ict_vr_data_last_movement', JSON.stringify(packet))
+            var positions = getPositions(this.el) //runs the function with the element (camera) and gets from hand-positions, the positions
+            var name = document.querySelector("#username");
+            var current_name = name.getAttribute('text').value.substr(14)
+            client.publish('hbo_ict_vr_data_last_movement', JSON.stringify([current_name, positions]))
 
-            client.publish('hbo_ict_vr_request_data', "{0}")
+            client.publish('hbo_ict_vr_request_database', "{0}")
         }
     }
 });
@@ -57,12 +59,13 @@ AFRAME.registerComponent('databoard_updating', {
             if(!this.con){
                 //last movement data:
                 client.subscribe('hbo_ict_vr_request_simplified_lastmovement') //topic to receive the lastmovement data back
-                client.publish('hbo_ict_vr_request_data', "{0}") //topic to ask the lastmovement data back
+                client.publish('hbo_ict_vr_request_database', "{0}") //topic to ask the lastmovement data back
                 this.con = true
                 //The setting of locations isnt actualy a component function but a mqtt claback function, that is why this is only called once, but it is in the tick function as we can only set this once the mqtt client is connected.
                 mqtt_add_topic_callback('hbo_ict_vr_request_simplified_lastmovement', function (topic, message) {
                     var LastMovement = document.querySelector("#LastMovement") //add the message from the topic to the databoard
                     LastMovement.setAttribute('text','value', message.toString())
+
                   })
                 //moves data:
 
