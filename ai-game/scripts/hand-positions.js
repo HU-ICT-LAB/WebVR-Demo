@@ -110,6 +110,8 @@ AFRAME.registerComponent('add_cords_to_hud', {
         var obj_rc = list[1];
         var obj_lc = list[2];
 
+        client.publish('hbo_ict_vr_request_data', JSON.stringify(list))
+
         //Add the coordinates to the HUD
         textEntity.setAttribute('text', 'value',
             "Headset: \n" + "x: " + [obj_h['x'] + "\ny: " + obj_h['y'] + "\nz: " + obj_h['z']] + "\n\n" +

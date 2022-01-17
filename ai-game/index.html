@@ -3,8 +3,12 @@
     <title> Aframe VRBoxing Game</title>
         <!--  Scripts  -->
         <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+        <script src="scripts/hand-positions.js"></script>
         <script src="../scripts/possition_logging.js"></script>
+        <script src="../ai-game/scripts/databoard_data.js"></script>
 
+        <!-- Font -->
+        <script src="https://cdn.aframe.io/fonts/Roboto-msdf.json"></script>
 
         <!-- Hitbox collider libraries   -->
         <script src="https://unpkg.com/aframe-environment-component@1.0.0/dist/aframe-environment-component.min.js"></script>
@@ -66,10 +70,15 @@
                         <a-entity id="Highscoretext" text="value: Top 10 Leaderboard\n------------\n---: --\n---: --\n---: --\n---: --\n---: --\n---: --\n---: --\n---: --\n---: --\n---: --; color: #FFFFFF" position="1.20 0 0.11" scale="5 5 5" sethighscore></a-entity>
                     </a-box>
                     <!--   Data Text Objects                 -->
-                    <a-box color="#A9A9A9" src=#Metal width="3.5" height="3" depth="0.1" position="3.5 -0.75 0"  repeat="10 1">
+                    <a-box color="#A9A9A9" src=#Metal width="3.5" height="3" depth="0.1" position="3.5 -0.75 0"  repeat="10 1" databoard_updating>
                         <a-entity id="Title" text="value: Databoard\n-------------\n ; color: #FFFFFF" position="0.90 1.1 0.11" scale="5 5 5" sethighscore></a-entity>
-                        <a-entity id="LastMovement" text="value: Databoard\n-------------\n ; color: #FFFFFF" position="0.90 1.1 0.11" scale="5 5 5" sethighscore></a-entity>
-                        <a-entity id="Title" text="value: Databoard\n-------------\n ; color: #FFFFFF" position="0.90 1.1 0.11" scale="5 5 5" sethighscore></a-entity>
+                        <a-entity id="LastMovement" text="value: *lastmovement* ; color: #FFFFFF" position="0.90 0.77 0.11" scale="5 5 5" sethighscore></a-entity>
+
+                        <a-entity id="Aftergame_Title" text="value: Aftergame; color: #000000 " position="0.90 0.50 0.11" scale="5 5 5" sethighscore></a-entity>
+                        <a-entity id="Moves_Title" text="value: Moves; color: #FFFFFF " position="0.90 0.30 0.11" scale="5 5 5" sethighscore></a-entity>
+
+<!--                        <a-entity id="LastMovement" text="value: *lastmovement* ; color: #FFFFFF" position="0.90 0.76 0.11" scale="5 5 5" sethighscore></a-entity>-->
+<!--                        <a-entity id="Title" text="value: Databoard\n-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;\n ; color: #FFFFFF" position="0.90 1.1 0.11" scale="5 5 5" sethighscore></a-entity>-->
 
                     </a-box>
                 </a-box>
@@ -112,7 +121,7 @@
     </a-box>
 
     <!--    Camera and Oculus rift-->
-    <a-entity wasd-controls id="rig" position="0 0 2" mqtt-logger>
+    <a-entity wasd-controls id="rig" position="0 0 2" mqtt-logger add_cords_to_hud lastmovement-logger>
         <a-entity id="camera" camera look-controls ></a-entity>
         <a-entity class="hand" aabb-collider="objects: a-box" id="left_controller"  oculus-touch-controls="hand: left" thumbstick-logging hit></a-entity>
         <a-entity class="hand" aabb-collider="objects: a-box" id="right_controller"  oculus-touch-controls="hand: right" thumbstick-logging hit></a-entity>

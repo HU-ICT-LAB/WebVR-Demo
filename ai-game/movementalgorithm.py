@@ -6,7 +6,6 @@ import operator
 broker = "broker.emqx.io"
 port = 1883
 
-
 def on_publish(client, userdata, result):  # create function for callback
     """
     when data is published, this function will be ran and print data published string
@@ -29,13 +28,15 @@ def on_connect(client, userdata, flags, rc):
     :param flags: gives more detailed information about message
     :param rc: return code (0 is accepted, 1 is rejected)
     """
-    client2.subscribe("hbo_ict_vr_game_player_stats")
+    client2.subscribe("hbo_ict_vr_request_data")
+    client2.subscribe("hbo_ict_vr_data_last_movement")
     client2.subscribe("request_simple_move_data")
 
 
-def updatedataboard(new_data="5"):
+def updatelastmovement(new_data="5"):
     file_object = open('datafiles/lastmovement.txt', 'w+')
     file = open("datafiles/lastmovement.txt")
+    print(new_data)
     if not (new_data in file.read()):
         file_object.write(new_data)
 
@@ -65,18 +66,26 @@ def updatedataboard(new_data="5"):
     # print(readable_highscores)
 
 
-def getdataboard():
+def getlastmovement():
     """
     receive the highscore from the leaderboard.txt and return it
     :rtype: returns the highscores from the leaderboard.txt
 
     """
-    highscore_file = open("datafiles/lastmovement.txt", "r")
-    highscorestring = ""
-    for score in highscore_file:
-        highscorestring = highscorestring + score
-    print("data to be send:" + highscorestring)
-    return highscorestring
+    global lastmovement_simplified_string
+    lastmovementfile = open("datafiles/lastmovement.txt", "r")
+    for lastmovementline in lastmovementfile:
+        lastmovement = json.loads(lastmovementline)
+        lastmovement_simplified_string = "L(" + \
+                                         str(round(float(lastmovement[1]["x"]),1)) + "," + \
+                                         str(round(float(lastmovement[1]["y"]),1))  + "," + \
+                                         str(round(float(lastmovement[1]["z"]),1))  + ")" + \
+                                         " R(" + \
+                                         str(round(float(lastmovement[2]["x"]),1)) + "," + \
+                                         str(round(float(lastmovement[2]["y"]),1))  + "," + \
+                                         str(round(float(lastmovement[2]["z"]),1))  + ")"
+        # print(lastmovement_simplified_string)
+    return lastmovement_simplified_string
 
 
 def on_message(client, userdata, msg):
@@ -86,14 +95,15 @@ def on_message(client, userdata, msg):
     :param userdata: the detailed information about the user
     :param msg: message itself
     """
-    if msg.topic == "hbo_ict_vr_game_player_stats":
-        print("request1 received")
-        updatedataboard(msg.payload.decode("utf-8"))
+    if msg.topic == "hbo_ict_vr_data_last_movement":
+        updatelastmovement(msg.payload.decode("utf-8"))
         # client2.publish('hbo_ict_vr_game_score', getdataboard())  # publish
 
     if msg.topic == "hbo_ict_vr_request_data":
-        print("request2 received")
-        client2.publish('hbo_ict_vr_request_simplified_data', getdataboard())
+        pass
+        # getlastmovement()
+        print('send simply data')
+        client2.publish('hbo_ict_vr_request_simplified_lastmovement', getlastmovement())
 
 
 # code to connect to the server and which message is connect to which function
