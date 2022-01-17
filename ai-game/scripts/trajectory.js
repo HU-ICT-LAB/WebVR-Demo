@@ -26,6 +26,7 @@ function dodgeMovement(bot, listOfHits) {
     const firstTouch = listOfHits[0];
     const lastTouch = listOfHits[listOfHits.length - 1];
 
+    //To see which direction changes the most
     const diffX = Math.abs(firstTouch.x - lastTouch.x);
     const diffY = Math.abs(firstTouch.y - lastTouch.y);
     const diffZ = Math.abs(firstTouch.z - lastTouch.z);
@@ -33,12 +34,14 @@ function dodgeMovement(bot, listOfHits) {
     const biggestDiff = Math.max(diffX, diffY, diffZ);
 
     if (biggestDiff === diffZ) {
+        //for punches from the front side of the opponent
         const width = bot.getAttribute('width');
         const leftSide = botPosition.x - (width/2);
         const rightSide = botPosition.x + (width/2);                  
         const disFromLeft = Math.min(Math.abs(lastTouch.x - leftSide), Math.abs(firstTouch.x - leftSide));
         const disFromRight = Math.min(Math.abs(lastTouch.x - rightSide), Math.abs(firstTouch.x - rightSide));
 
+        //decides if opponent moves right or left
         if (disFromLeft < disFromRight) {
             botPosition.x = botPosition.x + disFromLeft;
         } else {
@@ -46,11 +49,11 @@ function dodgeMovement(bot, listOfHits) {
         }
 
     } else {
+        //for punches from the side of the opponent
         const depth = bot.getAttribute('depth');
-        const frontSide = botPosition.z - (depth/2);
-        const rightSide = botPosition.z + (depth/2);
-        const disFromBack = Math.min(Math.abs(firstTouch.z - rightSide), Math.abs(lastTouch.z - frontSide));
-        botPosition.z = botPosition.z - disFromBack;
+        const frontSide = botPosition.z + (depth/2);
+        const disFromFront = Math.abs(lastTouch.z - frontSide);
+        botPosition.z = botPosition.z - disFromFront;
     }
 
     bot.setAttribute('position', botPosition);
@@ -272,9 +275,9 @@ AFRAME.registerComponent('trajectory', {
 
         }
 
-        if (positionsLeft.length === 2) {
-            executeCalculations(positionsLeft[0], positionsLeft[1], this.aiBot, this.stor);
-            positionsLeft = [];
-        }
+        // if (positionsLeft.length === 2) {
+        //     executeCalculations(positionsLeft[0], positionsLeft[1], this.aiBot, this.stor);
+        //     positionsLeft = [];
+        // }
     }
 })
