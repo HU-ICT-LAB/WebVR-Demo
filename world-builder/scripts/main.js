@@ -252,8 +252,7 @@ AFRAME.registerGeometry('terrain', {
     // Some start variables
     let WIDTH = 250;
     let HEIGHT = 250;
-    // let SIZE_AMPLIFIER = 3.9;
-    let SIZE_AMPLIFIER = 1;
+    let SIZE_AMPLIFIER = 3.9;
     let HEIGHT_AMPLIFIER = .6;
     var plane = new THREE.PlaneBufferGeometry(WIDTH * SIZE_AMPLIFIER, HEIGHT * SIZE_AMPLIFIER, WIDTH - 1, HEIGHT - 1);
     var material = new THREE.MeshPhongMaterial({ color: 0xFFFFFF, side: THREE.DoubleSide, shading: THREE.FlatShading });
@@ -285,14 +284,14 @@ AFRAME.registerGeometry('terrain', {
           min = n;
         }
         // The flatspot.
-        // if ((y > 75 && y < 175) && (x > 75 && x < 175)) {
-        //   c += 1
-        //   let n = noise2D(x * 0.01, y * 0.01, P);
-        //   n += pv;
-        //   n *= kv;
-        //   totalInPlayableArea += n;
-        //   n = 0;
-        // }
+        if ((y > 75 && y < 175) && (x > 75 && x < 175)) {
+          c += 1
+          let n = noise2D(x * 0.01, y * 0.01, P);
+          n += pv;
+          n *= kv;
+          totalInPlayableArea += n;
+          n = 0;
+        }
         rowArray.push(n);
 
       }
@@ -348,11 +347,11 @@ AFRAME.registerGeometry('terrain', {
     // Set the blobal min height.
     GLOBALMIN = minN;
     // Make sure the flatspot is on the min height level.
-    // for (let y = 75; y < 175; y++) {
-    //   for (let x = 75; x < 175; x++) {
-    //     generalArray[y][x] = minN;
-    //   }
-    // }
+    for (let y = 75; y < 175; y++) {
+      for (let x = 75; x < 175; x++) {
+        generalArray[y][x] = minN;
+      }
+    }
 
     console.log(minN, minX, minY, generalArray[minY][minX]);
 
@@ -553,7 +552,7 @@ AFRAME.registerComponent('generate_trees', {
     //     tree.setAttribute('position', pos);
     //     scene.appendChild(tree);
 
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 100; i++) {
       var tree = document.createElement('a-entity');
       tree.setAttribute('loaded_tree', '')
       tree.setAttribute('id', 'gentree')
