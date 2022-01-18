@@ -35,8 +35,8 @@ def on_connect(client, userdata, flags, rc):
 
 
 def updatelastmovement(new_data="5"):
-    file_object = open('datafiles/lastmovement.txt', 'w+')
-    file = open("datafiles/lastmovement.txt")
+    file_object = open('../datafiles/lastmovement.txt', 'w+')
+    file = open("../datafiles/lastmovement.txt")
     print(new_data)
     if not (new_data in file.read()):
         file_object.write(new_data)
@@ -74,7 +74,7 @@ def getlastmovement():
 
     """
     global lastmovement_simplified_string
-    lastmovementfile = open("datafiles/lastmovement.txt", "r")
+    lastmovementfile = open("../datafiles/lastmovement.txt", "r")
     for lastmovementline in lastmovementfile:
         lastmovement = json.loads(lastmovementline)
         lastmovement_simplified_string = "L(" + \

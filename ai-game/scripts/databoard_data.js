@@ -14,23 +14,17 @@ AFRAME.registerComponent('lastmovement-logger', {
     },
     
     /**
-     * Function that is executed every tick, it gets the controllers and headsets current position and rotation
-     * It then puts that information into a json object and sends it over mqtt to the topic: hbo_ict_vr_game_player_stats
+     * Function that is executed every tick, it gets the controllers and headsets current position & name
+     * It then puts that information into a json object and sends it over mqtt to the topic: hbo_ict_vr_data_last_movement
+     * then it asks to request the data from the database from the topic: hbo_ict_vr_request_database
      */
     tick: function () {
         if (connected){
-            if (!this.con){
-                mqtt_add_topic_callback("", function (topic, message) {
-                    // message is Buffer
-                    // console.log(message.toString())
-                })
-                this.con = true
-            }
+            if (!this.con){this.con = true}
             var positions = getPositions(this.el) //runs the function with the element (camera) and gets from hand-positions, the positions
             var name = document.querySelector("#username");
             var current_name = name.getAttribute('text').value.substr(14)
             client.publish('hbo_ict_vr_data_last_movement', JSON.stringify([current_name, positions]))
-
             client.publish('hbo_ict_vr_request_database', "{0}")
         }
     }
@@ -48,27 +42,37 @@ AFRAME.registerComponent('databoard_updating', {
     init: function () {
         //tells if we already set an mqtt calback or subscription, can only be true after the mqtt client has been connected
         this.con = false
-        
     },
     /**
-     * A function that executes every tick, it gets player headset and controller positions and rotations over mqtt.
-     * It then sets the rotations and positions of 3 objects called "left_hand", "right_hand" and "head"
+     * A function that executes every tick, it gets player controller positions over mqtt.
+     * It then sets the positions to the databoard with setAttribute on the Lastmovement entity
      */
     tick: function () {
         if (connected){
             if(!this.con){
+                this.con = true
                 //last movement data:
                 client.subscribe('hbo_ict_vr_request_simplified_lastmovement') //topic to receive the lastmovement data back
                 client.publish('hbo_ict_vr_request_database', "{0}") //topic to ask the lastmovement data back
-                this.con = true
-                //The setting of locations isnt actualy a component function but a mqtt claback function, that is why this is only called once, but it is in the tick function as we can only set this once the mqtt client is connected.
                 mqtt_add_topic_callback('hbo_ict_vr_request_simplified_lastmovement', function (topic, message) {
                     var LastMovement = document.querySelector("#LastMovement") //add the message from the topic to the databoard
                     LastMovement.setAttribute('text','value', message.toString())
-
                   })
-                //moves data:
 
+                //punch moves data:
+                //TODO: get hand movements from the database with a subscribed topic and set it to it's databoard attribute
+
+                //fastest punch data:
+                //TODO: get fast movements from the database with a subscribed topic and set it to it's databoard attribute
+
+                //slowest punch data:
+                //TODO: get slow movements from the database with a subscribed topic and set it to it's databoard attribute
+
+                //most punches data:
+                //TODO: get most accurate punches today from the database with a subscribed topic and set it to it's databoard attribute
+
+                //most punches data:
+                //TODO: get total calories burned from movements today from the database with a subscribed topic and set it to it's databoard attribute
             }
         }
     }
