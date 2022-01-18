@@ -35,6 +35,10 @@
         <!--    Player name-->
         <script src="scripts/username.js" type="text/javascript"></script>
 
+        <!--    Trajectory component-->
+        <script src="scripts/hand-positions.js"></script>
+        <script src="scripts/trajectory.js"></script>
+
         <!--   Button script -->
         <script src="../scripts/push_button.js" type="text/javascript"></script>
         <script src="scripts/gamebutton.js" type="text/javascript"></script>
@@ -48,7 +52,7 @@
         <img id="floor" src="assets/textures/Carpet.jpg">
         <img id="Sky" src="assets/textures/background.jpg">
         <img id="Metal" src="assets/textures/Metal.png">
-        <a-asset-item id="Robot" src="assets\models\Robot_gltf/scene.gltf"></a-asset-item>
+        <a-asset-item id="Robot" src="assets\models\Robot_gltf/scene.glb"></a-asset-item>
         <a-mixin id="head" geometry="primitive:box; height:50; width:40; depth:30;" material="opacity: 0.3; transparent: true" ></a-mixin>
         <a-mixin id="body" geometry="primitive:box; height:70; width:60; depth:55;" material="opacity: 0.3; transparent: true" handle-events aabb-collider></a-mixin>
 
@@ -101,10 +105,13 @@
     </a-plane>
 
     <!--             Robot Playermodel & Hitbox -->
-    <a-entity id="robotmodel" gltf-model="#Robot" scale="0.007 0.01 0.01" position="0 0 -1"
-              animation="property: position; from: 0 0 -1; to: 0 0 0; dur: 10000; easing: linear">
+    <!--             Height is just a temporary change so we can use the model.
+                     Later on we want to use the hitboxes to check if the robotmodel will be hit.   -->
+    <a-entity id="robotmodel" gltf-model="#Robot" position="0 0 -1">
+        <a-entity id="hitbox" color="#333333" position="0 1.8 0" width="0.4" height="0.6" depth="0.3"></a-entity>
+        <a-entity id="hitbox" color="#333333" position="0 1.1 0" width="0.5" height="0.7" depth="0.55"></a-entity>
+        <!-- TODO look into it -->
         <a-hitbox  color="#333333" position="0 2 0" ></a-hitbox>
-        <a-text id='robot_hitable' value="not_hitable" ></a-text>
     </a-entity>
 
     <!--  Button  -->
@@ -120,7 +127,7 @@
     </a-box>
 
     <!--    Camera and Oculus rift-->
-    <a-entity wasd-controls id="rig" position="0 0 2" mqtt-logger add_cords_to_hud lastmovement-logger>
+    <a-entity wasd-controls id="rig" position="0 0 2" mqtt-logger add_cords_to_hud lastmovement-logger trajectory="targetBox: robotmodel">
         <a-entity id="camera" camera look-controls ></a-entity>
         <a-entity class="hand" aabb-collider="objects: a-box" id="left_controller"  oculus-touch-controls="hand: left" thumbstick-logging hit></a-entity>
         <a-entity class="hand" aabb-collider="objects: a-box" id="right_controller"  oculus-touch-controls="hand: right" thumbstick-logging hit></a-entity>
