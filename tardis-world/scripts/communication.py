@@ -24,27 +24,35 @@ host_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 host_socket.bind((Socket_HOST, Socket_PORT))
 host_socket.listen()
 
+moving_mutext = threading.Lock()
+
 def receive_thread():
     print("we are waiting for a connection")
     conn, addr = host_socket.accept()
     with conn:
         print("got a connection")
         data = conn.recv(1024)
-        x = ast.literal_eval(data.decode())
-        x = [math.degrees(float(n)) for n in x]
-        print(x)
-        message = {}
-        message["base"] = x[0]
-        message["shoulder"] = (x[1]+90) %360
-        message["elbow"] = x[2]
-        message["wrist1"] = (x[3]+90) %360
-        message["wrist2"] = x[4]
-        message["wrist3"] = x[5]%360
-        print(json.dumps(message))
-        client1.publish("robot_arm_positions", json.dumps(message))
-        conn.close()
+        data = data.decode()
+        if len(data) > 20:
+            x = ast.literal_eval(data)
+            x = [math.degrees(float(n)) for n in x]
+            print(x)
+            message = {}
+            message["base"] = x[0]
+            message["shoulder"] = (x[1]+90) %360
+            message["elbow"] = x[2]
+            message["wrist1"] = (x[3]+90) %360
+            message["wrist2"] = x[4]
+            message["wrist3"] = x[5]%360
+            print(json.dumps(message))
+            client1.publish("robot_arm_positions", json.dumps(message))
+            conn.close()
+        else:
+            print(data)
+            if data == "done":
+                conn.close()
 
-def send_positions():
+def send_positions(desired_path=""):
     """
     Let the robot arm send its positions
     """
@@ -54,8 +62,8 @@ def send_positions():
 			+ "\twhile True:\n"
 			+ "\t\tif socket_open(\"192.168.1.128\", 8080, \"socket_2\") == True:\n"
             + "\t\t\ttextmsg(\"Connection successful?\")\n"
+            + "\t\t\t" + desired_path + "\n"
             + "\t\t\tsocket_send_string(to_str(get_target_joint_positions()), \"socket_2\")\n"
-            + "\t\t\tsleep(10)\n"
 			+ "\t\t\tbreak\n"
             + "\t\telse:\n"
             + "\t\t\ttextmsg(\"Connection unsuccessful\")\n"
@@ -63,59 +71,53 @@ def send_positions():
 			+ "\tend\n"
 			+ "end\n").encode("utf8"))
     z.join()
-    time.sleep(0.5)
 
 
 def move_backwards():
     """
     Move the robot arm backward
     """
-    s.send((" movej(pose_trans(get_forward_kin(), p[0, -0.05, 0, 0, 0, 0]), a=1.2, v=1.05, t=0, r=0)"+"\n").encode("utf8"))
-    time.sleep(2)
-    send_positions()
+    send_positions("movej(pose_trans(get_forward_kin(), p[0, 0.05, 0, 0, 0, 0]), a=1.2, v=1.05, t=0, r=0)")
+    time.sleep(0.5)
 
 def move_forwards():
     """
     Move the robot arm forward
     """
-    s.send((" movej(pose_trans(get_forward_kin(), p[0, 0.05, 0, 0, 0, 0]), a=1.2, v=1.05, t=0, r=0)"+"\n").encode("utf8"))
-    time.sleep(2)
-    send_positions()
+    send_positions("movej(pose_trans(get_forward_kin(), p[0, -0.05, 0, 0, 0, 0]), a=1.2, v=1.05, t=0, r=0)")
+    time.sleep(0.5)
 
 def move_left():
     """
     Move the robot arm left
     """
-    s.send((" movej(pose_trans(get_forward_kin(), p[0.05, 0, 0, 0, 0, 0]), a=1.2, v=1.05, t=0, r=0)"+"\n").encode("utf8"))
-    time.sleep(2)
-    send_positions()
+    send_positions("movej(pose_trans(get_forward_kin(), p[0.05, 0, 0, 0, 0, 0]), a=1.2, v=1.05, t=0, r=0)")
+    time.sleep(0.5)
+
 
 def move_right():
     """
     Move the robot arm right
     """
-    s.send((" movej(pose_trans(get_forward_kin(), p[-0.05, 0, 0, 0, 0, 0]), a=1.2, v=1.05, t=0, r=0)"+"\n").encode("utf8"))
-    time.sleep(2)
-    send_positions()
+    send_positions("movej(pose_trans(get_forward_kin(), p[-0.05, 0, 0, 0, 0, 0]), a=1.2, v=1.05, t=0, r=0)")
+    time.sleep(0.5)
+
 
 def move_up():
     """
     Move the robot arm up
     """
     print("moving up")
-    s.send((" movej(pose_trans(get_forward_kin(), p[0, 0, -0.05, 0, 0, 0]), a=1.2, v=1.05, t=0, r=0)"+"\n").encode("utf8"))
-    time.sleep(2)
-    send_positions()
+    send_positions("movej(pose_trans(get_forward_kin(), p[0, 0, -0.05, 0, 0, 0]), a=1.2, v=1.05, t=0, r=0)")
+    time.sleep(0.5)
     
 
 def move_down():
     """
     Move the robot arm down
     """
-    s.send((" movej(pose_trans(get_forward_kin(), p[0, 0, 0.05, 0, 0, 0]), a=1.2, v=1.05, t=0, r=0)"+"\n").encode("utf8"))
-    time.sleep(2)
-    send_positions()
-    time.sleep(1)
+    send_positions("movej(pose_trans(get_forward_kin(), p[0, 0, 0.05, 0, 0, 0]), a=1.2, v=1.05, t=0, r=0)")
+    time.sleep(0.5)
 
 
 def move_open():
@@ -127,7 +129,21 @@ def move_open():
     while (l):
         s.send(l)
         l = f.read(1024)
-    s.send(" rq_open()\nend\n".encode("utf8"))
+    s.send((""
+    + " rq_open()\n"
+    + " while True:\n"
+    + " \tif socket_open(\"192.168.1.128\", 8080, \"socket_2\") == True:\n"
+    + " \t\ttextmsg(\"Connection successful\")\n"
+    + " \t\twhile not rq_is_object_detected():\n"
+    + " \t\t\tsocket_send_string(to_str(rq_current_pos_mm()), \"socket_2\")\n"
+    + " \t\tend\n"
+    + " \t\tsocket_send_string(\"done\", \"socket_2\")\n"
+    + " \t\tbreak\n"
+    + " \telse:\n"
+    + " \t\ttextmsg(\"Connection unsuccessful\")\n"
+    + " \tend\n"
+    + " end\n"
+    + "end\n").encode("utf8"))
     time.sleep(5)
 
 
@@ -180,9 +196,10 @@ def on_message(client, userdata, msg):
     if msg.topic == "hbo_ict_robot_arm_controll":
         print("msg recieved")
         print(msg.payload)
-        if not moving_robot:
+        if not moving_mutext.locked():
             payload = json.loads(msg.payload)
             movement_queue.put( payload['command']) 
+            time.sleep(0.05)
 
 def movement_thread():
     """
@@ -193,39 +210,39 @@ def movement_thread():
         move = movement_queue.get()
         print(move)
         if move == "move_up":
-            moving_robot = True
+            moving_mutext.acquire()
             move_up()
         elif move == "move_down":
-            moving_robot = True
+            moving_mutext.acquire()
             move_down()
         elif move == "move_left":
-            moving_robot = True
+            moving_mutext.acquire()
             move_left()
         elif move == "move_right":
-            moving_robot = True
+            moving_mutext.acquire()
             move_right()
         elif move == "move_forward":
-            moving_robot = True
+            moving_mutext.acquire()
             move_forwards()
         elif move == "move_backward":
-            moving_robot = True
+            moving_mutext.acquire()
             move_backwards()
         elif move == "move_open":
-            moving_robot = True
+            moving_mutext.acquire()
             move_open()
         elif move == "move_close":
-            moving_robot = True
+            moving_mutext.acquire()
             move_close()
         elif move == "get_positions":
-            moving_robot = True
+            moving_mutext.acquire()
             send_positions()
         elif move == "shutdown":
-            moving_robot = True
+            moving_mutext.release()
             running = False
             break
         else:
             pass
-        moving_robot = False
+        moving_mutext.release()
 
 
 
@@ -240,7 +257,6 @@ x = threading.Thread(target=movement_thread, args=(), daemon=True)
 x.start()
 
 print("running main")
-moving_robot = False
 while running:
     client1.loop()
 
