@@ -111,31 +111,24 @@
         <a-entity id="hitbox" color="#333333" position="0 1.8 0" width="0.4" height="0.6" depth="0.3"></a-entity>
         <a-entity id="hitbox" color="#333333" position="0 1.1 0" width="0.5" height="0.7" depth="0.55"></a-entity>
         <!-- TODO look into it -->
-        <a-hitbox  color="#333333" position="0 2 0" ></a-hitbox>
+        <a-hitbox  color="#333333" position="0 3 0" hitbox ></a-hitbox>
     </a-entity>
 
     <!--  Button  -->
-<!--    <a-box position="0  0  0" scale="0.5 1.5 0.5" color="#000000"></a-box>-->
+    <a-box position="1 0  0" scale="0.25 1.5 0.25" color="#000000"></a-box>
     <a-entity id="start_button" rotation="0 0 0" button="event_start: startbutton_pressed; event_stop: button_1_released;
-    button_color: #FF0000; base_color: #0000FF;" position="1  0  0"></a-entity>
+    button_color: #FF0000; base_color: #0000FF;" position="1  0.8  0"></a-entity>
 
     <a-entity timerdown button_listener ></a-entity>
 
-    <!--             Test predicted movement box-->
-    <a-box
-        id="testbox" color="#808080" height="0.1" width="0.1" depth="0.1" position="-0.30 1.4 -1" modeldodgemovement>
-    </a-box>
+
 
     <!--    Camera and Oculus rift-->
-    <a-entity wasd-controls id="rig" position="0 0 2" mqtt-logger add_cords_to_hud lastmovement-logger trajectory="targetBox: robotmodel">
+    <a-entity wasd-controls id="rig" position="0 0 2" mqtt-logger  lastmovement-logger trajectory="targetBox: robotmodel">
         <a-entity id="camera" camera look-controls ></a-entity>
         <a-entity class="hand" aabb-collider="objects: a-box" id="left_controller"  oculus-touch-controls="hand: left" thumbstick-logging hit></a-entity>
         <a-entity class="hand" aabb-collider="objects: a-box" id="right_controller"  oculus-touch-controls="hand: right" thumbstick-logging hit></a-entity>
     </a-entity>
-
-    <!--    Bug fix entity-->
-<!--    <a-text id="debug" value= "404" position="2 5 -5.9" scale="2 2 2"> </a-text>-->
-
 
 </a-scene>
 </body>

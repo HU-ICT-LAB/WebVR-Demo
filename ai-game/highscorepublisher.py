@@ -44,7 +44,7 @@ def updateleaderboard(new_score="5"):
     if len(new_scorenumber) == 1:
         new_scorenumber = "0" + new_scorenumber
     print(new_name + ":" + new_scorenumber)
-    highscore_file = open("leaderboard.txt", "r")
+    highscore_file = open("datafiles/leaderboard.txt", "r")
     readable_highscores = json.loads(highscore_file.readline())
     if new_name in readable_highscores.keys():
         if readable_highscores[new_name] < new_scorenumber:
@@ -55,7 +55,7 @@ def updateleaderboard(new_score="5"):
         readable_highscores = dict(sorted(readable_highscores.items(), key=operator.itemgetter(1), reverse=True))
         readable_highscores.popitem()
 
-    fout = open("leaderboard.txt", "w")
+    fout = open("datafiles/leaderboard.txt", "w")
     fout.write(json.dumps(readable_highscores))
     fout.close()
     print(readable_highscores)
@@ -67,7 +67,7 @@ def getleaderboard():
     :rtype: returns the highscores from the leaderboard.txt
 
     """
-    highscore_file = open("leaderboard.txt", "r")
+    highscore_file = open("datafiles/leaderboard.txt", "r")
     highscorestring = ""
     for score in highscore_file:
         highscorestring = highscorestring + score
