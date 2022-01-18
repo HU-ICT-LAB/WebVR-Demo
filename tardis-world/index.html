@@ -26,7 +26,7 @@
                     scale="2 2 2">
             </a-entity>
 
-            <a-entity id="rig" headbob-movement relative-movement>
+            <a-entity id="rig" headbob-movement relative-movement position = "0 1 0">
                     <a-entity id="camera"  wasd-controls camera look-controls>
                         <a-sky color="AAAAAA"></a-sky>
                     </a-entity>
@@ -36,7 +36,7 @@
 
 
 
-            <a-entity robot_controller button_listener robot_arm_model_controller></a-entity>
+            <a-entity robot_controller button_listener></a-entity>
 
             <a-teleporter teleporter_id="0" target_id="1" position="5 0 0"></a-teleporter>
 
@@ -51,51 +51,7 @@
                 <a-teleporter teleporter_id="1" target_id="0" position="0 -6 5"></a-teleporter>
 
 
-                <a-entity rotation="0 -135 0" position="0 -5.8 -2.5">
-                    <a-entity id="Joint1_Container" scale="4 4 4">
-                        <a-cylinder id="Joint_1" height="0.152" radius="0.05" color="blue"></a-cylinder>
-
-                        <a-entity id="Joint2_Container" position="0.04 0.025 0">
-
-                            <a-cylinder id="Joint_2_connection"  radius="0.05" height="0.15" rotation="0 0 90" position="0.05 0 0" color="blue"></a-cylinder>
-                            <a-cylinder id="Joint_2_arm" height="0.244" radius="0.045" position="0.07 0.13 0"></a-cylinder>
-
-                            <a-entity id="Joint3_Container" position="0.10 0.26 0">
-
-                                <a-cylinder id="Joint_3_connection" height="0.23" radius="0.05" rotation="0 0 90" position="-0.09 0 0" color="blue"></a-cylinder>
-                                <a-cylinder id="Joint_3_arm" height="0.213" radius="0.04" position="-0.15 0.13 0" ></a-cylinder>
-
-                                <a-entity id="Joint4_Container" position="-0.15 0.24 0">
-                                    <a-cylinder id="Joint_4_connection" height="0.17" radius="0.045" rotation="0 0 90" position="0.03 0 0" color="blue"></a-cylinder>
-
-                                    <a-entity id="Joint5_Container" position="0.08 0.03 0">
-                                        <a-cylinder id="Joint_5_connection" height="0.17" radius="0.045" rotation="0 0 0" position="0.02 0 0" color="blue"></a-cylinder>
-
-                                        <a-entity id="Joint6_Container" position="0.03 0.1 0">
-                                            <a-cylinder id="Joint_6_connection" height="0.13" radius="0.045" rotation="0 0 90" position="0 0 0" color="blue"></a-cylinder>
-
-                                            <a-entity id="Gripper_Model" position="0.1 0 0">
-                                                <a-cylinder id="gripper_arm" height="0.08" radius="0.03" rotation="0 0 90" position="0 0 0" color="black"></a-cylinder>
-                                                <a-box id="gripper_base" height="0.10" depth="0.05" width="0.01" position="0.045 0 0" color="black" rotation="90 0 0">
-                                                    <a-box id="gripper_finger_left" width="0.06" depth="0.02" height="0.01" position="0.035 0.045 0" color="black"></a-box>
-                                                    <a-box id="gripper_finger_right"width="0.06" depth="0.02" height="0.01" position="0.035 -0.045 0" color="black"></a-box>
-                                                </a-box >
-                                                
-
-                                            </a-entity>
-
-                                        </a-entity>
-
-                                    </a-entity>
-
-                                </a-entity>
-
-                            </a-entity>
-
-                        </a-entity>
-
-                    </a-entity>
-                </a-entity>
+                <a-robot-arm r_scale="4 4 4"></a-robot-arm>
 
 
 
