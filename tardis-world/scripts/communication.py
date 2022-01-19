@@ -33,24 +33,40 @@ def receive_thread():
         print("got a connection")
         data = conn.recv(1024)
         data = data.decode()
-        if len(data) > 20:
-            x = ast.literal_eval(data)
-            x = [math.degrees(float(n)) for n in x]
-            print(x)
-            message = {}
-            message["base"] = x[0]
-            message["shoulder"] = (x[1]+90) %360
-            message["elbow"] = x[2]
-            message["wrist1"] = (x[3]+90) %360
-            message["wrist2"] = x[4]
-            message["wrist3"] = x[5]%360
-            print(json.dumps(message))
-            client1.publish("robot_arm_positions", json.dumps(message))
-            conn.close()
-        else:
+        x = ast.literal_eval(data)
+        x = [math.degrees(float(n)) for n in x]
+        print(x)
+        message = {}
+        message["base"] = x[0]
+        message["shoulder"] = (x[1]+90) %360
+        message["elbow"] = x[2]
+        message["wrist1"] = (x[3]+90) %360
+        message["wrist2"] = x[4]
+        message["wrist3"] = x[5]%360
+        print(json.dumps(message))
+        client1.publish("robot_arm_positions", json.dumps(message))
+        conn.close()
+
+def receive_gripper_thread():
+    print("we are waiting for a connection")
+    conn, addr = host_socket.accept()
+    receiving = True
+    message = {}
+    message["gripper_dist"] = 0
+    with conn:
+        print("got a connection")
+        while receiving:
+            data = conn.recv(16)
+            data = data.decode()
             print(data)
             if data == "done":
-                conn.close()
+                receiving = False
+            else:
+                message["gripper_dist"] = float(data)
+                client1.publish("robot_gripper_positions", json.dumps(message))
+        conn.close()
+
+
 
 def send_positions(desired_path=""):
     """
@@ -124,19 +140,25 @@ def move_open():
     """
     Open the robot arm gripper
     """
+    
+    z = threading.Thread(target=receive_gripper_thread, args=(), daemon=True)
+    z.start()
+
     f = open("Gripper.script", "rb")  # Robotiq Gripper
     l = f.read()
     while (l):
         s.send(l)
         l = f.read(1024)
+
     s.send((""
     + " rq_open()\n"
     + " while True:\n"
     + " \tif socket_open(\"192.168.1.128\", 8080, \"socket_2\") == True:\n"
     + " \t\ttextmsg(\"Connection successful\")\n"
-    + " \t\twhile not rq_is_object_detected():\n"
-    + " \t\t\tsocket_send_string(to_str(rq_current_pos_mm()), \"socket_2\")\n"
+    + " \t\twhile rq_current_pos_norm() > 1:\n"
+    + " \t\t\tsocket_send_string(to_str(rq_current_pos_norm()), \"socket_2\")\n"
     + " \t\tend\n"
+    + " \t\tsocket_send_string(to_str(rq_current_pos_norm()), \"socket_2\")\n"
     + " \t\tsocket_send_string(\"done\", \"socket_2\")\n"
     + " \t\tbreak\n"
     + " \telse:\n"
@@ -145,19 +167,40 @@ def move_open():
     + " end\n"
     + "end\n").encode("utf8"))
     time.sleep(5)
+    z.join()
 
 
 def move_close():
     """
     Close the robot arm gripper
     """
+    z = threading.Thread(target=receive_gripper_thread, args=(), daemon=True)
+    z.start()
+
     f = open("Gripper.script", "rb")  # Robotiq Gripper
     l = f.read()
     while (l):
         s.send(l)
         l = f.read(1024)
-    s.send(" rq_close()\nend\n".encode("utf8"))
+
+    s.send((""
+    + " rq_close()\n"
+    + " while True:\n"
+    + " \tif socket_open(\"192.168.1.128\", 8080, \"socket_2\") == True:\n"
+    + " \t\ttextmsg(\"Connection successful\")\n"
+    + " \t\twhile not rq_is_object_detected() and rq_current_pos_norm() < 89:\n"
+    + " \t\t\tsocket_send_string(to_str(rq_current_pos_norm()), \"socket_2\")\n"
+    + " \t\tend\n"
+    + " \t\tsocket_send_string(to_str(rq_current_pos_norm()), \"socket_2\")\n"
+    + " \t\tsocket_send_string(\"done\", \"socket_2\")\n"
+    + " \t\tbreak\n"
+    + " \telse:\n"
+    + " \t\ttextmsg(\"Connection unsuccessful\")\n"
+    + " \tend\n"
+    + " end\n"
+    + "end\n").encode("utf8"))
     time.sleep(5)
+    z.join()
 
 
 # ###############################################################################################################################################################
@@ -167,7 +210,7 @@ def move_close():
 # broker server:
 broker = "broker.emqx.io"
 port = 1883
-client1 = paho.Client("ROBOT_Controller")  # create client object
+client1 = paho.Client("ROBOT__ARM_Controller")  # create client object
 running = True
 moving_robot = False
 
