@@ -108,23 +108,23 @@ AFRAME.registerComponent('robot_arm_model_controller',{
         Gripper_Base.setAttribute("width", "0.01")
         Gripper_Base.setAttribute("position", "0.045 0 0")
         Gripper_Base.setAttribute("rotation", "90 0 0")
-        Gripper_Base.setAttribute("color", "black")
+        Gripper_Base.setAttribute("color", "red")
         Gripper_Model.appendChild(Gripper_Base)
 
         var Gripper_Finger_Left = document.createElement("a-box")
         Gripper_Finger_Left.setAttribute("width", "0.06")
         Gripper_Finger_Left.setAttribute("depth", "0.02")
         Gripper_Finger_Left.setAttribute("height", "0.01")
-        Gripper_Finger_Left.setAttribute("position", "0.035 0.045 0")
-        Gripper_Finger_Left.setAttribute("color", "black")
+        Gripper_Finger_Left.setAttribute("position", "0.035 0.045 0") // 0.005 to 0.045  
+        Gripper_Finger_Left.setAttribute("color", "red")
         Gripper_Base.appendChild(Gripper_Finger_Left)
 
         var Gripper_Finger_Right = document.createElement("a-box")
         Gripper_Finger_Right.setAttribute("width", "0.06")
         Gripper_Finger_Right.setAttribute("depth", "0.02")
         Gripper_Finger_Right.setAttribute("height", "0.01")
-        Gripper_Finger_Right.setAttribute("position", "0.035 -0.045 0")
-        Gripper_Finger_Right.setAttribute("color", "black")
+        Gripper_Finger_Right.setAttribute("position", "0.035 -0.045 0") // -0.005 to -0.045
+        Gripper_Finger_Right.setAttribute("color", "red")
         Gripper_Base.appendChild(Gripper_Finger_Right)
 
         this.el.appendChild(Robot_Arm)
@@ -143,6 +143,7 @@ AFRAME.registerComponent('robot_arm_model_controller',{
                 var new_wrist2_rotation = obj["wrist2"]
                 var new_wrist3_rotation = obj["wrist3"]
 
+                // Current rotation from the virtual robot arm
                 current_1 = Joint1_Container.getAttribute("rotation").y
                 current_2 = Joint2_Container.getAttribute("rotation").x
                 current_3 = Joint3_Container.getAttribute("rotation").x
@@ -150,7 +151,7 @@ AFRAME.registerComponent('robot_arm_model_controller',{
                 current_5 = Joint5_Container.getAttribute("rotation").y
                 current_6 = Joint6_Container.getAttribute("rotation").x
 
-
+                // Set the rotation of each joint to the designed rotation for the complete movement
                 Joint1_Container.setAttribute("animation__turn", "property: rotation.y; from:"+ current_1 +" ;to: "+ this.GetRotationTarget(current_1, new_base_rotation) +"; easing: easeInOutQuad; dur: 1000; loop: false; startEvents: goToTarget")  
                 Joint2_Container.setAttribute("animation__turn", "property: rotation.x; from:"+ current_2 +" ;to: "+ this.GetRotationTarget(current_2, new_shoulder_rotation)+"; easing: easeInOutQuad; dur: 1000; loop: false; startEvents: goToTarget")
                 Joint3_Container.setAttribute("animation__turn", "property: rotation.x; from:"+ current_3 +" ;to: "+ this.GetRotationTarget(current_3, new_elbow_rotation) +"; easing: easeInOutQuad; dur: 1000; loop: false; startEvents: goToTarget")
@@ -175,6 +176,28 @@ AFRAME.registerComponent('robot_arm_model_controller',{
                 }.bind(this), 1000)
 
                 
+            }.bind(this))
+
+            client.subscribe('robot_arm_gripper')
+            mqtt_add_topic_callback('robot_arm_gripper', function (topic, message) {
+                var obj = JSON.parse(message);
+                console.log(obj)
+
+                var new_gripper_position = obj["gripper"]
+
+                current_r = new_gripper_position.getAttribute("position").y
+                current_l = new_gripper_position.getAttribute("position").y
+
+                Gripper_Finger_Left.setAttribute("animation__grip", "property: position.y; from: "+ current_l +"; to: "+ new_pos_l +"; easing: easeInOutQuad; dur: 500; loop: false; startEvents: goToPos")
+                Gripper_Finger_Right.setAttribute("animation__grip", "property: position.y; from: "+ current_r +"; to: "+ new_pos_r +"; easing: easeInOutQuad; dur: 500; loop: false; startEvents: goToPos")
+
+                Gripper_Finger_Left.emit("goToPos")
+                Gripper_Finger_Right.emit("goToPos")
+
+                setTimeout(function(){
+                    Gripper_Finger_Left.setAttribute("position", new_pos_l)
+                    Gripper_Finger_Right.setAttribute("position", new_pos_r)
+                })
             }.bind(this))
         }.bind(this), 1000);
 
