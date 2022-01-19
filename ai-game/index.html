@@ -75,11 +75,29 @@
                     </a-box>
                     <!--   Data Text Objects                 -->
                     <a-box color="#A9A9A9" src=#Metal width="3.5" height="3" depth="0.1" position="3.5 -0.75 0"  repeat="10 1" databoard_updating>
-                        <a-entity id="Title" text="value: Databoard\n-------------\n ; color: #FFFFFF" position="0.90 1.1 0.11" scale="5 5 5" sethighscore></a-entity>
-                        <a-entity id="LastMovement" text="value: *lastmovement* ; color: #FFFFFF" position="0.90 0.77 0.11" scale="5 5 5" sethighscore></a-entity>
+                        <a-entity id="Title" text="value: Databoard\n-------------\n ; color: #FFFFFF" position="0.90 1.1 0.11" scale="5 5 5"></a-entity>
+                        <a-entity id="LastMovement_Title" text="value: Current Position: ; color: #FFFFFF" position="0.43 0.77 0.11" scale="4 4 4" ></a-entity>
+                        <a-entity id="LastMovement" text="value: ---- ; color: #FFFFFF" position="1.80 0.77 0.11" scale="4 4 4"></a-entity>
 
-                        <a-entity id="Aftergame_Title" text="value: Aftergame; color: #000000 " position="0.90 0.50 0.11" scale="5 5 5" sethighscore></a-entity>
-                        <a-entity id="Moves_Title" text="value: Moves; color: #FFFFFF " position="0.90 0.30 0.11" scale="5 5 5" sethighscore></a-entity>
+                        <a-entity id="Lastgame_Title" text="value: Currentgame; color: #000000 " position="0.90 0.50 0.11" scale="5 5 5"></a-entity>
+                        <a-entity id="cur_total_controller_distance_Title" text="value: Controllers Moved: ; color: #FFFFFF" position="0.43 0.20 0.11" scale="4 4 4" ></a-entity>
+                        <a-entity id="cur_total_controller_distance" text="value: ---- ; color: #FFFFFF" position="2.00 0.20 0.11" scale="4 4 4"></a-entity>
+
+                        <a-entity id="movingtime_title" text="value: Moving Time: ; color: #FFFFFF" position="0.43 -0.05 0.11" scale="4 4 4" ></a-entity>
+                        <a-entity id="movingtime" text="value: ---- ; color: #FFFFFF" position="1.60 -0.05 0.11" scale="4 4 4"></a-entity>
+
+                        <a-entity id="calories_burned_title" text="value: Calories Burned: ; color: #FFFFFF" position="0.43 -0.30 0.11" scale="4 4 4" ></a-entity>
+                        <a-entity id="calories_burned" text="value: ---- ; color: #FFFFFF" position="1.80 -0.30 0.11" scale="4 4 4"></a-entity>
+
+                        <a-entity id="Lastgame_Title" text="value: All Games; color: #000000 " position="0.90 -0.60 0.11" scale="5 5 5"></a-entity>
+                        <a-entity id="all_total_controller_distance_Title" text="value: Controllers Moved: ; color: #FFFFFF" position="0.43 -0.85 0.11" scale="4 4 4" ></a-entity>
+                        <a-entity id="all_total_controller_distance" text="value: ---- ; color: #FFFFFF" position="2.00 -0.85 0.11" scale="4 4 4"></a-entity>
+
+                        <a-entity id="fastest_punch_Title" text="value: Fastest Punch: ; color: #FFFFFF" position="0.43 -1.05 0.11" scale="4 4 4" ></a-entity>
+                        <a-entity id="fastest_punch" text="value: ---- ; color: #FFFFFF" position="1.65 -1.05 0.11" scale="4 4 4"></a-entity>
+
+                        <a-entity id="slowest_punch_Title" text="value: Slowest Punch: ; color: #FFFFFF" position="0.43 -1.25 0.11" scale="4 4 4" ></a-entity>
+                        <a-entity id="slowest_punch" text="value: ---- ; color: #FFFFFF" position="1.70 -1.25 0.11" scale="4 4 4"></a-entity>
 
                     </a-box>
                 </a-box>
@@ -116,17 +134,4 @@
     <a-entity id="start_button" rotation="0 0 0" button="event_start: startbutton_pressed; event_stop: button_1_released;
     button_color: #FF0000; base_color: #0000FF;" position="1  0.8  0"></a-entity>
 
-    <a-entity timerdown button_listener ></a-entity>
-
-
-
-    <!--    Camera and Oculus rift-->
-    <a-entity wasd-controls id="rig" position="0 0 2" mqtt-logger  lastmovement-logger trajectory="targetBox: robotmodel">
-        <a-entity id="camera" camera look-controls ></a-entity>
-        <a-entity class="hand" aabb-collider="objects: a-box" id="left_controller"  oculus-touch-controls="hand: left" thumbstick-logging hit></a-entity>
-        <a-entity class="hand" aabb-collider="objects: a-box" id="right_controller"  oculus-touch-controls="hand: right" thumbstick-logging hit></a-entity>
-    </a-entity>
-
-</a-scene>
-</body>
-</html>
+    <a-entity timerdown button_listener

@@ -73,12 +73,6 @@ AFRAME.registerComponent('databoard_updating', {
 
                 //slowest punch data:
                 //TODO: get slow movements from the database with a subscribed topic and set it to it's databoard attribute
-
-                //most punches data:
-                //TODO: get most accurate punches today from the database with a subscribed topic and set it to it's databoard attribute
-
-                //most punches data:
-                //TODO: get total calories burned from movements today from the database with a subscribed topic and set it to it's databoard attribute
             }
         }
     }

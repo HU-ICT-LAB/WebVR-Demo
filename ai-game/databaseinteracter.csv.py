@@ -3,6 +3,7 @@ import csv
 from datetime import datetime
 import paho.mqtt.client as paho
 import pandas as pd
+import numpy as np
 
 #------------------------CSV PART---------------------:
 fieldnames = ['name', 'time', 'pos1', 'pos2']
@@ -73,9 +74,9 @@ def getlastmovement(databoard=True):
         for lastmovement in lastmovementfile:
             lastmovement = ast.literal_eval(lastmovement)
             lastmovement_simplified_string = "L({0},{1},{2}) R({3},{4},{5})".format(
-                str(round(float(lastmovement[0]["x"]), 1)), str(round(float(lastmovement[0]["y"]), 1)),
-                str(round(float(lastmovement[0]["z"]), 1)), str(round(float(lastmovement[0]["x"]), 1)),
-                str(round(float(lastmovement[0]["y"]), 1)), str(round(float(lastmovement[0]["z"]), 1)))
+                str(round(float(lastmovement[0]["x"]), 1)), str(round(float(lastmovement[1]["y"]), 1)),
+                str(round(float(lastmovement[0]["z"]), 1)), str(round(float(lastmovement[1]["x"]), 1)),
+                str(round(float(lastmovement[0]["y"]), 1)), str(round(float(lastmovement[1]["z"]), 1)))
         return lastmovement_simplified_string
     else:
         for lastmovementline in lastmovementfile:
@@ -83,6 +84,47 @@ def getlastmovement(databoard=True):
 
 def csv_getsorted_data():
     data = pd.read_csv("datafiles/movement_database.csv")
+    data['time'] = pd.to_datetime(data['time']) #turn date column into time
+    data = data.sort_values(by='time', ascending=False)
+    lastgame_data = data.loc[data['name'] == data.iloc[0]['name']]
+    def get_total_controllers_distance(data):
+        totaldist = 0
+        for index, row in data.iterrows():
+            # left
+            x1_coords = round(float(ast.literal_eval(row['pos1'])[0]["x"]), 1)
+            y1_coords = round(float(ast.literal_eval(row['pos1'])[0]["y"]), 1)
+            z1_coords = round(float(ast.literal_eval(row['pos1'])[0]["z"]), 1)
+            x2_coords = round(float(ast.literal_eval(row['pos2'])[0]["x"]), 1)
+            y2_coords = round(float(ast.literal_eval(row['pos2'])[0]["y"]), 1)
+            z2_coords = round(float(ast.literal_eval(row['pos2'])[0]["z"]), 1)
+            print(ast.literal_eval(row['pos1']))
+            p1 = np.array([x1_coords, y1_coords, z1_coords])
+            p2 = np.array([x2_coords, y2_coords, z2_coords])
+            squared_dist = np.sum((p1 - p2) ** 2, axis=0)
+            dist = np.sqrt(squared_dist)
+            totaldist += dist
+            # right
+            x1_coords = round(float(ast.literal_eval(row['pos1'])[1]["x"]), 1)
+            y1_coords = round(float(ast.literal_eval(row['pos1'])[1]["y"]), 1)
+            z1_coords = round(float(ast.literal_eval(row['pos1'])[1]["z"]), 1)
+            x2_coords = round(float(ast.literal_eval(row['pos2'])[1]["x"]), 1)
+            y2_coords = round(float(ast.literal_eval(row['pos2'])[1]["y"]), 1)
+            z2_coords = round(float(ast.literal_eval(row['pos2'])[1]["z"]), 1)
+            print(ast.literal_eval(row['pos1']))
+            p1 = np.array([x1_coords, y1_coords, z1_coords])
+            p2 = np.array([x2_coords, y2_coords, z2_coords])
+            squared_dist = np.sum((p1 - p2) ** 2, axis=0)
+            dist = np.sqrt(squared_dist)
+            totaldist += dist
+        return totaldist
+
+    # get all values of the last game:
+    lastgame_total_controller_distance = get_total_controllers_distance(lastgame_data)
+    lastgame_movingtime =  lastgame_data.iloc[0]['time'] - lastgame_data.iloc[-1]['time'].total_seconds()
+    lastgame_calories_burned = int(lastgame_movingtime) * (5.5 * 80 * 3.5 / 200)#https://captaincalculator.com/health/calorie/calories-burned-boxing-calculator/
+
+    # get data from all games:
+    allgames_total_controller_distance = get_total_controllers_distance(data)
 
 #------------------------MQTT PART--------------------:
 # broker server:
