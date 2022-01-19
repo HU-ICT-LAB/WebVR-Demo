@@ -240,6 +240,40 @@ AFRAME.registerComponent('robot_arm_model_controller',{
      } 
 })
 
+AFRAME.registerComponent('fake_gripper',{
+    init: function(){
+        this.time_to_move = false
+        this.gripper_val_max = 89
+        this.gripper_val_min = 1
+        this.current_gripper = 1
+        this.direction = 1
+        this.timer_count =0
+        this.gripper_packet = {}
+        setTimeout(function() {       
+            this.time_to_move = true
+        }.bind(this), 1000)
+
+    },
+    tick: function(){
+        if(this.time_to_move){
+            if(this.timer_count == 0){
+                this.current_gripper += this.direction
+                if (this.current_gripper == this.gripper_val_min || this.current_gripper == this.gripper_val_max){
+                    this.direction *= -1
+                }
+                this.gripper_packet["gripper_dist"] = this.current_gripper
+                client.publish("robot_gripper_positions", JSON.stringify(this.gripper_packet))
+                this.timer_count += 1
+            }else{
+                this.timer_count += 1
+                if(this.timer_count == 20){
+                    this.timer_count = 0
+                }
+            }
+        }
+    }
+})
+
 /**
  * A wrapper around the robot_arm component so you can use it as a entity.
  */
