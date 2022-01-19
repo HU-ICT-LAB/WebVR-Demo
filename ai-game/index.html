@@ -134,4 +134,17 @@
     <a-entity id="start_button" rotation="0 0 0" button="event_start: startbutton_pressed; event_stop: button_1_released;
     button_color: #FF0000; base_color: #0000FF;" position="1  0.8  0"></a-entity>
 
-    <a-entity timerdown button_listener
+    <a-entity timerdown button_listener></a-entity>
+
+
+
+    <!--    Camera and Oculus rift-->
+    <a-entity wasd-controls id="rig" position="0 0 2" mqtt-logger  lastmovement-logger trajectory="targetBox: robotmodel">
+        <a-entity id="camera" camera look-controls ></a-entity>
+        <a-entity class="hand" aabb-collider="objects: a-box" id="left_controller"  oculus-touch-controls="hand: left" thumbstick-logging hit></a-entity>
+        <a-entity class="hand" aabb-collider="objects: a-box" id="right_controller"  oculus-touch-controls="hand: right" thumbstick-logging hit></a-entity>
+    </a-entity>
+
+</a-scene>
+</body>
+</html>
