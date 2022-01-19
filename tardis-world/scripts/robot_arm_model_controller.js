@@ -178,15 +178,22 @@ AFRAME.registerComponent('robot_arm_model_controller',{
                 
             }.bind(this))
 
-            client.subscribe('robot_arm_gripper')
-            mqtt_add_topic_callback('robot_arm_gripper', function (topic, message) {
+            client.subscribe('robot_gripper_positions')
+            mqtt_add_topic_callback('robot_gripper_positions', function (topic, message) {
                 var obj = JSON.parse(message);
                 console.log(obj)
 
-                var new_gripper_position = obj["gripper"]
-
+                var new_gripper_position = obj["gripper_dist"]
+                
+                //current positions moeten we ophalen via Gripper_Finger_Right en Gripper_Finger_Left
                 current_r = new_gripper_position.getAttribute("position").y
                 current_l = new_gripper_position.getAttribute("position").y
+
+
+                //new gripper pos berekenen met gebruik van new_gripper_pos. als new_gripper_position 1 is dan is de gripper open, en bij 89 is hij dicht.
+                //Dat moeten we dus mappen naar 4.5 centimeter voor de linker gripper en -4.5 centimeter voor de rechter gripper. 
+                //formule? = 4.5 / 89 * (89-(pos-1)). En dan heb je de afstand die je bij de ene + moet doen en bij de ander -
+
 
                 Gripper_Finger_Left.setAttribute("animation__grip", "property: position.y; from: "+ current_l +"; to: "+ new_pos_l +"; easing: easeInOutQuad; dur: 500; loop: false; startEvents: goToPos")
                 Gripper_Finger_Right.setAttribute("animation__grip", "property: position.y; from: "+ current_r +"; to: "+ new_pos_r +"; easing: easeInOutQuad; dur: 500; loop: false; startEvents: goToPos")
@@ -194,6 +201,7 @@ AFRAME.registerComponent('robot_arm_model_controller',{
                 Gripper_Finger_Left.emit("goToPos")
                 Gripper_Finger_Right.emit("goToPos")
 
+                //deze moet nog op n delay van 1000
                 setTimeout(function(){
                     Gripper_Finger_Left.setAttribute("position", new_pos_l)
                     Gripper_Finger_Right.setAttribute("position", new_pos_r)
