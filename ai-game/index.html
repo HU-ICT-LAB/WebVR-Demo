@@ -105,14 +105,14 @@
     <!--             Height is just a temporary change so we can use the model.
                      Later on we want to use the hitboxes to check if the robotmodel will be hit.   -->
     <a-entity id="robotmodel" gltf-model="#Robot" position="0 0 -1">
-        <a-entity id="hitbox" color="#333333" position="0 1.8 0" width="0.4" height="0.6" depth="0.3"></a-entity>
-        <a-entity id="hitbox" color="#333333" position="0 1.1 0" width="0.5" height="0.7" depth="0.55"></a-entity>
+        <a-box id="hitbox" color="#333333" position="0 1.8 0" width="0.4" height="0.6" depth="0.3" handle-events aabb-collider></a-box>
+        <a-box id="hitbox" color="#333333" position="0 1.1 0" width="0.5" height="0.7" depth="0.55" handle-events aabb-collider></a-box>
         <!-- TODO look into it -->
         <a-hitbox  color="#333333" position="0 3 0" hitbox ></a-hitbox>
     </a-entity>
 
     <!--  Button  -->
-    <a-box position="1 0  0" scale="0.25 1.5 0.25" color="#000000"></a-box>
+    <a-entity geometry="primitive: box" position="1 0  0" scale="0.25 1.5 0.25" color="#000000"></a-entity>
     <a-entity id="start_button" rotation="0 0 0" button="event_start: startbutton_pressed; event_stop: button_1_released;
     button_color: #FF0000; base_color: #0000FF;" position="1  0.8  0"></a-entity>
 

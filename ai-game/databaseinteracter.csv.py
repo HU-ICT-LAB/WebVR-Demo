@@ -122,7 +122,9 @@ def on_message(client, userdata, msg):
         received_data = ast.literal_eval(msg.payload.decode("utf-8"))
         name = received_data[0]
         last_position = received_data[1][1:] #only get the positions [1] from the hands [1:]
-        if getlastmovement(False) != last_position: #prevents saving stationary movements
+        print(getlastmovement(False), str(last_position))
+        print(getlastmovement(False) != str(last_position))
+        if getlastmovement(False) != str(last_position): #prevents saving stationary movements
             csv_add_move_data(name, getlastmovement(False), last_position) #compare current and former position
 
         updatelastmovement(last_position) #update the lastmovement file with the current position

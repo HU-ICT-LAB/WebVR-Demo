@@ -18,14 +18,20 @@ AFRAME.registerComponent('lastmovement-logger', {
      * It then puts that information into a json object and sends it over mqtt to the topic: hbo_ict_vr_data_last_movement
      * then it asks to request the data from the database from the topic: hbo_ict_vr_request_database
      */
-    tick: function () {
-        if (connected){
-            if (!this.con){this.con = true}
-            var positions = getPositions(this.el) //runs the function with the element (camera) and gets from hand-positions, the positions
-            var name = document.querySelector("#username");
-            var current_name = name.getAttribute('text').value.substr(14)
-            client.publish('hbo_ict_vr_data_last_movement', JSON.stringify([current_name, positions]))
-            client.publish('hbo_ict_vr_request_database', "{0}")
+    tick: function (time) {
+        // console.log(time)
+        if (Math.round(time) % 4 === 0) {
+            if (connected) {
+                if (!this.con) {
+                    this.con = true
+                }
+                console.log("runned")
+                var positions = getPositions(this.el) //runs the function with the element (camera) and gets from hand-positions, the positions
+                var name = document.querySelector("#username");
+                var current_name = name.getAttribute('text').value.substr(14)
+                client.publish('hbo_ict_vr_data_last_movement', JSON.stringify([current_name, positions]))
+                client.publish('hbo_ict_vr_request_database', "{0}")
+            }
         }
     }
 });

@@ -269,15 +269,15 @@ AFRAME.registerComponent('trajectory', {
         }
 
         //Runs if there are two measured points of the hand
-        if (positionsRight.length === 2) {
-            executeCalculations(positionsRight[0], positionsRight[1], this.aiBot, this.stor);
-            positionsRight = [];
-
-        }
-
-        if (positionsLeft.length === 2) {
-            executeCalculations(positionsLeft[0], positionsLeft[1], this.aiBot, this.stor);
-            positionsLeft = [];
-        }
-    }
-})
+    //     if (positionsRight.length === 2) {
+    //         executeCalculations(positionsRight[0], positionsRight[1], this.aiBot, this.stor);
+    //         positionsRight = [];
+    //
+    //     }
+    //
+    //     if (positionsLeft.length === 2) {
+    //         executeCalculations(positionsLeft[0], positionsLeft[1], this.aiBot, this.stor);
+    //         positionsLeft = [];
+    //     }
+    // }
+});
