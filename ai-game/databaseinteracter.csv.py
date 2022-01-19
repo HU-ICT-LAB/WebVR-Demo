@@ -2,7 +2,7 @@ import ast
 import csv
 from datetime import datetime
 import paho.mqtt.client as paho
-import json
+import pandas as pd
 
 #------------------------CSV PART---------------------:
 fieldnames = ['name', 'time', 'pos1', 'pos2']
@@ -49,36 +49,7 @@ def csv_test_data():
 csv_header() #only run this once (it will clear out the database)
 # csv_test_data() #only run when testing database
 
-#------------------------MQTT PART--------------------:
-# broker server:
-broker = "broker.emqx.io"
-port = 1883
-
-
-def on_publish(client, userdata, result):  # create function for callback
-    """
-    when data is published, this function will be ran and print data published string
-    :param client: the client object (client1 in our case)
-    :param userdata: the detailed information about the user
-    :param result: the message results
-    """
-    print("data published \n")
-    pass
-
-client3 = paho.Client("gamemodespub")  # create client object
-
-def on_connect(client, userdata, flags, rc):
-    """
-    when connected to the server, subscribe to the topics
-    :param client: the client object (client1 in our case)
-    :param userdata: the detailed information about the user
-    :param flags: gives more detailed information about message
-    :param rc: return code (0 is accepted, 1 is rejected)
-    """
-    client3.subscribe("hbo_ict_vr_request_database")
-    client3.subscribe("hbo_ict_vr_data_last_movement")
-
-def updatelastmovement(new_data="5"):
+def txt_updatelastmovement(new_data="5"):
     """
     adds the lastmovement data to lastmovement.txt and checks if not the same data
     :param new_data: the lastmovement data
@@ -110,6 +81,37 @@ def getlastmovement(databoard=True):
         for lastmovementline in lastmovementfile:
             return lastmovementline
 
+def csv_getsorted_data():
+    data = pd.read_csv("datafiles/movement_database.csv")
+
+#------------------------MQTT PART--------------------:
+# broker server:
+broker = "broker.emqx.io"
+port = 1883
+
+def on_publish(client, userdata, result):  # create function for callback
+    """
+    when data is published, this function will be ran and print data published string
+    :param client: the client object (client1 in our case)
+    :param userdata: the detailed information about the user
+    :param result: the message results
+    """
+    print("data published \n")
+    pass
+
+client3 = paho.Client("gamemodespub")  # create client object
+
+def on_connect(client, userdata, flags, rc):
+    """
+    when connected to the server, subscribe to the topics
+    :param client: the client object (client1 in our case)
+    :param userdata: the detailed information about the user
+    :param flags: gives more detailed information about message
+    :param rc: return code (0 is accepted, 1 is rejected)
+    """
+    client3.subscribe("hbo_ict_vr_request_database")
+    client3.subscribe("hbo_ict_vr_data_last_movement")
+
 def on_message(client, userdata, msg):
     """
     when a message is received, checkout it's topic to run the correct functions
@@ -127,7 +129,7 @@ def on_message(client, userdata, msg):
         if getlastmovement(False) != str(last_position): #prevents saving stationary movements
             csv_add_move_data(name, getlastmovement(False), last_position) #compare current and former position
 
-        updatelastmovement(last_position) #update the lastmovement file with the current position
+        txt_updatelastmovement(last_position) #update the lastmovement file with the current position
 
     if msg.topic == "hbo_ict_vr_request_database":
         '''pushes every data'''
