@@ -33,7 +33,7 @@ AFRAME.registerComponent('compas',{
 
 
         this.r_hand = this.el.sceneEl.querySelector("#rightcontrl")          
-        this.house_pos = this.el.sceneEl.querySelector(this.data.target_id).getAttribute("position")
+        this.target = this.el.sceneEl.querySelector(this.data.target_id)
         this.rotation = this.compas_container.getAttribute("rotation")
 
         this.r_hand.addEventListener("gripdown", function(){
@@ -49,9 +49,14 @@ AFRAME.registerComponent('compas',{
     tick: function() {
 
         this.compas_container.setAttribute("position", this.r_hand.getAttribute("position"))
-        var worldPos = new THREE.Vector3();
-        worldPos.setFromMatrixPosition(this.r_hand.object3D.matrixWorld);
-        var dir = Math.atan2(worldPos.x - this.house_pos.x, worldPos.z - this.house_pos.z) * 180 / Math.PI;                    
+        var right_controll_pos = new THREE.Vector3();
+        right_controll_pos.setFromMatrixPosition(this.r_hand.object3D.matrixWorld);
+
+        var target_world_pos = new THREE.Vector3();
+        target_world_pos.setFromMatrixPosition(this.target.object3D.matrixWorld);
+
+
+        var dir = Math.atan2(right_controll_pos.x - target_world_pos.x, right_controll_pos.z - target_world_pos.z) * 180 / Math.PI;                    
         this.rotation.y = dir
         this.compas_container.setAttribute("rotation", this.rotation)
     }
