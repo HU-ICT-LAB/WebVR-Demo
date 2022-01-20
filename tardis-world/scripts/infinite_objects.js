@@ -139,7 +139,7 @@ AFRAME.registerComponent('generate_floor',{
           pos.x = i %2*50;
           //devide by 4 so we get a 4 by 4 square
           pos.z = i /2*50;
-          pos.y = -0.6
+          pos.y = 0
           floor.setAttribute('position', pos);
           //add the tree to the scene
           scene.appendChild(floor);
@@ -168,7 +168,7 @@ AFRAME.registerComponent('generate_trees',{
           pos.x = i %4*10;
           //devide by 4 so we get a 4 by 4 square
           pos.z = i /4*10;
-          pos.y = -0.6;
+          pos.y = 0;
           tree.setAttribute('position', pos);
           //add the tree to the scene
           scene.appendChild(tree);

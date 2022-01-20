@@ -113,7 +113,7 @@ AFRAME.registerComponent('robot_arm_model_controller',{
 
         var Gripper_Finger_Left = document.createElement("a-box")
         Gripper_Finger_Left.setAttribute("width", "0.06")
-        Gripper_Finger_Left.setAttribute("depth", "0.02")
+        Gripper_Finger_Left.setAttribute("depth", "0.05")
         Gripper_Finger_Left.setAttribute("height", "0.01")
         Gripper_Finger_Left.setAttribute("position", "0.035 0.045 0") // 0.005 to 0.045  
         Gripper_Finger_Left.setAttribute("color", "red")
@@ -121,7 +121,7 @@ AFRAME.registerComponent('robot_arm_model_controller',{
 
         var Gripper_Finger_Right = document.createElement("a-box")
         Gripper_Finger_Right.setAttribute("width", "0.06")
-        Gripper_Finger_Right.setAttribute("depth", "0.02")
+        Gripper_Finger_Right.setAttribute("depth", "0.05")
         Gripper_Finger_Right.setAttribute("height", "0.01")
         Gripper_Finger_Right.setAttribute("position", "0.035 -0.045 0") // -0.005 to -0.045
         Gripper_Finger_Right.setAttribute("color", "red")
@@ -186,29 +186,49 @@ AFRAME.registerComponent('robot_arm_model_controller',{
                 var new_gripper_position = obj["gripper_dist"]
                 
                 //current positions moeten we ophalen via Gripper_Finger_Right en Gripper_Finger_Left
-                current_r = new_gripper_position.getAttribute("position").y
-                current_l = new_gripper_position.getAttribute("position").y
+                current_r = Gripper_Finger_Right.getAttribute("position").y
+                current_l = Gripper_Finger_Left.getAttribute("position").y
 
 
                 //new gripper pos berekenen met gebruik van new_gripper_pos. als new_gripper_position 1 is dan is de gripper open, en bij 89 is hij dicht.
                 //Dat moeten we dus mappen naar 4.5 centimeter voor de linker gripper en -4.5 centimeter voor de rechter gripper. 
-                //formule? = 4.5 / 89 * (89-(pos-1)). En dan heb je de afstand die je bij de ene + moet doen en bij de ander -
+                //formule? = (0.045 / 89 * (89-(pos-1)))+0.01. En dan heb je de afstand die je bij de ene + moet doen en bij de ander -
 
+                // Gripper_Finger_Left.setAttribute("animation__grip", "property: position.y; from: "+ current_l +"; to: "+ this.GetGripperPos("left", new_gripper_position) +"; easing: easeInOutQuad; dur: 10; loop: false; startEvents: goToPos")
+                // Gripper_Finger_Right.setAttribute("animation__grip", "property: position.y; from: "+ current_r +"; to: "+ this.GetGripperPos("right", new_gripper_position) +"; easing: easeInOutQuad; dur: 10; loop: false; startEvents: goToPos")
 
-                Gripper_Finger_Left.setAttribute("animation__grip", "property: position.y; from: "+ current_l +"; to: "+ new_pos_l +"; easing: easeInOutQuad; dur: 500; loop: false; startEvents: goToPos")
-                Gripper_Finger_Right.setAttribute("animation__grip", "property: position.y; from: "+ current_r +"; to: "+ new_pos_r +"; easing: easeInOutQuad; dur: 500; loop: false; startEvents: goToPos")
-
-                Gripper_Finger_Left.emit("goToPos")
-                Gripper_Finger_Right.emit("goToPos")
+                // Gripper_Finger_Left.emit("goToPos")
+                // Gripper_Finger_Right.emit("goToPos")
 
                 //deze moet nog op n delay van 1000
                 setTimeout(function(){
-                    Gripper_Finger_Left.setAttribute("position", new_pos_l)
-                    Gripper_Finger_Right.setAttribute("position", new_pos_r)
-                })
+                    var pos_l = new THREE.Vector3()
+                    pos_l.x = 0.035
+                    pos_l.z = 0
+                    pos_l.y = this.GetGripperPos("left", new_gripper_position)
+                    var pos_r = new THREE.Vector3()
+                    pos_r.x = 0.035
+                    pos_r.z = 0
+                    pos_r.y = this.GetGripperPos("right", new_gripper_position)
+                    Gripper_Finger_Left.setAttribute("position", pos_l)
+                    Gripper_Finger_Right.setAttribute("position", pos_r)
+                }.bind(this), 10)
             }.bind(this))
         }.bind(this), 1000);
 
+    },
+    GetGripperPos: function(id, new_pos){
+        var finger_pos = (0.04 / 89 * (89-(new_pos-1)))+0.005
+        if(id == "left"){    //right finger
+            //console.log("left ", new_pos)
+            return finger_pos
+
+        }else{                  //left finger
+            //console.log("right ", new_pos)
+
+            return -finger_pos
+
+        }
     },
     /**
      * This function calulates to wich degree the object should rotate in the animation to avoid incorrect animations.
