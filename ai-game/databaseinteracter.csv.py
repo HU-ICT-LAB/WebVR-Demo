@@ -47,7 +47,7 @@ def csv_test_data():
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writerows(rows)
 
-csv_header() #only run this once (it will clear out the database)
+# csv_header() #only run this once (it will clear out the database)
 # csv_test_data() #only run when testing database
 
 def txt_updatelastmovement(new_data="5"):
@@ -97,7 +97,6 @@ def csv_getsorted_data():
             x2_coords = round(float(ast.literal_eval(row['pos2'])[0]["x"]), 1)
             y2_coords = round(float(ast.literal_eval(row['pos2'])[0]["y"]), 1)
             z2_coords = round(float(ast.literal_eval(row['pos2'])[0]["z"]), 1)
-            print(ast.literal_eval(row['pos1']))
             p1 = np.array([x1_coords, y1_coords, z1_coords])
             p2 = np.array([x2_coords, y2_coords, z2_coords])
             squared_dist = np.sum((p1 - p2) ** 2, axis=0)
@@ -110,7 +109,6 @@ def csv_getsorted_data():
             x2_coords = round(float(ast.literal_eval(row['pos2'])[1]["x"]), 1)
             y2_coords = round(float(ast.literal_eval(row['pos2'])[1]["y"]), 1)
             z2_coords = round(float(ast.literal_eval(row['pos2'])[1]["z"]), 1)
-            print(ast.literal_eval(row['pos1']))
             p1 = np.array([x1_coords, y1_coords, z1_coords])
             p2 = np.array([x2_coords, y2_coords, z2_coords])
             squared_dist = np.sum((p1 - p2) ** 2, axis=0)
@@ -120,11 +118,12 @@ def csv_getsorted_data():
 
     # get all values of the last game:
     lastgame_total_controller_distance = get_total_controllers_distance(lastgame_data)
-    lastgame_movingtime =  lastgame_data.iloc[0]['time'] - lastgame_data.iloc[-1]['time'].total_seconds()
+    lastgame_movingtime =  (lastgame_data.iloc[0]['time'] - lastgame_data.iloc[-1]['time']).total_seconds()
     lastgame_calories_burned = int(lastgame_movingtime) * (5.5 * 80 * 3.5 / 200)#https://captaincalculator.com/health/calorie/calories-burned-boxing-calculator/
 
     # get data from all games:
     allgames_total_controller_distance = get_total_controllers_distance(data)
+    return lastgame_total_controller_distance, lastgame_movingtime, lastgame_calories_burned, allgames_total_controller_distance
 
 #------------------------MQTT PART--------------------:
 # broker server:
@@ -166,21 +165,26 @@ def on_message(client, userdata, msg):
         received_data = ast.literal_eval(msg.payload.decode("utf-8"))
         name = received_data[0]
         last_position = received_data[1][1:] #only get the positions [1] from the hands [1:]
-        print(getlastmovement(False), str(last_position))
-        print(getlastmovement(False) != str(last_position))
         if getlastmovement(False) != str(last_position): #prevents saving stationary movements
             csv_add_move_data(name, getlastmovement(False), last_position) #compare current and former position
 
         txt_updatelastmovement(last_position) #update the lastmovement file with the current position
 
     if msg.topic == "hbo_ict_vr_request_database":
-        '''pushes every data'''
+        '''pushes movement data'''
         client3.publish('hbo_ict_vr_request_simplified_lastmovement', getlastmovement(databoard=True))
-        # TODO: publish hand movements from the database with a subscribed topic and set it to it's databoard attribute
+
+    if msg.topic == "hbo_ict_vr_request_database_aftergame":
+        '''pushes all aftergame data'''
+        lastgame_total_controller_distance, lastgame_movingtime, lastgame_calories_burned, allgames_total_controller_distance = csv_getsorted_data()
+        print(lastgame_total_controller_distance, lastgame_movingtime, lastgame_calories_burned, allgames_total_controller_distance)
+        client3.publish('hbo_ict_vr_request_simplified_lastgame_total_controller_distance', lastgame_total_controller_distance)
+        client3.publish('hbo_ict_vr_request_simplified_lastgame_movingtime', lastgame_movingtime)
+        client3.publish('hbo_ict_vr_request_simplified_lastgame_calories_burned', lastgame_calories_burned)
+
+        client3.publish('hbo_ict_vr_request_simplified_allgames_total_controller_distance', allgames_total_controller_distance)
         # TODO: publish fast movements from the database with a subscribed topic and set it to it's databoard attribute
         # TODO: publish slow movements from the database with a subscribed topic and set it to it's databoard attribute
-        # TODO: publish most accurate punches today from the database with a subscribed topic and set it to it's databoard attribute
-        # TODO: publish total calories burned from movements today from the database with a subscribed topic and set it to it's databoard attribute
 
 # code to connect to the server and which message is connect to which function
 client3.on_publish = on_publish  # assign function to callback

@@ -15,7 +15,7 @@ AFRAME.registerComponent('timerdown', {
         // let warming_up_ended = false;
         let warming_up_ended = false;
         let game_start = false;
-
+        let game_played = false;
         /*
         create the sixtyseconds value which be used in the setinterval function to decrease it's number with 1 every second
          */
@@ -78,6 +78,7 @@ AFRAME.registerComponent('timerdown', {
                             updatescore()
                             getrandomizedname(username)
                             game_start = false
+                            game_played = true
                             ;
                         } else if (Number.isInteger(gametime)) {
 

@@ -1,4 +1,4 @@
-
+import game_played from "./timer.js"
 
 /**
  * A component that can be attached to the camera rig. it loggs the information of the headset and controllers over mqtt
@@ -42,6 +42,7 @@ AFRAME.registerComponent('lastmovement-logger', {
  * These will be given the position and rotation recieved on the topic: "hbo_ict_vr_game_player_stats" of the mqtt client.
  */
 AFRAME.registerComponent('databoard_updating', {
+
     /**
      * updates the databoard with subscribed topics
      */
@@ -54,8 +55,11 @@ AFRAME.registerComponent('databoard_updating', {
      * It then sets the positions to the databoard with setAttribute on the Lastmovement entity
      */
     tick: function () {
+
         if (connected){
             if(!this.con){
+                console.log(game_played)
+                console.log("TEST")
                 this.con = true
                 //last movement data:
                 client.subscribe('hbo_ict_vr_request_simplified_lastmovement') //topic to receive the lastmovement data back
