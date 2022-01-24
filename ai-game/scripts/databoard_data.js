@@ -18,13 +18,11 @@ AFRAME.registerComponent('lastmovement-logger', {
      * then it asks to request the data from the database from the topic: hbo_ict_vr_request_database
      */
     tick: function (time) {
-        // console.log(time)
         if (Math.round(time) % 4 === 0) {
             if (connected) {
                 if (!this.con) {
                     this.con = true
                 }
-                console.log("runned")
                 var positions = getPositions(this.el) //runs the function with the element (camera) and gets from hand-positions, the positions
                 var name = document.querySelector("#username");
                 var current_name = name.getAttribute('text').value.substr(14)
@@ -53,7 +51,7 @@ AFRAME.registerComponent('databoard_updating', {
      * A function that executes every tick, it gets player controller positions over mqtt.
      * It then sets the positions to the databoard with setAttribute on the Lastmovement entity
      */
-    tick: function (runned_once) {
+    tick: function () {
         var game_played = document.querySelector("#game_played")
 
         if (connected) {
