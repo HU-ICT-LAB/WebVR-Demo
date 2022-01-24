@@ -15,7 +15,6 @@ AFRAME.registerComponent('timerdown', {
         // let warming_up_ended = false;
         let warming_up_ended = false;
         let game_start = false;
-
         /*
         create the sixtyseconds value which be used in the setinterval function to decrease it's number with 1 every second
          */
@@ -49,8 +48,8 @@ AFRAME.registerComponent('timerdown', {
                         warming_uptime = "GO!"
                         timer.setAttribute('text', 'value', "GO!")
                         this.el.emit("warming_up_ended")
-                        hitable.setAttribute('value', "hitable");
-                        console.log(hitable.getAttribute('value'))
+                        hitable.setAttribute('value', "true");
+                        console.log("Hitable?:", hitable.getAttribute('value'))
                     } else if (Number.isInteger(warming_uptime)) {
                         // document.querySelector("#debug").setAttribute('text', 'value', "decrease")
                         timer.setAttribute('text', 'value', (warming_uptime--));
@@ -62,15 +61,17 @@ AFRAME.registerComponent('timerdown', {
                 }.bind(this), timeout);
             }
         }.bind(this))
-
+                var hitable = document.querySelector("#robot_hitable");
                 //Game start
                 this.el.addEventListener("warming_up_ended", function() {
                     var timer = document.querySelector("#timer");
+                    var game_played = document.querySelector("#game_played")
                     timer.setAttribute('color', "#06CCCA")
                     let gametime = 6;
                     console.log("warming up ended")
                     setInterval(function () { //this code will decrease the value number every second
                         if (gametime === 0) {
+                            game_played.setAttribute('text', 'value', "True")
                             gametime = "Game over"
                             timer.setAttribute('color', "#CC0621")
                             timer.setAttribute('text', 'value', "Game Over")
@@ -78,6 +79,9 @@ AFRAME.registerComponent('timerdown', {
                             updatescore()
                             getrandomizedname(username)
                             game_start = false
+                            hitable.setAttribute('value', "false");
+                            console.log("Hitable?:", hitable.getAttribute('value'))
+
                             ;
                         } else if (Number.isInteger(gametime)) {
 

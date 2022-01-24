@@ -279,5 +279,5 @@ AFRAME.registerComponent('trajectory', {
     //         executeCalculations(positionsLeft[0], positionsLeft[1], this.aiBot, this.stor);
     //         positionsLeft = [];
     //     }
-    // }
+    }
 });
