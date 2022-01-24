@@ -137,7 +137,7 @@ def on_publish(client, userdata, result):  # create function for callback
     :param userdata: the detailed information about the user
     :param result: the message results
     """
-    print("data published \n")
+    # print("data published \n")
     pass
 
 client3 = paho.Client("gamemodespub")  # create client object
@@ -152,6 +152,7 @@ def on_connect(client, userdata, flags, rc):
     """
     client3.subscribe("hbo_ict_vr_request_database")
     client3.subscribe("hbo_ict_vr_data_last_movement")
+    client3.subscribe("hbo_ict_vr_request_database_aftergame")
 
 def on_message(client, userdata, msg):
     """
@@ -177,11 +178,9 @@ def on_message(client, userdata, msg):
     if msg.topic == "hbo_ict_vr_request_database_aftergame":
         '''pushes all aftergame data'''
         lastgame_total_controller_distance, lastgame_movingtime, lastgame_calories_burned, allgames_total_controller_distance = csv_getsorted_data()
-        print(lastgame_total_controller_distance, lastgame_movingtime, lastgame_calories_burned, allgames_total_controller_distance)
         client3.publish('hbo_ict_vr_request_simplified_lastgame_total_controller_distance', lastgame_total_controller_distance)
         client3.publish('hbo_ict_vr_request_simplified_lastgame_movingtime', lastgame_movingtime)
         client3.publish('hbo_ict_vr_request_simplified_lastgame_calories_burned', lastgame_calories_burned)
-
         client3.publish('hbo_ict_vr_request_simplified_allgames_total_controller_distance', allgames_total_controller_distance)
         # TODO: publish fast movements from the database with a subscribed topic and set it to it's databoard attribute
         # TODO: publish slow movements from the database with a subscribed topic and set it to it's databoard attribute
