@@ -18,7 +18,7 @@ def on_publish(client, userdata, result):  # create function for callback
     pass
 
 
-client1 = paho.Client("gamemodespub")  # create client object
+client1 = paho.Client("highscore_publisher")  # create client object
 
 
 def on_connect(client, userdata, flags, rc):

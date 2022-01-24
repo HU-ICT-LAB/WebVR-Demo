@@ -67,7 +67,7 @@
                     <a-box color="#333333" src=#Metal width="8" height="0.5" depth="0.5" rotation="0 0 90" position="-5.25 -2.25 0"></a-box>
                     <!--   Game Text Objects                 -->
                     <a-text id="username" position="-4.8 1 0.08" getnewname> </a-text>
-                    <a-text id="score" value= "3" position="-1.1 0 0.08" scale="7 7 7"> </a-text>
+                    <a-text id="score" value= "0" position="-1.1 0 0.08" scale="7 7 7"> </a-text>
                     <a-text id="timer" value= "60" position="-0.3 1 0.08" scale="2 2 2" timerdown>
                         <a-text id="game_played" value= "false" scale="0.001 0.001 0.001"></a-text>
                     </a-text>
@@ -77,10 +77,10 @@
                         <a-entity id="Highscoretext" text="value: Top 10 Leaderboard\n------------\n---: --\n---: --\n---: --\n---: --\n---: --\n---: --\n---: --\n---: --\n---: --\n---: --; color: #FFFFFF" position="1.20 0 0.11" scale="5 5 5" sethighscore></a-entity>
                     </a-box>
                     <!--   Data Text Objects                 -->
-                    <a-box color="#A9A9A9" src=#Metal width="3.5" height="3" depth="0.1" position="3.5 -0.75 0"  repeat="10 1" databoard_updating>
+                    <a-box color="#A9A9A9" src=#Metal width="3.5" height="3" depth="0.1" position="3.5 -0.75 0"   databoard_updating>
                         <a-entity id="Title" text="value: Databoard\n-------------\n ; color: #FFFFFF" position="0.90 1.1 0.11" scale="5 5 5"></a-entity>
-                        <a-entity id="LastMovement_Title" text="value: Current Position: ; color: #FFFFFF" position="0.43 0.77 0.11" scale="4 4 4" ></a-entity>
-                        <a-entity id="LastMovement" text="value: ---- ; color: #FFFFFF" position="1.80 0.77 0.11" scale="4 4 4"></a-entity>
+                        <a-entity id="LastMovement_Title" text="value: Position: ; color: #FFFFFF" position="0.43 0.77 0.11" scale="4 4 4" ></a-entity>
+                        <a-entity id="LastMovement" text="value: ---- ; color: #FFFFFF" position="1.30 0.77 0.11" scale="4 4 4"></a-entity>
 
                         <a-entity id="Lastgame_Title" text="value: Currentgame; color: #000000 " position="0.90 0.50 0.11" scale="5 5 5"></a-entity>
                         <a-entity id="cur_total_controller_distance_Title" text="value: Controllers Moved: ; color: #FFFFFF" position="0.43 0.20 0.11" scale="4 4 4" ></a-entity>

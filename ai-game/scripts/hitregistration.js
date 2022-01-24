@@ -17,10 +17,10 @@ AFRAME.registerComponent('hit', {
 
                 console.log("Item touched");
 
-
+                var game_started = document.querySelector("#robot_hitable")
                 var currentscore = scorenumber.getAttribute('text').value;
                 console.log(currentscore);
-                if (scoreagaindelay === 0) {
+                if (scoreagaindelay === 0 && game_started.getAttribute('value') === 'true') {
                     scorenumber.setAttribute('text', 'value', +currentscore + 1);
                     // scorenumber.setAttribute('text', 'value', 3);
 

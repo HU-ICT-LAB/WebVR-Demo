@@ -89,6 +89,7 @@ def csv_getsorted_data():
     lastgame_data = data.loc[data['name'] == data.iloc[0]['name']]
     def get_total_controllers_distance(data):
         totaldist = 0
+        total_time = 0
         for index, row in data.iterrows():
             # left
             x1_coords = round(float(ast.literal_eval(row['pos1'])[0]["x"]), 1)
@@ -113,16 +114,21 @@ def csv_getsorted_data():
             p2 = np.array([x2_coords, y2_coords, z2_coords])
             squared_dist = np.sum((p1 - p2) ** 2, axis=0)
             dist = np.sqrt(squared_dist)
+            if dist > 0.6:
+                current_time = row['time']
+                try:
+                    total_time = total_time + int((formertime - current_time).total_seconds())
+                except UnboundLocalError:
+                    pass
+            formertime = row['time']
             totaldist += dist
-        return totaldist
+        return totaldist, total_time
 
     # get all values of the last game:
-    lastgame_total_controller_distance = get_total_controllers_distance(lastgame_data)
-    lastgame_movingtime =  (lastgame_data.iloc[0]['time'] - lastgame_data.iloc[-1]['time']).total_seconds()
+    lastgame_total_controller_distance, lastgame_movingtime = get_total_controllers_distance(lastgame_data)
+    # lastgame_movingtime =  (lastgame_data.iloc[0]['time'] - lastgame_data.iloc[-1]['time']).total_seconds()
     lastgame_calories_burned = int(lastgame_movingtime) * (5.5 * 80 * 3.5 / 200)#https://captaincalculator.com/health/calorie/calories-burned-boxing-calculator/
-
-    # get data from all games:
-    allgames_total_controller_distance = get_total_controllers_distance(data)
+    allgames_total_controller_distance, _ = get_total_controllers_distance(data)
     return lastgame_total_controller_distance, lastgame_movingtime, lastgame_calories_burned, allgames_total_controller_distance
 
 #------------------------MQTT PART--------------------:
@@ -140,7 +146,7 @@ def on_publish(client, userdata, result):  # create function for callback
     # print("data published \n")
     pass
 
-client3 = paho.Client("gamemodespub")  # create client object
+client3 = paho.Client("databaseinteracter")  # create client object
 
 def on_connect(client, userdata, flags, rc):
     """
@@ -166,7 +172,8 @@ def on_message(client, userdata, msg):
         received_data = ast.literal_eval(msg.payload.decode("utf-8"))
         name = received_data[0]
         last_position = received_data[1][1:] #only get the positions [1] from the hands [1:]
-        if getlastmovement(False) != str(last_position): #prevents saving stationary movements
+        gamestarted = received_data[2]
+        if getlastmovement(False) != str(last_position) and gamestarted == "true": #prevents saving stationary movements
             csv_add_move_data(name, getlastmovement(False), last_position) #compare current and former position
 
         txt_updatelastmovement(last_position) #update the lastmovement file with the current position
