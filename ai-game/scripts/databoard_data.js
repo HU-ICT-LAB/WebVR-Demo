@@ -71,6 +71,8 @@ AFRAME.registerComponent('databoard_updating', {
                         client.subscribe('hbo_ict_vr_request_simplified_lastgame_movingtime')
                         client.subscribe('hbo_ict_vr_request_simplified_lastgame_calories_burned')
                         client.subscribe('hbo_ict_vr_request_simplified_allgames_total_controller_distance')
+                        client.subscribe('hbo_ict_vr_request_simplified_allgames_slowest_punch')
+                        client.subscribe('hbo_ict_vr_request_simplified_allgames_fastest_punch')
                         client.publish('hbo_ict_vr_request_database_aftergame', "{0}") //topic to receive the lastmovement data back
 
                         mqtt_add_topic_callback('hbo_ict_vr_request_simplified_lastgame_total_controller_distance', function (topic, message) {
@@ -90,16 +92,18 @@ AFRAME.registerComponent('databoard_updating', {
                             all_total_controller_distance.setAttribute('text', 'value', message.toString().substring(0, 7) + "m")
 
                         })
+                        mqtt_add_topic_callback('hbo_ict_vr_request_simplified_allgames_fastest_punch', function (topic, message) {
+                            var fastest_punch = document.querySelector("#fastest_punch") //add the message from the topic to the databoard
+                            fastest_punch.setAttribute('text', 'value', message.toString().substring(0, 7) + "m/s")
+
+                        })
+                        mqtt_add_topic_callback('hbo_ict_vr_request_simplified_allgames_slowest_punch', function (topic, message) {
+                            var slowest_punch = document.querySelector("#slowest_punch") //add the message from the topic to the databoard
+                            slowest_punch.setAttribute('text', 'value', message.toString().substring(0, 7) + "m/s")
+
+                        })
                         game_played.setAttribute('text', 'value', "False")
                     }
-                    //punch moves data:
-                    //TODO: get hand movements from the database with a subscribed topic and set it to it's databoard attribute
-
-                    //fastest punch data:
-                    //TODO: get fast movements from the database with a subscribed topic and set it to it's databoard attribute
-
-                    //slowest punch data:
-                    //TODO: get slow movements from the database with a subscribed topic and set it to it's databoard attribute
                 }
 
         }, timeout);
