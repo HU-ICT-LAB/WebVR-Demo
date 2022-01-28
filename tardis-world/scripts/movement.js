@@ -197,8 +197,13 @@ AFRAME.registerComponent('x-button-listener', {
 
 
 
-
+    /**
+     * A component to let the player move in thw world by jogging on their place.
+     * Is enabled when the headbobmoving_value > 0.
+     * We check for the buttons x and a because when ducking its still buggy, it works well when just walking but other movement still produces unwanted results.
+     */
 AFRAME.registerComponent('headbob-movement',{
+
     init: function() {
         this.y_positions = []
         this.x_positions = []
@@ -221,7 +226,7 @@ AFRAME.registerComponent('headbob-movement',{
         this.x_rotation = queueAdder(this.x_rotation,this.length, player.getAttribute('rotation').x)
 
 
-        // if( getTotalDistance(this.y_positions)/this.length > 0.003 && getSumDistance(this.y_positions) < 0.2){
+        // if( getTotalDistance(this.y_positions)/this.length > 0.003 && getSumDistance(this.y_positions) < 0.2){ possible check
 
         // }
         //check if the player has not moved too much on the x and z axis and if the rotation on the x axis is minimal.
