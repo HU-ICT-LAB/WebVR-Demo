@@ -1,5 +1,11 @@
 
+    /**
+     * A coponent to create a 3d robot arm. It generates the arm and has event handles for setting the correct angles with the data recieved from mqtt
+     */
 AFRAME.registerComponent('robot_arm_model_controller',{
+    /**
+     * Use r_scale to scale the robot instead of normal scale
+     */
     schema: {
         r_scale: {default: "1 1 1"}
     },
@@ -189,18 +195,6 @@ AFRAME.registerComponent('robot_arm_model_controller',{
                 current_r = Gripper_Finger_Right.getAttribute("position").y
                 current_l = Gripper_Finger_Left.getAttribute("position").y
 
-
-                //new gripper pos berekenen met gebruik van new_gripper_pos. als new_gripper_position 1 is dan is de gripper open, en bij 89 is hij dicht.
-                //Dat moeten we dus mappen naar 4.5 centimeter voor de linker gripper en -4.5 centimeter voor de rechter gripper. 
-                //formule? = (0.045 / 89 * (89-(pos-1)))+0.01. En dan heb je de afstand die je bij de ene + moet doen en bij de ander -
-
-                // Gripper_Finger_Left.setAttribute("animation__grip", "property: position.y; from: "+ current_l +"; to: "+ this.GetGripperPos("left", new_gripper_position) +"; easing: easeInOutQuad; dur: 10; loop: false; startEvents: goToPos")
-                // Gripper_Finger_Right.setAttribute("animation__grip", "property: position.y; from: "+ current_r +"; to: "+ this.GetGripperPos("right", new_gripper_position) +"; easing: easeInOutQuad; dur: 10; loop: false; startEvents: goToPos")
-
-                // Gripper_Finger_Left.emit("goToPos")
-                // Gripper_Finger_Right.emit("goToPos")
-
-                //deze moet nog op n delay van 1000
                 setTimeout(function(){
                     var pos_l = new THREE.Vector3()
                     pos_l.x = 0.035
@@ -260,6 +254,9 @@ AFRAME.registerComponent('robot_arm_model_controller',{
      } 
 })
 
+/**
+ * A component to imitate the gripper of the robot arm.
+ */
 AFRAME.registerComponent('fake_gripper',{
     init: function(){
         this.time_to_move = false
