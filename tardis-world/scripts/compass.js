@@ -6,7 +6,7 @@
  */
 AFRAME.registerComponent('compass',{
     schema: {
-        target_id: {default: "#House_build"}
+        target_id: {default: ""}
     },
 
     /**
@@ -59,7 +59,17 @@ AFRAME.registerComponent('compass',{
         var dir = Math.atan2(right_controll_pos.x - target_world_pos.x, right_controll_pos.z - target_world_pos.z) * 180 / Math.PI;                    
         this.rotation.y = dir
         this.compass_container.setAttribute("rotation", this.rotation)
+    },
+
+    /**
+     * Set a new target for the compass to point to
+     * @param {string} target_id The id of the new target
+     */
+    setTarget: function(target_id) {
+        this.data.target_id = target_id
+        this.target = this.el.sceneEl.querySelector(target_id)
     }
+
 })
 
 /**

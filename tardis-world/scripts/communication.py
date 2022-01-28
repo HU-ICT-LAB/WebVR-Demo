@@ -27,6 +27,9 @@ host_socket.listen()
 moving_mutext = threading.Lock()
 
 def receive_thread():
+    """
+    A thread function. Waits for as connection with the robot arm, it receives positions of the joints and sends them over mqtt to the game.
+    """
     print("we are waiting for a connection")
     conn, addr = host_socket.accept()
     with conn:
@@ -48,6 +51,9 @@ def receive_thread():
         conn.close()
 
 def receive_gripper_thread():
+    """
+    A thread function. Waits for as connection with the robot arm, it receives positions of the gripper and sends them over mqtt to the game.
+    """
     print("we are waiting for a connection")
     conn, addr = host_socket.accept()
     receiving = True
