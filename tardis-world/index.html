@@ -21,11 +21,11 @@
                 
             </a-assets>
             <a-entity gltf-model="#house"
-                    position="-4 0.4 0"
+                    position="-4 1 0"
                     scale="2 2 2">
             </a-entity>
 
-            <a-entity id="rig" headbob-movement relative-movement>
+            <a-entity id="rig" headbob-movement relative-movement position="0 0.05 0">
                     <a-entity id="camera"  wasd-controls camera look-controls>
                         <a-sky color="AAAAAA"></a-sky>
                     </a-entity>
@@ -36,7 +36,7 @@
 
             <a-entity robot_controller button_listener></a-entity>
 
-            <a-teleporter teleporter_id="0" target_id="1" position="5 -0.6 0"></a-teleporter>
+            <a-teleporter teleporter_id="0" target_id="1" position="5 0 0"></a-teleporter>
 
             <!-- This is in the controll panel room -->
             <a-entity id="controll_room" position="0 -12 0">
