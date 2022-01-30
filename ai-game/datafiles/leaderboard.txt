@@ -1,1 +1,1 @@
-{"Gray-Cobra": "87", "Gray-Oyster": "78", "Tomato-Nightingale": "73", "Gray-Raccoon": "63", "White-Tapir": "61", "Peru-Worm": "51", "Snow-Chinchilla": "44", "OldLace-Termite": "37", "Beige-Parrot": "16", "Beige-Pony": "14"}
+{"Gray-Cobra": "87", "Gray-Oyster": "78", "Tomato-Nightingale": "73", "Gray-Raccoon": "63", "White-Tapir": "61", "Peru-Worm": "51", "Snow-Chinchilla": "44", "OldLace-Termite": "37", "Beige-Parrot": "16", "White-Chamois": "15"}

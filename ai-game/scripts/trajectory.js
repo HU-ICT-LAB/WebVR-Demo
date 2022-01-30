@@ -178,9 +178,13 @@ function executeCalculations(coordinate1, coordinate2, aiBot, hitBoxes) {
 
     hitBoxes.forEach(element => {
         const botHit = checkIfGonnaHit(trajectory, element[0], element[1]);
-
+        var robot_dodge_cooldown = document.querySelector("#robot_dodge_cooldown");
+        var dodge_cooldown_value = robot_dodge_cooldown.getAttribute('value')
         if (botHit.length > 0) {
-            dodgeMovement(aiBot, botHit);
+            if (dodge_cooldown_value === "false"){
+                dodgeMovement(aiBot, botHit);
+                robot_dodge_cooldown.setAttribute('value', "true")
+            }
         }
     })
 }
@@ -269,15 +273,15 @@ AFRAME.registerComponent('trajectory', {
         }
 
         //Runs if there are two measured points of the hand
-    //     if (positionsRight.length === 2) {
-    //         executeCalculations(positionsRight[0], positionsRight[1], this.aiBot, this.stor);
-    //         positionsRight = [];
-    //
-    //     }
-    //
-    //     if (positionsLeft.length === 2) {
-    //         executeCalculations(positionsLeft[0], positionsLeft[1], this.aiBot, this.stor);
-    //         positionsLeft = [];
-    //     }
+        if (positionsRight.length === 2) {
+            executeCalculations(positionsRight[0], positionsRight[1], this.aiBot, this.stor);
+            positionsRight = [];
+
+        }
+
+        if (positionsLeft.length === 2) {
+            executeCalculations(positionsLeft[0], positionsLeft[1], this.aiBot, this.stor);
+            positionsLeft = [];
+        }
     }
 });

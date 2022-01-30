@@ -224,9 +224,6 @@ def on_message(client, userdata, msg):
                         allgames_total_slowest)
         client3.publish('hbo_ict_vr_request_simplified_allgames_fastest_punch',
                         allgames_total_fastest)
-        # TODO: publish fast movements from the database with a subscribed topic and set it to it's databoard attribute
-        # TODO: publish slow movements from the database with a subscribed topic and set it to it's databoard attribute
-
 
 # code to connect to the server and which message is connect to which function
 client3.on_publish = on_publish  # assign function to callback
