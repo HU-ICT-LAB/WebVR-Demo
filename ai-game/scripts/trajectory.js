@@ -37,14 +37,16 @@ function dodgeMovement(bot, listOfHits) {
         //for punches from the front side of the opponent
         const width = bot.getAttribute('width');
         const leftSide = botPosition.x - (width/2);
-        const rightSide = botPosition.x + (width/2);                  
-        const disFromLeft = Math.min(Math.abs(lastTouch.x - leftSide), Math.abs(firstTouch.x - leftSide));
-        const disFromRight = Math.min(Math.abs(lastTouch.x - rightSide), Math.abs(firstTouch.x - rightSide));
+        const rightSide = botPosition.x + (width/2);
+        const disFromLeft = Math.max(Math.abs(lastTouch.x - leftSide), Math.abs(firstTouch.x - leftSide));
+        const disFromRight = Math.max(Math.abs(lastTouch.x - rightSide), Math.abs(firstTouch.x - rightSide));
 
         //decides if opponent moves right or left
         if (disFromLeft < disFromRight) {
+            //move right
             botPosition.x = botPosition.x + disFromLeft;
         } else {
+            //move left
             botPosition.x = botPosition.x - disFromRight;
         }
 
@@ -81,6 +83,7 @@ function diff (num1, num2) {
  * @returns {THREE.Vector3[]} The two positions of the corners of the childEntity
  */
 function positionsOfBox(childEntity, parentEntity = null) {
+    // If the childEntity has no parent entity
     if (parentEntity === null) {
         const boxpos = childEntity.getAttribute('position');
         const scale = childEntity.getAttribute('scale');
@@ -176,10 +179,15 @@ function executeCalculations(coordinate1, coordinate2, aiBot, hitBoxes) {
         trajectory.push(endpoint);
     }
 
+    //Check if the trajectory will hit the hitboxes and move the opponent if so
     hitBoxes.forEach(element => {
         const botHit = checkIfGonnaHit(trajectory, element[0], element[1]);
+
+        // Cooldown to reduce difficulty
         var robot_dodge_cooldown = document.querySelector("#robot_dodge_cooldown");
         var dodge_cooldown_value = robot_dodge_cooldown.getAttribute('value')
+
+        // Move opponent if punch will hit it
         if (botHit.length > 0) {
             if (dodge_cooldown_value === "false"){
                 dodgeMovement(aiBot, botHit);
@@ -237,8 +245,8 @@ function getWorldAttributes(childEntity, parentEntity) {
     return returns
 }
 
-let positionsRight = [];
-let positionsLeft = [];
+let positions_right = [];
+let positions_left = [];
 
 //Calculate trajectory and moves targetBox if in its trajectory
 AFRAME.registerComponent('trajectory', {
@@ -261,11 +269,12 @@ AFRAME.registerComponent('trajectory', {
             const obj_rc = refineCoordinate(list[1]);
             const obj_lc = refineCoordinate(list[2]);
 
-            positionsRight.push(obj_rc);
-            positionsLeft.push(obj_lc);
+            positions_right.push(obj_rc);
+            positions_left.push(obj_lc);
         }
 
-        if (positionsRight.length === 2 || positionsLeft.length === 2) {
+        // To get the two opposite corners of every hitbox
+        if (positions_right.length === 2 || positions_left.length === 2) {
             this.stor = [];
             this.hitBoxes.forEach((element) => {
                 this.stor.push(positionsOfBox(element, this.aiBot));
@@ -273,15 +282,15 @@ AFRAME.registerComponent('trajectory', {
         }
 
         //Runs if there are two measured points of the hand
-        if (positionsRight.length === 2) {
-            executeCalculations(positionsRight[0], positionsRight[1], this.aiBot, this.stor);
-            positionsRight = [];
+        if (positions_right.length === 2) {
+            executeCalculations(positions_right[0], positions_right[1], this.aiBot, this.stor);
+            positions_right = [];
 
         }
 
-        if (positionsLeft.length === 2) {
-            executeCalculations(positionsLeft[0], positionsLeft[1], this.aiBot, this.stor);
-            positionsLeft = [];
+        if (positions_left.length === 2) {
+            executeCalculations(positions_left[0], positions_left[1], this.aiBot, this.stor);
+            positions_left = [];
         }
     }
 });
