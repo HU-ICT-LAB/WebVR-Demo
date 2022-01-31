@@ -3,176 +3,145 @@
     {
       "bufferView": 2,
       "componentType": 5126,
-      "count": 431,
+      "count": 28341,
       "max": [
-        20.439632415771484,
-        27.626657485961914,
-        22.411252975463867
+        74.41181182861328,
+        230.70068359375,
+        30.105133056640625
       ],
       "min": [
-        -22.411252975463867,
-        -3.9946656227111816,
-        -20.439632415771484
+        -74.41181182861328,
+        -0.05437469482421875,
+        -30.105133056640625
       ],
       "type": "VEC3"
     },
     {
       "bufferView": 2,
-      "byteOffset": 5172,
+      "byteOffset": 340092,
       "componentType": 5126,
-      "count": 431,
+      "count": 28341,
       "max": [
-        0.9998741149902344,
-        0.2698412835597992,
-        0.9997481107711792
-      ],
-      "min": [
-        -0.9998741149902344,
-        -0.2698412835597992,
-        -0.9997481107711792
-      ],
-      "type": "VEC3"
-    },
-    {
-      "bufferView": 3,
-      "componentType": 5126,
-      "count": 431,
-      "max": [
-        0.9998741149902344,
-        0.9998741149902344,
-        0.9997481107711792,
-        1.0
-      ],
-      "min": [
-        -0.9998741149902344,
-        -0.2380952388048172,
-        -0.9997481107711792,
-        -1.0
-      ],
-      "type": "VEC4"
-    },
-    {
-      "bufferView": 1,
-      "componentType": 5126,
-      "count": 431,
-      "max": [
+        1.0,
         1.0,
         1.0
       ],
       "min": [
-        -2.0539125955565396e-14,
-        -2.0539125955565396e-14
+        -1.0,
+        -1.0,
+        -1.0
       ],
-      "type": "VEC2"
+      "type": "VEC3"
     },
     {
       "bufferView": 1,
-      "byteOffset": 3448,
       "componentType": 5126,
-      "count": 431,
+      "count": 28341,
       "max": [
-        0.9647058844566345,
-        0.9647058844566345
+        0.9938710927963257,
+        1.9968504905700684
       ],
       "min": [
-        0.07058823853731155,
-        0.07058823853731155
+        0.002955615520477295,
+        1.0029085874557495
       ],
       "type": "VEC2"
     },
     {
       "bufferView": 0,
       "componentType": 5125,
-      "count": 780,
+      "count": 158436,
       "type": "SCALAR"
     }
   ],
   "asset": {
     "extras": {
-      "author": "lemedesign (https://sketchfab.com/lemedesign)",
+      "author": "Andrew.Beck (https://sketchfab.com/Andrew.Beck)",
       "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
-      "source": "https://sketchfab.com/3d-models/low-poly-grass-c7b3cadd101245d899ca49fa587b2745",
-      "title": "Low Poly Grass"
+      "source": "https://sketchfab.com/3d-models/bender-bending-rodriguez-fc8de4f5db924365bc0bc3b4ba757629",
+      "title": "Bender Bending Rodriguez."
     },
-    "generator": "Sketchfab-11.71.0",
+    "generator": "Sketchfab-11.79.0",
     "version": "2.0"
   },
   "bufferViews": [
     {
       "buffer": 0,
-      "byteLength": 3120,
+      "byteLength": 633744,
       "name": "floatBufferViews",
       "target": 34963
     },
     {
       "buffer": 0,
-      "byteLength": 6896,
-      "byteOffset": 3120,
+      "byteLength": 226728,
+      "byteOffset": 633744,
       "byteStride": 8,
       "name": "floatBufferViews",
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteLength": 10344,
-      "byteOffset": 10016,
+      "byteLength": 680184,
+      "byteOffset": 860472,
       "byteStride": 12,
-      "name": "floatBufferViews",
-      "target": 34962
-    },
-    {
-      "buffer": 0,
-      "byteLength": 6896,
-      "byteOffset": 20360,
-      "byteStride": 16,
       "name": "floatBufferViews",
       "target": 34962
     }
   ],
   "buffers": [
     {
-      "byteLength": 27256,
+      "byteLength": 1540656,
       "uri": "scene.bin"
     }
   ],
   "images": [
     {
-      "uri": "assets/textures/grassMat_baseColor.png"
+      "uri": "textures/lambert1_baseColor.png"
     },
     {
-      "uri": "assets/textures/grassMat_normal.png"
+      "uri": "textures/lambert1_metallicRoughness.png"
+    },
+    {
+      "uri": "textures/lambert1_emissive.png"
     }
   ],
   "materials": [
     {
-      "alphaMode": "MASK",
       "doubleSided": true,
-      "name": "grassMat",
-      "normalTexture": {
+      "emissiveFactor": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emissiveTexture": {
+        "index": 2
+      },
+      "name": "lambert1",
+      "occlusionTexture": {
         "index": 1
       },
       "pbrMetallicRoughness": {
         "baseColorTexture": {
           "index": 0
         },
-        "metallicFactor": 0.0,
-        "roughnessFactor": 0.6
+        "metallicRoughnessTexture": {
+          "index": 1
+        },
+        "roughnessFactor": 0.75
       }
     }
   ],
   "meshes": [
     {
-      "name": "grassAS_01_grassMat_0",
+      "name": "polySurface21_lambert1_0",
       "primitives": [
         {
           "attributes": {
             "NORMAL": 1,
             "POSITION": 0,
-            "TANGENT": 2,
-            "TEXCOORD_0": 3,
-            "TEXCOORD_1": 4
+            "TEXCOORD_0": 2
           },
-          "indices": 5,
+          "indices": 3,
           "material": 0,
           "mode": 4
         }
@@ -209,16 +178,16 @@
         2
       ],
       "matrix": [
-        0.009999999776482582,
+        1.0,
         0.0,
         0.0,
         0.0,
         0.0,
         0.0,
-        0.009999999776482582,
+        1.0,
         0.0,
         0.0,
-        -0.009999999776482582,
+        -1.0,
         0.0,
         0.0,
         0.0,
@@ -226,7 +195,7 @@
         0.0,
         1.0
       ],
-      "name": "grassAS-01.fbx"
+      "name": "57ab4f6da0494ce984ff94947f69f805.fbx"
     },
     {
       "children": [
@@ -238,11 +207,11 @@
       "children": [
         4
       ],
-      "name": "grassAS_01"
+      "name": "polySurface21"
     },
     {
       "mesh": 0,
-      "name": "grassAS_01_grassMat_0"
+      "name": "polySurface21_lambert1_0"
     }
   ],
   "samplers": [
@@ -270,6 +239,10 @@
     {
       "sampler": 0,
       "source": 1
+    },
+    {
+      "sampler": 0,
+      "source": 2
     }
   ]
 }

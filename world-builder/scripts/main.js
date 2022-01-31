@@ -1,3 +1,4 @@
+
 function sendLogToServer(msg) {
   client.publish("world-builder-debug", JSON.stringify(msg))
 }
@@ -52,54 +53,7 @@ AFRAME.registerComponent('generate_textures', {
   },
 });
 
-// AFRAME.registerComponent('draw-canvas', {
-//   schema: {default: ''},
 
-//   init: function () {
-//     this.canvas = document.getElementById(this.data);
-//     this.color = this.data.split('-')[0];
-//     console.log(this.color);
-//     this.ctx = this.canvas.getContext('2d');
-
-//     let pv = 1.5
-//     let kv = 0.15
-
-//     for (let y = 0; y < 500; y++) {
-//       for (let x = 0; x < 500; x++) {
-//         let n = noise2D(x * 0.01, y * 0.01);
-//         n += pv;
-//         n *= kv;
-//         let rgb = Math.round(255 * n);
-//         switch (this.color){
-//           case "red":
-//             this.ctx.fillStyle = "rgba(" + rgb + "," + 0 + "," + 0 + ",1.0)";
-//             break;
-//           case "green":
-//             this.ctx.fillStyle = "rgba(" + 0 + "," + rgb + "," + 0 + ",1.0)";
-//             break;
-//           case "blue":
-//             this.ctx.fillStyle = "rgba(" + 0 + "," + 0 + "," + rgb + ",1.0)";
-//             break;
-//           case "yellow":
-//             this.ctx.fillStyle = "rgba(" + rgb + "," + rgb + "," + 0 + ",1.0)";
-//             break;
-//           case "lightblue":
-//             this.ctx.fillStyle = "rgba(" + 0 + "," + rgb + "," + rgb + ",1.0)";
-//             break;
-//           case "purple":
-//             this.ctx.fillStyle = "rgba(" + rgb + "," + 0 + "," + rgb + ",1.0)";
-//             break;
-//           default:
-//             this.ctx.fillStyle = "rgba(" + rgb + "," + rgb + "," + rgb + ",1.0)";
-//             break;
-//         }
-
-//         this.ctx.fillRect(x, y, 1, 1);
-//       }
-//     }
-
-//   }
-// });
 
 
 let GLOBALCOLOR = 'red';
@@ -230,6 +184,7 @@ AFRAME.registerComponent('snap', {
         pos.z = Math.ceil(pos.z / data.snap.z) * data.snap.z - data.offset.z;
         sendLogToServer({ "newSnap": pos });
         break;
+
       }
     }
 
@@ -247,29 +202,7 @@ AFRAME.registerComponent('snap', {
   }
 });
 
-// AFRAME.registerComponent('snap', {
-//   dependencies: ['position'],
 
-//   schema: {
-//       offset: {type: 'vec3'},
-//       snap: {type: 'vec3'}
-//   },
-
-//   init: function () {
-//       this.originalPos = this.el.getAttribute('position');
-//   },
-
-//   update: function () {
-//       const data = this.data;
-
-//       const pos = AFRAME.utils.clone(this.originalPos);
-//       pos.x = Math.ceil(pos.x / data.snap.x) * data.snap.x - data.offset.x;
-//       pos.y = Math.ceil(pos.y / data.snap.y) * data.snap.y - data.offset.y;
-//       pos.z = Math.ceil(pos.z / data.snap.z) * data.snap.z - data.offset.z;
-
-//       this.el.setAttribute('position', pos);
-//   }
-// });
 // delete object
 
 /**
@@ -463,6 +396,7 @@ AFRAME.registerComponent('set-p', {
 
   init: function () {
     pos = { 'x': 0, 'y': -(GLOBALMIN * 5 * 10) - .2, 'z': 0 }
+
     this.el.setAttribute('position', pos);
   }
 });
@@ -612,15 +546,6 @@ AFRAME.registerComponent('generate_trees', {
   init: function () {
     var scene = document.querySelector('a-scene');
 
-    // var tree = document.createElement('a-entity');
-    //     tree.setAttribute('loaded_tree','')
-    //     tree.setAttribute('id','gentree')
-    //     var pos = new THREE.Vector3();
-    //     pos.x = -90;
-    //     pos.z = -90;
-    //     pos.y = -0.6;
-    //     tree.setAttribute('position', pos);
-    //     scene.appendChild(tree);
 
     for (let i = 0; i < 100; i++) {
       var tree = document.createElement('a-entity');
@@ -640,4 +565,5 @@ AFRAME.registerComponent('generate_trees', {
       scene.appendChild(tree);
     }
   },
+
 });

@@ -2,6 +2,7 @@
 <html>
 
 <head>
+    <!-- Script mports -->
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdn.rawgit.com/donmccurdy/aframe-extras/v4.1.2/dist/aframe-extras.min.js"></script>
     <script src="../scripts/browserMqtt.js" type="text/javascript"></script>
@@ -37,6 +38,7 @@
         <a-plane id="ground" color="green" class="collidable" rotation="-90 0 0" width="60" height="60" material="opacity: 0.0; transparent: true"></a-plane>
         <a-entity geometry="primitive: terrain" position="0 -40 0" scale="0.2 0.2 0.2" rotation="-90 0 0 " color="green" set-p></a-entity>
         <!-- <a-entity position="0 0 0" mixin="voxel" class="collidable block" material="src: #red-canvas" draw-canvas="red-canvas"></a-entity> -->
+
         <!-- add sky -->
         <a-sky src="#sky" position="-200 0 0"></a-sky>
 
@@ -47,6 +49,7 @@
                 <a-box id="color_identifier" width="0.05" depth="0.01" height="0.05" position="-0.7 -0.3 -0.5"></a-box>
             </a-entity>
             <a-entity id="leftHand" laser-controls="hand: left" raycaster="objects: .collidable.block; far: 5;"
+
                 line="color: #CCCCCC" delete-object></a-entity>
             <a-entity id="rightHand" laser-controls="hand: right" raycaster="objects: .collidable; far: 5;"
                 line="color: #CCCCCC" add-object change-color></a-entity>
