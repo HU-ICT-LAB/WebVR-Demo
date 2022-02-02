@@ -142,7 +142,7 @@
 
 
     <!--    Camera and Oculus rift-->
-    <a-entity wasd-controls id="rig" position="0 1 2" mqtt-logger  lastmovement-logger trajectory="targetBox: robotmodel">
+    <a-entity wasd-controls id="rig" position="0 0 2" mqtt-logger  lastmovement-logger trajectory="targetBox: robotmodel">
         <a-entity id="camera" camera look-controls hit></a-entity>
         <a-entity class="hand" aabb-collider="objects: a-box" id="left_controller"  oculus-touch-controls="hand: left" thumbstick-logging hit></a-entity>
         <a-entity class="hand" aabb-collider="objects: a-box" id="right_controller"  oculus-touch-controls="hand: right" thumbstick-logging hit></a-entity>
