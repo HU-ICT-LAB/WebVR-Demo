@@ -1,3 +1,4 @@
+
 function sendLogToServer(msg) {
   // Sends a message to the MQTT debug server
   client.publish("world-builder-debug", JSON.stringify(msg))
@@ -127,6 +128,7 @@ AFRAME.registerComponent('snap', {
         pos.z = Math.ceil(pos.z / data.snap.z) * data.snap.z - data.offset.z;
         sendLogToServer({ "newSnap": pos });
         break;
+
       }
     }
 
