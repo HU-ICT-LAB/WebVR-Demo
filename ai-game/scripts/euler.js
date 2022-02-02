@@ -1,3 +1,5 @@
+// This file contains the Euler method.
+
 /**
  * This file contains the functions for the Euler method.
  * Euler method: yn+1 = yn + h*F(tn, yn)

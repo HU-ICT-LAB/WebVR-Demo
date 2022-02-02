@@ -248,29 +248,6 @@ AFRAME.registerComponent('trajectory', {
         this.aiBot = document.querySelector("#"+this.data.targetBox);
         this.hitBoxes = this.aiBot.querySelectorAll('#hitbox');
 
-
-
-        let rondjes = document.querySelectorAll("#rondje");
-
-        const middle_point = {x: 0, y:0, z:0};
-        // const middle_point = {x: 1, y:0, z:3};
-
-        let rondje_1 = rondjes[0].getAttribute('position');
-        let rondje_2 = rondjes[1].getAttribute('position');
-
-        console.log('oldPos', rondje_1, rondje_2);
-
-        // rondje_1['x'] -= middle_point['x'];
-        // Object.keys(middle_point).forEach(key => {
-        //     rondje_1[key] = rondje_1[key] + middle_point[key];
-        //     rondje_2[key] = rondje_2[key] + middle_point[key];
-        // })
-
-        console.log('NewPos', rondje_1, rondje_2);
-        // console.log(rondje_1, rondje_1['x'], rondje_1['z']);
-
-        const formu = calculateCurveEquation(rondje_1, rondje_2);
-
         for (let step=0; step<11; step++) {
             console.log('step', step)
             let pos = new THREE.Vector3();

@@ -1,3 +1,13 @@
+// This file contains the curve solving function and the
+
+/**
+ * Solves the a and b variable in the curve formula y=ax^2*bx using two positions
+ * (but it uses the z coordinate instead of the y coordinate because the curve isn't vertical but horizontal
+ * and its also a 2D curve formula).
+ * @param pos1 Position one on the curve.
+ * @param pos2 Position two one the curve.
+ * @returns {number[]} The a and b variables
+ */
 function calculateCurveEquation(pos1, pos2) {
     let a;
     let b;
@@ -31,8 +41,7 @@ function calculateCurveEquation(pos1, pos2) {
     new_pos2x = new_pos2x - new_pos1x;
     new_pos2x2 = new_pos2x2 - new_pos1x2;
 
-    console.log(new_pos2z, "=", new_pos2x2, "a", "+", new_pos2x, "b");
-
+    // Decides if a will be solved before b or the other way around
     if (new_pos2x === 0) {
         a = pos2z / pos2x2;
 
@@ -50,12 +59,16 @@ function calculateCurveEquation(pos1, pos2) {
 
         a = pos2z/pos2x2;
     }
-
-    // console.log('formula: y=', a, 'x^2 +', b, 'x');
     return [a, b];
 }
 
+/**
+ * Gives the z coordinate on the curve given the x, a and b variables.
+ * @param x The x coordinate on the curve
+ * @param a The a variable provided by the calculateCurveEquation() function
+ * @param b The b variable provided by the calculateCurveEquation() function
+ * @returns {number} The z coordinate
+ */
 function curve_spot(x, a, b) {
-    // console.log(x,a * x**2 + b * x);
     return a * x**2 + b * x;
 }
