@@ -34,14 +34,14 @@ function dodgeMovement(bot, listOfHits) {
     const biggestDiff = Math.max(diffX, diffY, diffZ);
 
     if (biggestDiff === diffZ) {
-        //for punches from the front side of the opponent
+        //For punches from the front side of the opponent
         const width = bot.getAttribute('width');
         const leftSide = botPosition.x - (width/2);
         const rightSide = botPosition.x + (width/2);
         const disFromLeft = Math.max(Math.abs(lastTouch.x - leftSide), Math.abs(firstTouch.x - leftSide));
         const disFromRight = Math.max(Math.abs(lastTouch.x - rightSide), Math.abs(firstTouch.x - rightSide));
 
-        //decides if opponent moves right or left
+        //Decides if opponent moves right or left
         if (disFromLeft < disFromRight) {
             //move right
             botPosition.x = botPosition.x + disFromLeft;
@@ -51,13 +51,13 @@ function dodgeMovement(bot, listOfHits) {
         }
 
     } else {
-        //for punches from the side of the opponent
+        //For punches from the side of the opponent
         const depth = bot.getAttribute('depth');
         const frontSide = botPosition.z + (depth/2);
         const disFromFront = Math.abs(lastTouch.z - frontSide);
         botPosition.z = botPosition.z - disFromFront;
     }
-
+    //Move the opponent
     bot.setAttribute('position', botPosition);
 }
 
@@ -91,6 +91,7 @@ function positionsOfBox(childEntity, parentEntity = null) {
         let height = childEntity.getAttribute('height');
         let depth = childEntity.getAttribute('depth');
 
+        //Give a number to width, height and/or depth if its not already
         if (width === null) {
             width = 1;
             childEntity.setAttribute('width', width);
@@ -107,6 +108,7 @@ function positionsOfBox(childEntity, parentEntity = null) {
         return calculateCorners(boxpos, width, height, depth, scale);
 
     } else {
+        //Get and assign world positions of childEntity
         const att = getWorldAttributes(childEntity, parentEntity);
         const boxpos = att[0];
         const scale = att[1];
@@ -151,6 +153,7 @@ function calculateCorners(position, width, height, depth, scale) {
 function checkIfGonnaHit(listOfTrajectory, corner1, corner2) {
     const cordsBetweenCorners = [];
 
+    //Checks every point in listOfTrajectory if it is between the two given corners
     for (let i = 0; i < listOfTrajectory.length; i++) {
         if (corner1.x < listOfTrajectory[i].x && listOfTrajectory[i].x < corner2.x && corner1.y < listOfTrajectory[i].y && listOfTrajectory[i].y < corner2.y && corner1.z < listOfTrajectory[i].z && listOfTrajectory[i].z < corner2.z) {
             cordsBetweenCorners.push(listOfTrajectory[i]);
@@ -167,11 +170,16 @@ function checkIfGonnaHit(listOfTrajectory, corner1, corner2) {
  * @param hitBoxes The hit boxes of the aiBot
  */
 function executeCalculations(coordinate1, coordinate2, aiBot, hitBoxes) {
+    //Calculate the step size of the trajectory
     const dif = calculateSteps(coordinate1, coordinate2);
 
+    //List with trajectory point
     const trajectory = [coordinate1];
 
-    while (dif.x + dif.y + dif.z !== 0 && diff(coordinate1.x, trajectory[trajectory.length - 1].x) < 1 && diff(coordinate1.y, trajectory[trajectory.length - 1].y) < 1 && diff(coordinate1.z, trajectory[trajectory.length - 1].z) < 1) {
+    //How far the trajectory will be predicted
+    const reach = 0.3;
+
+    while (dif.x + dif.y + dif.z !== 0 && diff(coordinate1.x, trajectory[trajectory.length - 1].x) < reach && diff(coordinate1.y, trajectory[trajectory.length - 1].y) < reach && diff(coordinate1.z, trajectory[trajectory.length - 1].z) < reach) {
         const endpoint = new THREE.Vector3();
         endpoint.x = trajectory[trajectory.length - 1].x + dif.x;
         endpoint.y = trajectory[trajectory.length - 1].y + dif.y;
@@ -184,14 +192,14 @@ function executeCalculations(coordinate1, coordinate2, aiBot, hitBoxes) {
         const botHit = checkIfGonnaHit(trajectory, element[0], element[1]);
 
         // Cooldown to reduce difficulty
-        var robot_dodge_cooldown = document.querySelector("#robot_dodge_cooldown");
-        var dodge_cooldown_value = robot_dodge_cooldown.getAttribute('value')
+        const robot_dodge_cooldown = document.querySelector("#robot_dodge_cooldown");
+        const dodge_cooldown_value = robot_dodge_cooldown.getAttribute('value');
 
         // Move opponent if punch will hit it
         if (botHit.length > 0) {
             if (dodge_cooldown_value === "false"){
                 dodgeMovement(aiBot, botHit);
-                robot_dodge_cooldown.setAttribute('value', "true")
+                robot_dodge_cooldown.setAttribute('value', "true");
             }
         }
     })
@@ -218,15 +226,19 @@ function refineCoordinate(coordinate) {
  */
 function getWorldAttributes(childEntity, parentEntity) {
     const returns = [];
+
+    //All attributes we want to convert into 'world values'
     const attributes = ['position', 'scale', 'rotation', 'width', 'depth', 'height'];
 
     attributes.forEach(element => {
         let childAtt = childEntity.getAttribute(element);
         let parentAtt = parentEntity.getAttribute(element);
 
+        //Some childEntity attributes need to be added differently to the parentEntity
         if (element === 'scale') {
             returns.push(sumObjects(childAtt, parentAtt, true));
         } else if (element === 'width' || element === 'depth' || element === 'height') {
+            //Give number to attributes that have none
             if (childAtt === null) {
                 childAtt = 1;
                 childEntity.setAttribute(element, childAtt);
@@ -245,6 +257,7 @@ function getWorldAttributes(childEntity, parentEntity) {
     return returns
 }
 
+//List of controller positions
 let positions_right = [];
 let positions_left = [];
 
@@ -254,6 +267,7 @@ AFRAME.registerComponent('trajectory', {
         targetBox: {type: 'string'},
     },
     init: function () {
+        //Tick when algorithm was last run
         this.lastTick = 0;
 
         //Select the opponent entity
@@ -265,15 +279,17 @@ AFRAME.registerComponent('trajectory', {
         if (Math.round(time - this.lastTick) > 50) {
             this.lastTick = Math.round(time);
 
+            //Gets positions of headset and controllers
             const list = getPositions(this.el);
             const obj_rc = refineCoordinate(list[1]);
             const obj_lc = refineCoordinate(list[2]);
 
+            //Store positions
             positions_right.push(obj_rc);
             positions_left.push(obj_lc);
         }
 
-        // To get the two opposite corners of every hitbox
+        // To get the two opposite corners of every hitbox and store them
         if (positions_right.length === 2 || positions_left.length === 2) {
             this.stor = [];
             this.hitBoxes.forEach((element) => {
