@@ -275,8 +275,8 @@ AFRAME.registerComponent('trajectory', {
         this.hitBoxes = this.aiBot.querySelectorAll('#hitbox');
     },
     tick: function (time) {
-        //Runs every 50 ticks
-        if (Math.round(time - this.lastTick) > 50) {
+        //Runs every 5 ticks
+        if (Math.round(time - this.lastTick) > 5) {
             this.lastTick = Math.round(time);
 
             //Gets positions of headset and controllers
