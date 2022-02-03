@@ -29,7 +29,7 @@ AFRAME.registerComponent('robot_position_changer', {
          */
         var robot_dodge_cooldown = document.querySelector("#robot_dodge_cooldown");
         var dodge_cooldown_value = robot_dodge_cooldown.getAttribute('value')
-        var dodge_cooldown_time = 1000//seconds
+        var dodge_cooldown_time = 2000//seconds
 
         if (dodge_cooldown_value === 'true'){
             setTimeout(function(){robot_dodge_cooldown.setAttribute('value', "false")},dodge_cooldown_time)

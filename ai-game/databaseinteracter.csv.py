@@ -53,8 +53,6 @@ def csv_test_data():
 
 
 # csv_header()  # only run this once (it will clear out the database)
-
-
 # csv_test_data() #only run when testing database
 
 def txt_updatelastmovement(new_data="5"):
@@ -92,19 +90,28 @@ def txt_getlastmovement(databoard=True):
 
 
 def csv_getsorted_data():
+    """
+    get the data, uses it on the get_total_controllers_distance function and calculates the calories burned
+    @return: the important data for the databoard with the calories burned
+    """
     data = pd.read_csv("datafiles/movement_database.csv")
     data['time'] = pd.to_datetime(data['time'])  # turn date column into time
     data = data.sort_values(by='time', ascending=False)
     lastgame_data = data.loc[data['name'] == data.iloc[0]['name']]
 
     def get_total_controllers_distance(data):
+        """
+        calculates, from the data received, the totaldistance, total_time, fastest punch and slowest punch
+        @param data: the data received from the database
+        @return: the important data for the databoard except the calories burned
+        """
         totaldist = 0
         total_time = 0
         highestspeed = 0
         slowestspeed = 0
         for index, row in data.iterrows():
             # left
-            x1_coords = round(float(ast.literal_eval(row['pos1'])[0]["x"]), 1)
+            x1_coords = round(float(ast.literal_eval(row['pos1'])[0]["x"]), 1) #ast.literal_eval turns a string formed list into a real list
             y1_coords = round(float(ast.literal_eval(row['pos1'])[0]["y"]), 1)
             z1_coords = round(float(ast.literal_eval(row['pos1'])[0]["z"]), 1)
             x2_coords = round(float(ast.literal_eval(row['pos2'])[0]["x"]), 1)
@@ -132,11 +139,12 @@ def csv_getsorted_data():
                 current_time = row['time']
                 try:
                     total_time = total_time + int((formertime - current_time).total_seconds())
-                except UnboundLocalError:
+                except UnboundLocalError: #to catch if the first movement is already 0.6 meters
                     pass
+            # determines if the punch is the slowest or fastest or nothing special and continues
             if rightpunchspeed > highestspeed:
                 highestspeed = rightpunchspeed
-            elif (rightpunchspeed < slowestspeed or slowestspeed == 0) and rightpunchspeed > 0.09:
+            elif (rightpunchspeed < slowestspeed or slowestspeed == 0) and rightpunchspeed > 0.09: #the slowest punch must at least be faster than 0.09 m/s
                 slowestspeed = rightpunchspeed
             if leftpunchspeed > highestspeed:
                 highestspeed = rightpunchspeed
@@ -148,7 +156,7 @@ def csv_getsorted_data():
 
     # get all values of the last game:
     lastgame_total_controller_distance, lastgame_movingtime, _, _ = get_total_controllers_distance(lastgame_data)
-    # lastgame_movingtime =  (lastgame_data.iloc[0]['time'] - lastgame_data.iloc[-1]['time']).total_seconds()
+
     lastgame_calories_burned = int(lastgame_movingtime) * (
                 5.5 * 80 * 3.5 / 200)  # https://captaincalculator.com/health/calorie/calories-burned-boxing-calculator/
     allgames_total_controller_distance, _, highestspeed, slowestspeed = get_total_controllers_distance(data)

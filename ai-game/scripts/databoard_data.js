@@ -37,11 +37,7 @@ AFRAME.registerComponent('lastmovement-logger', {
     }
 });
 
-/**
- * A component that can be attached to a entity
- * It required the document to have a object with the id: "left_hand", "right_hand" and "head". 
- * These will be given the position and rotation recieved on the topic: "hbo_ict_vr_game_player_stats" of the mqtt client.
- */
+
 AFRAME.registerComponent('databoard_updating', {
 
     /**
@@ -56,8 +52,8 @@ AFRAME.registerComponent('databoard_updating', {
 
             if (connected) {
                 if (!this.con) {
+                    //run this part only once while connected to server to subscribe to topic
                     this.con = true
-                    //last movement data:
                     client.subscribe('hbo_ict_vr_request_simplified_lastmovement') //topic to receive the lastmovement data back
                 }
                     mqtt_add_topic_callback('hbo_ict_vr_request_simplified_lastmovement', function (topic, message) {
@@ -67,6 +63,7 @@ AFRAME.registerComponent('databoard_updating', {
                     })
 
                     if ((game_played.getAttribute('text').value).toString() === "True") {
+                        // subscribes to every databoard topic when a game is played (check with a game_played entity)
                         client.subscribe('hbo_ict_vr_request_simplified_lastgame_total_controller_distance')
                         client.subscribe('hbo_ict_vr_request_simplified_lastgame_movingtime')
                         client.subscribe('hbo_ict_vr_request_simplified_lastgame_calories_burned')
@@ -75,6 +72,7 @@ AFRAME.registerComponent('databoard_updating', {
                         client.subscribe('hbo_ict_vr_request_simplified_allgames_fastest_punch')
                         client.publish('hbo_ict_vr_request_database_aftergame', "{0}") //topic to receive the lastmovement data back
 
+                        // if the request topic is received then make the message the the entity value of the designated entity
                         mqtt_add_topic_callback('hbo_ict_vr_request_simplified_lastgame_total_controller_distance', function (topic, message) {
                             var cur_total_controller_distance = document.querySelector("#cur_total_controller_distance") //add the message from the topic to the databoard
                             cur_total_controller_distance.setAttribute('text', 'value', message.toString().substring(0, 7) + "m")
@@ -103,64 +101,11 @@ AFRAME.registerComponent('databoard_updating', {
 
                         })
                         game_played.setAttribute('text', 'value', "False")
+                        // and turn game_played entity to false so the next game it can ran again
                     }
                 }
 
         }, timeout);
     },
-    /**
-     * A function that executes every tick, it gets player controller positions over mqtt.
-     * It then sets the positions to the databoard with setAttribute on the Lastmovement entity
-     */
-    // tick: function () {
-    //     var game_played = document.querySelector("#game_played")
-    //
-    //     if (connected) {
-    //         if (!this.con) {
-    //             // this.con = true
-    //             //last movement data:
-    //             client.subscribe('hbo_ict_vr_request_simplified_lastmovement') //topic to receive the lastmovement data back
-    //             client.publish('hbo_ict_vr_request_database', "{0}") //topic to ask the lastmovement data back
-    //             mqtt_add_topic_callback('hbo_ict_vr_request_simplified_lastmovement', function (topic, message) {
-    //                 var LastMovement = document.querySelector("#LastMovement") //add the message from the topic to the databoard
-    //                 LastMovement.setAttribute('text', 'value', message.toString())
-    //             })
-    //
-    //             if ((game_played.getAttribute('text').value).toString() === "True") {
-    //                 client.subscribe('hbo_ict_vr_request_simplified_lastgame_total_controller_distance')
-    //                 client.subscribe('hbo_ict_vr_request_simplified_lastgame_movingtime')
-    //                 client.subscribe('hbo_ict_vr_request_simplified_lastgame_calories_burned')
-    //                 client.subscribe('hbo_ict_vr_request_simplified_allgames_total_controller_distance')
-    //                 client.publish('hbo_ict_vr_request_database_aftergame', "{0}") //topic to receive the lastmovement data back
-    //
-    //                 mqtt_add_topic_callback('hbo_ict_vr_request_simplified_lastgame_total_controller_distance', function (topic, message) {
-    //                     var cur_total_controller_distance = document.querySelector("#cur_total_controller_distance") //add the message from the topic to the databoard
-    //                     cur_total_controller_distance.setAttribute('text', 'value', message.toString().substring(0, 7) + "m")
-    //                 })
-    //                 mqtt_add_topic_callback('hbo_ict_vr_request_simplified_lastgame_movingtime', function (topic, message) {
-    //                     var movingtime = document.querySelector("#movingtime") //add the message from the topic to the databoard
-    //                     movingtime.setAttribute('text', 'value', message.toString().substring(0, 7) + "s")
-    //                 })
-    //                 mqtt_add_topic_callback('hbo_ict_vr_request_simplified_lastgame_calories_burned', function (topic, message) {
-    //                     var calories_burned = document.querySelector("#calories_burned") //add the message from the topic to the databoard
-    //                     calories_burned.setAttribute('text', 'value', message.toString().substring(0, 7) + "calorie")
-    //                 })
-    //                 mqtt_add_topic_callback('hbo_ict_vr_request_simplified_allgames_total_controller_distance', function (topic, message) {
-    //                     var all_total_controller_distance = document.querySelector("#all_total_controller_distance") //add the message from the topic to the databoard
-    //                     all_total_controller_distance.setAttribute('text', 'value', message.toString().substring(0, 7) + "m")
-    //                     game_played.setAttribute('text', 'value', "False")
-    //                 })
-    //
-    //             }
-    //             //punch moves data:
-    //             //TODO: get hand movements from the database with a subscribed topic and set it to it's databoard attribute
-    //
-    //             //fastest punch data:
-    //             //TODO: get fast movements from the database with a subscribed topic and set it to it's databoard attribute
-    //
-    //             //slowest punch data:
-    //             //TODO: get slow movements from the database with a subscribed topic and set it to it's databoard attribute
-    //         }
-    //     }
-    // }
+
 });
