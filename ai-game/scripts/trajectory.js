@@ -174,12 +174,12 @@ function executeCalculations(coordinate1, coordinate2, aiBot, hitBoxes) {
     const dif = calculateSteps(coordinate1, coordinate2);
 
     //List with trajectory point
-    const trajectory = [coordinate1];
+    const trajectory = [coordinate2];
 
     //How far the trajectory will be predicted
     const reach = 0.3;
 
-    while (dif.x + dif.y + dif.z !== 0 && diff(coordinate1.x, trajectory[trajectory.length - 1].x) < reach && diff(coordinate1.y, trajectory[trajectory.length - 1].y) < reach && diff(coordinate1.z, trajectory[trajectory.length - 1].z) < reach) {
+    while (dif.x + dif.y + dif.z !== 0 && diff(coordinate2.x, trajectory[trajectory.length - 1].x) < reach && diff(coordinate2.y, trajectory[trajectory.length - 1].y) < reach && diff(coordinate2.z, trajectory[trajectory.length - 1].z) < reach) {
         const endpoint = new THREE.Vector3();
         endpoint.x = trajectory[trajectory.length - 1].x + dif.x;
         endpoint.y = trajectory[trajectory.length - 1].y + dif.y;
