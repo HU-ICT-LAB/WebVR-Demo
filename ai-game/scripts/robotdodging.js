@@ -4,17 +4,34 @@ AFRAME.registerComponent('modeldodgemovement', {
         Uses the middelpoint and the predicted point to determine the next position the robot needs to go, to dodge the punch.
         This position will be used in an position animation, so you can see the robot move.
         */
-        var predictedmove = document.querySelector("#testbox");
-        var middlepoint = document.querySelector("#middlepoint");
+        var arena = document.querySelector("#arena");
+        console.log("test: ", arena.getAttribute('position'))
+    }})
+
+AFRAME.registerComponent('robot_position_changer', {
+    tick: function () {
+        /* Robot Arena Touch checker
+        Uses the distance from the middlepoint to the robot and determines if it's outside the ring, if so teleport back to beginning
+        */
         var robot = document.querySelector("#robotmodel");
         var currentpos = robot.getAttribute('position');
-        var P = predictedmove.getAttribute('position');
-        var M = middlepoint.getAttribute('position');
+        var middlepoint = {x: 0, y: 0, z: 0}
+        let distance = Math.sqrt(Math.abs((currentpos.x - middlepoint.x)**2 + (currentpos.y - middlepoint.y)**2 + (currentpos.z - middlepoint.z)**2))
 
-        var x_distance = M.x - P.x;
-        var movemultiplier = 1/x_distance*0.2;
-        var robotmove = movemultiplier;
+        if (distance > 2.75) {
+            robot.setAttribute('position', "0 0 0");
+            console.log("OUTSIDE")
+        }
 
-        var animationMoveString = "property: position; from: "+ currentpos.x + " " + currentpos.y + " " + (currentpos.z-1) + "; to: " + robotmove + " " + currentpos.y + " " + (currentpos.z-1) + " dur: 10000; easing: linear"
-        robot.setAttribute("animation", animationMoveString);
+        /* Dodge cooldown
+        If the robot has dodged an attack, the robot_dodge_cooldown will be true and need to wait "dodge_cooldown_time" amount of seconds
+        to dodge again
+         */
+        var robot_dodge_cooldown = document.querySelector("#robot_dodge_cooldown");
+        var dodge_cooldown_value = robot_dodge_cooldown.getAttribute('value')
+        var dodge_cooldown_time = 2000//seconds
+
+        if (dodge_cooldown_value === 'true'){
+            setTimeout(function(){robot_dodge_cooldown.setAttribute('value', "false")},dodge_cooldown_time)
+        }
     }})

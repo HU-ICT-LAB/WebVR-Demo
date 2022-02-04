@@ -11,7 +11,7 @@ AFRAME.registerComponent('mqtt-logger', {
         //tells if we already set an mqtt calback or subscription, can only be true after the mqtt client has been connected
         this.con = false
     },
-    
+
     /**
      * Function that is executed every tick, it gets the controllers and headsets current position and rotation
      * It then puts that information into a json object and sends it over mqtt to the topic: hbo_ict_vr_game_player_stats
@@ -21,7 +21,7 @@ AFRAME.registerComponent('mqtt-logger', {
             if (!this.con){
                 mqtt_add_topic_callback("", function (topic, message) {
                     // message is Buffer
-                    console.log(message.toString())
+                    // console.log(message.toString())
                 })
                 this.con = true
             }
@@ -57,7 +57,11 @@ AFRAME.registerComponent('mqtt-logger', {
                 pos = headset.getAttribute('rotation')
                 obj = {'x': pos.x.toPrecision(8), 'y': pos.y.toPrecision(8), 'z': pos.z.toPrecision(8)};
                 packet['headset_rot'] = obj
-                client.publish('hbo_ict_vr_game_player_stats', JSON.stringify(packet))
+
+                // var lastmovement = JSON.stringify(getPositions(this.el))
+                // client.publish('hbo_ict_vr_game_player_stats', lastmovement)d
+                // console.log("DATA PUBLISHED")
+
             }
         }
 
@@ -66,7 +70,7 @@ AFRAME.registerComponent('mqtt-logger', {
 
 /**
  * A component that can be attached to a entity
- * It required the document to have a object with the id: "left_hand", "right_hand" and "head". 
+ * It required the document to have a object with the id: "left_hand", "right_hand" and "head".
  * These will be given the position and rotation recieved on the topic: "hbo_ict_vr_game_player_stats" of the mqtt client.
  */
 AFRAME.registerComponent('mqtt-pos-setter', {
@@ -76,7 +80,7 @@ AFRAME.registerComponent('mqtt-pos-setter', {
     init: function () {
         //tells if we already set an mqtt calback or subscription, can only be true after the mqtt client has been connected
         this.con = false
-        
+
     },
     /**
      * A function that executes every tick, it gets player headset and controller positions and rotations over mqtt.
@@ -96,48 +100,48 @@ AFRAME.registerComponent('mqtt-pos-setter', {
                     // message is Buffer
                     var pos = new THREE.Vector3();
 
-                        var obj = JSON.parse(message);
-                        var set = obj['left_controller_pos']
-                        pos.x = set.x;
-                        pos.y = set.y;
-                        pos.z = set.z;
-                        left_controller.setAttribute('position', pos)
+                    var obj = JSON.parse(message);
+                    var set = obj['left_controller_pos']
+                    pos.x = set.x;
+                    pos.y = set.y;
+                    pos.z = set.z;
+                    left_controller.setAttribute('position', pos)
 
-                        set = obj['right_controller_pos']
-                        pos.x = set.x;
-                        pos.y = set.y;
-                        pos.z = set.z;
-                        right_controller.setAttribute('position', pos)
-
-
-                        set = obj['headset_pos']
-                        pos.x = set.x;
-                        pos.y = set.y;
-                        pos.z = set.z;
-                        headset.setAttribute('position', pos)
+                    set = obj['right_controller_pos']
+                    pos.x = set.x;
+                    pos.y = set.y;
+                    pos.z = set.z;
+                    right_controller.setAttribute('position', pos)
 
 
-                        set = obj['left_controller_rot']
-                        pos.x = set.x;
-                        pos.y = set.y;
-                        pos.z = set.z;
-                        left_controller.setAttribute('rotation', pos)
+                    set = obj['headset_pos']
+                    pos.x = set.x;
+                    pos.y = set.y;
+                    pos.z = set.z;
+                    headset.setAttribute('position', pos)
 
 
-                        set = obj['right_controller_rot']
-                        pos.x = set.x;
-                        pos.y = set.y;
-                        pos.z = set.z;
-                        right_controller.setAttribute('rotation', pos)
+                    set = obj['left_controller_rot']
+                    pos.x = set.x;
+                    pos.y = set.y;
+                    pos.z = set.z;
+                    left_controller.setAttribute('rotation', pos)
 
-                        set = obj['headset_rot']
-                        pos.x = set.x;
-                        pos.y = set.y;
-                        pos.z = set.z;
-                        headset.setAttribute('rotation', pos)
+
+                    set = obj['right_controller_rot']
+                    pos.x = set.x;
+                    pos.y = set.y;
+                    pos.z = set.z;
+                    right_controller.setAttribute('rotation', pos)
+
+                    set = obj['headset_rot']
+                    pos.x = set.x;
+                    pos.y = set.y;
+                    pos.z = set.z;
+                    headset.setAttribute('rotation', pos)
                     //log the recieved positions and rotations to the console
                     console.log(message.toString())
-                  })
+                })
             }
         }
     }
