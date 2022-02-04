@@ -1,24 +1,15 @@
 /**
- * This function adds or multiplies items of the two given objects
+ * This function sum up each item of the two objects
  * @param obj1 Object 1
  * @param obj2 Object 2
- * @param multiply A boolean to determine if the objects need to be multiplied
- * @returns {{}} Object with the added or multiplied items
+ * @returns {{}} Object with the summed up items
  */
-function sumObjects(obj1, obj2, multiply = false) {
+function sumObjects(obj1, obj2) {
     let sum = {};
 
-    if (multiply) {
-        Object.keys(obj1).forEach(key => {
-            sum[key] = obj1[key] * obj2[key]
-        })
-    }
-
-    else {
-        Object.keys(obj1).forEach(key => {
-            sum[key] = obj1[key] + obj2[key]
-        })
-    }
+    Object.keys(obj1).forEach(key => {
+        sum[key] = obj1[key] + obj2[key]
+    })
     return sum;
 }
 
@@ -118,8 +109,6 @@ AFRAME.registerComponent('add_cords_to_hud', {
         var obj_h = list[0];
         var obj_rc = list[1];
         var obj_lc = list[2];
-
-        client.publish('hbo_ict_vr_request_data', JSON.stringify(list))
 
         //Add the coordinates to the HUD
         textEntity.setAttribute('text', 'value',

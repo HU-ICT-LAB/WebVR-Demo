@@ -3,13 +3,10 @@
     <title> Aframe VRBoxing Game</title>
         <!--  Scripts  -->
         <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-        <script src="scripts/hand-positions.js"></script>
-        <script src="../scripts/possition_logging.js"></script>
-        <script type="module" src="../ai-game/scripts/databoard_data.js"></script>
 
         <!-- Hitbox collider libraries   -->
         <script src="https://unpkg.com/aframe-environment-component@1.0.0/dist/aframe-environment-component.min.js"></script>
-        <script src="https://unpkg.com/aframe-event-set-component@4.0.1/dist/aframemodeldodgemovement-event-set-component.js"></script>
+        <script src="https://unpkg.com/aframe-event-set-component@4.0.1/dist/aframe-event-set-component.js"></script>
         <script src="https://unpkg.com/aframe-aabb-collider-component@3.1.0/dist/aframe-aabb-collider-component.min.js"></script>
 
         <!--    Paho Mqtt interaction with python-->
@@ -31,23 +28,16 @@
 
         <!--    Player name-->
         <script src="scripts/username.js" type="text/javascript"></script>
-
-        <!--    Trajectory component-->
-        <script src="scripts/trajectory.js"></script>
-
-        <!--   Button script -->
-        <script src="../scripts/push_button.js" type="text/javascript"></script>
-
 </head>
 
 <body>
-<a-scene cursor="rayOrigin:mouse">
+<a-scene>
     <!-- Assets -->
     <a-assets>
         <img id="floor" src="assets/textures/Carpet.jpg">
         <img id="Sky" src="assets/textures/background.jpg">
         <img id="Metal" src="assets/textures/Metal.png">
-        <a-asset-item id="Robot" src="assets\models\Robot_gltf/scene.glb"></a-asset-item>
+        <a-asset-item id="Robot" src="assets\models\Robot_gltf/scene.gltf"></a-asset-item>
         <a-mixin id="head" geometry="primitive:box; height:50; width:40; depth:30;" material="opacity: 0.3; transparent: true" ></a-mixin>
         <a-mixin id="body" geometry="primitive:box; height:70; width:60; depth:55;" material="opacity: 0.3; transparent: true" handle-events aabb-collider></a-mixin>
 
@@ -55,52 +45,17 @@
 
     <!-- ScoreBoard-->
     <a-box color="#FFFFFF" src=#Metal width="3" height="1.5" depth="0.1" position="0 4 -6">
-
-                    <!-- Building Objects                  -->
                     <a-circle color="#333333" side="double" position="1.3 0 0.08" radius="0.2"> </a-circle>
                     <a-box color="#FFFFFF" src=#Metal width="10" height="0.5" depth="0.1" position="0 1 0" repeat="10 1"></a-box>
                     <a-box color="#333333" src=#Metal width="8" height="0.5" depth="0.5" rotation="0 0 90" position="5.25 -2.25 0"></a-box>
                     <a-box color="#333333" src=#Metal width="8" height="0.5" depth="0.5" rotation="0 0 90" position="-5.25 -2.25 0"></a-box>
-                    <!--   Game Text Objects                 -->
-                    <a-text id="username" position="-4.8 1 0.08" getnewname> </a-text>
                     <a-text id="score" value= "0" position="-1.1 0 0.08" scale="7 7 7"> </a-text>
-                    <a-text id="timer" value= "5" position="-0.3 1 0.08" scale="2 2 2" timerdown>
-                        <a-text id="game_played" value= "false" scale="0.001 0.001 0.001"></a-text>
-                    </a-text>
-
-                    <!--   Score Text Objects                 -->
+                    <a-text id="timer" value= "60" position="-0.3 1 0.08" scale="2 2 2" timerdown> </a-text>
+                    <a-text id="username" position="-4.8 1 0.08" getnewname> </a-text>
                     <a-box id="Highscoreboard" color="#A9A9A9" src=#Metal width="3.5" height="3" depth="0.1" position="-3.5 -0.75 0"  repeat="10 1">
-                        <a-entity id="Highscoretext" text="value: Top 10 Leaderboard\n------------\n---: --\n---: --\n---: --\n---: --\n---: --\n---: --\n---: --\n---: --\n---: --\n---: --; color: #FFFFFF" position="1.20 0 0.11" scale="5 5 5" sethighscore></a-entity>
-                    </a-box>
-                    <!--   Data Text Objects                 -->
-                    <a-box color="#A9A9A9" src=#Metal width="3.5" height="3" depth="0.1" position="3.5 -0.75 0"   databoard_updating>
-                        <a-entity id="Title" text="value: Databoard\n-------------\n ; color: #FFFFFF" position="0.90 1.1 0.11" scale="5 5 5"></a-entity>
-                        <a-entity id="LastMovement_Title" text="value: Position: ; color: #FFFFFF" position="0.43 0.77 0.11" scale="4 4 4" ></a-entity>
-                        <a-entity id="LastMovement" text="value: ---- ; color: #FFFFFF" position="1.30 0.77 0.11" scale="4 4 4"></a-entity>
-
-                        <a-entity id="Lastgame_Title" text="value: Currentgame; color: #000000 " position="0.90 0.50 0.11" scale="5 5 5"></a-entity>
-                        <a-entity id="cur_total_controller_distance_Title" text="value: Controllers Moved: ; color: #FFFFFF" position="0.43 0.20 0.11" scale="4 4 4" ></a-entity>
-                        <a-entity id="cur_total_controller_distance" text="value: ---- ; color: #FFFFFF" position="2.00 0.20 0.11" scale="4 4 4"></a-entity>
-
-                        <a-entity id="movingtime_title" text="value: Moving Time: ; color: #FFFFFF" position="0.43 -0.05 0.11" scale="4 4 4" ></a-entity>
-                        <a-entity id="movingtime" text="value: ---- ; color: #FFFFFF" position="1.60 -0.05 0.11" scale="4 4 4"></a-entity>
-
-                        <a-entity id="calories_burned_title" text="value: Calories Burned: ; color: #FFFFFF" position="0.43 -0.30 0.11" scale="4 4 4" ></a-entity>
-                        <a-entity id="calories_burned" text="value: ---- ; color: #FFFFFF" position="1.80 -0.30 0.11" scale="4 4 4"></a-entity>
-
-                        <a-entity id="Lastgame_Title" text="value: All Games; color: #000000 " position="0.90 -0.60 0.11" scale="5 5 5"></a-entity>
-                        <a-entity id="all_total_controller_distance_Title" text="value: Controllers Moved: ; color: #FFFFFF" position="0.43 -0.85 0.11" scale="4 4 4" ></a-entity>
-                        <a-entity id="all_total_controller_distance" text="value: ---- ; color: #FFFFFF" position="2.00 -0.85 0.11" scale="4 4 4"></a-entity>
-
-                        <a-entity id="fastest_punch_Title" text="value: Fastest Punch: ; color: #FFFFFF" position="0.43 -1.05 0.11" scale="4 4 4" ></a-entity>
-                        <a-entity id="fastest_punch" text="value: ---- ; color: #FFFFFF" position="1.65 -1.05 0.11" scale="4 4 4"></a-entity>
-
-                        <a-entity id="slowest_punch_Title" text="value: Slowest Punch: ; color: #FFFFFF" position="0.43 -1.25 0.11" scale="4 4 4" ></a-entity>
-                        <a-entity id="slowest_punch" text="value: ---- ; color: #FFFFFF" position="1.70 -1.25 0.11" scale="4 4 4"></a-entity>
-
+                        <a-entity id="Highscoretext" text="value: Top 10 Leaderboard\n------------\ndaan:--\nruben:--\nfloris:--\nshaun:--\ncharlie:--\npieter:--\nmanneke:--\nwit:--\nman:--\nvrouw:--; color: #FFFFFF" position="1.20 0 0.11" scale="5 5 5" sethighscore></a-entity>
                     </a-box>
                 </a-box>
-
 
     <!-- Sky -->
     <a-sky src="#Sky"
@@ -109,7 +64,7 @@
     </a-sky>
 
     <!-- Arena -->
-    <a-cylinder id="arena" radius="3.25" height="4" color="#FFC65D" segments-radial="6" open-ended="True" side="double" position="0 0 -1" rotation="0 0 0" animation="property: position; from:0 -3 0; to: 0 -1 0; repeat:indefinite; direction:alternate; dur: 7000; easing:linear"></a-cylinder>
+    <a-cylinder radius="2.75" height="4" color="#FFC65D" segments-radial="6" open-ended="True" side="double" position="0 -1 0" rotation="0 0 0" animation="property: position; from:0 -3 0; to: 0 -1 0; repeat:indefinite; direction:alternate; dur: 7000; easing:linear"></a-cylinder>
 
     <!-- Floor -->
     <a-plane material="color: #FFFFFF; src: #floor; repeat: 5 5;"
@@ -119,30 +74,37 @@
     </a-plane>
 
     <!--             Robot Playermodel & Hitbox -->
-    <a-entity id="robotmodel" gltf-model="#Robot" position="0 0 -1" robot_position_changer >
-        <a-box id="hitbox" color="#333333" position="0 1.8 0" width="0.4" height="0.6" depth="0.3" handle-events aabb-collider material="opacity: 0.0; transparent: true" ></a-box>
-        <a-box id="hitbox" color="#333333" position="0 1.1 0" width="0.5" height="0.7" depth="0.55" handle-events aabb-collider  material="opacity: 0.0; transparent: true"></a-box>
-        <!-- TODO look into it -->
-        <a-hitbox  color="#333333" position="0 3 0" hitbox ></a-hitbox>
-        <a-text id="robot_hitable" value= "false" scale="0.001 0.001 0.001"></a-text>
-        <a-text id="robot_dodge_cooldown" value= "false" scale="0.001 0.001 0.001"></a-text>
+    <a-entity id="robotmodel" gltf-model="#Robot" scale="0.007 0.01 0.01" position="0 0 -1"
+              animation="property: position; from: 0 0 -1; to: 0 0 0; dur: 10000; easing: linear">
+        <a-hitbox color="#333333" position="0 2 0" >
+            <a-circle
+                    id="middlepoint" color="#000000" scale="5 3.5 50" position="0 140 0">
+            </a-circle>
+        </a-hitbox>
     </a-entity>
 
-    <!--  Button  -->
-    <a-entity geometry="primitive: box" position="1 0  2" scale="0.25 1.5 0.25" color="#000000"></a-entity>
-    <a-entity id="start_button" rotation="0 0 0" button="event_start: startbutton_pressed; event_stop: button_1_released;
-    button_color: #FF0000; base_color: #0000FF;" position="1  0.8  2"></a-entity>
+    <!--             Only Visible Hitbox connected Playermodel-->
+    <!--    <a-hitbox id="robotmodel" color="#333333" scale="0.007 0.01 0.01" position="0 0 -1">-->
+    <!--        <a-circle-->
+    <!--            id="middlepoint" color="#000000" scale="5 3.5 50" position="0 140 0">-->
+    <!--        </a-circle>-->
+    <!--    </a-hitbox>-->
 
-    <a-entity timerdown button_listener></a-entity>
-
-
+    <!--             Test predicted movement box-->
+    <a-box
+        id="testbox" color="#808080" height="0.1" width="0.1" depth="0.1" position="-0.30 1.4 -1" modeldodgemovement>
+    </a-box>
 
     <!--    Camera and Oculus rift-->
-    <a-entity wasd-controls id="rig" position="0 0 2" mqtt-logger  lastmovement-logger trajectory="targetBox: robotmodel">
-        <a-entity id="camera" camera look-controls hit></a-entity>
-        <a-entity class="hand" aabb-collider="objects: a-box" id="left_controller"  oculus-touch-controls="hand: left" thumbstick-logging hit></a-entity>
-        <a-entity class="hand" aabb-collider="objects: a-box" id="right_controller"  oculus-touch-controls="hand: right" thumbstick-logging hit></a-entity>
+    <a-entity wasd-controls id="rig" position="0 0 2">
+        <a-entity id="camera" camera look-controls ></a-entity>
+        <a-entity id="lefthand" aabb-collider="objects: a-box" oculus-touch-controls="hand: left" thumbstick-logging hit></a-entity>
+        <a-entity id="righthand" aabb-collider="objects: a-box" oculus-touch-controls="hand: right" thumbstick-logging hit></a-entity>
     </a-entity>
+
+    <!--    Bug fix entity-->
+<!--    <a-text id="debug" value= "404" position="2 5 -5.9" scale="2 2 2"> </a-text>-->
+
 
 </a-scene>
 </body>

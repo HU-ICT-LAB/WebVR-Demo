@@ -3,7 +3,7 @@
  * devide it by 10 so you get tiny steps to calculate the trajectory.
  * @param pos1 Position 1
  * @param pos2 Position 2
- * @returns {THREE.Vector3} The size of one step
+ * @returns {THREE.Vector3} The step
  */
 function calculateSteps(pos1, pos2) {
     const vec1 = [pos1['x'], pos1['y'], pos1['z']]
@@ -24,41 +24,13 @@ function calculateSteps(pos1, pos2) {
 function dodgeMovement(bot, listOfHits) {
     const botPosition = bot.getAttribute('position');
     const firstTouch = listOfHits[0];
-    const lastTouch = listOfHits[listOfHits.length - 1];
 
-    //To see which direction changes the most
-    const diffX = Math.abs(firstTouch.x - lastTouch.x);
-    const diffY = Math.abs(firstTouch.y - lastTouch.y);
-    const diffZ = Math.abs(firstTouch.z - lastTouch.z);
+    const x_distance = botPosition.x - firstTouch.x;
+    const moveMultiplier = 1/x_distance*0.2;
 
-    const biggestDiff = Math.max(diffX, diffY, diffZ);
+    const animationMoveString = "property: position; from: "+ botPosition.x + " " + botPosition.y + " " + (botPosition.z-1) + "; to: " + moveMultiplier + " " + botPosition.y + " " + (botPosition.z-1) + " dur: 10000; easing: linear";
 
-    if (biggestDiff === diffZ) {
-        //For punches from the front side of the opponent
-        const width = bot.getAttribute('width');
-        const leftSide = botPosition.x - (width/2);
-        const rightSide = botPosition.x + (width/2);
-        const disFromLeft = Math.max(Math.abs(lastTouch.x - leftSide), Math.abs(firstTouch.x - leftSide));
-        const disFromRight = Math.max(Math.abs(lastTouch.x - rightSide), Math.abs(firstTouch.x - rightSide));
-
-        //Decides if opponent moves right or left
-        if (disFromLeft < disFromRight) {
-            //move right
-            botPosition.x = botPosition.x + disFromLeft;
-        } else {
-            //move left
-            botPosition.x = botPosition.x - disFromRight;
-        }
-
-    } else {
-        //For punches from the side of the opponent
-        const depth = bot.getAttribute('depth');
-        const frontSide = botPosition.z + (depth/2);
-        const disFromFront = Math.abs(lastTouch.z - frontSide);
-        botPosition.z = botPosition.z - disFromFront;
-    }
-    //Move the opponent
-    bot.setAttribute('position', botPosition);
+    bot.setAttribute('animation', animationMoveString);
 }
 
 /**
@@ -76,71 +48,38 @@ function diff (num1, num2) {
 }
 
 /**
- * Get the right positions and attributes for the calculateCorners function
- * and calls that function to calculate the outer corners of a (box) entity
- * @param childEntity The entity that you want the corners to be calculated from
- * @param parentEntity The parent entity of the childEntity if there is one
- * @returns {THREE.Vector3[]} The two positions of the corners of the childEntity
+ * This function calculate the two outer vertices of the given enitty
+ * @param aiEntity An entity
+ * @returns {THREE.Vector3[]} Two positions in an array
  */
-function positionsOfBox(childEntity, parentEntity = null) {
-    // If the childEntity has no parent entity
-    if (parentEntity === null) {
-        const boxpos = childEntity.getAttribute('position');
-        const scale = childEntity.getAttribute('scale');
-        let width = childEntity.getAttribute('width');
-        let height = childEntity.getAttribute('height');
-        let depth = childEntity.getAttribute('depth');
+function positionsOfBox(aiEntity) {
+    const boxpos = aiEntity.getAttribute('position');
+    const scale = aiEntity.getAttribute('scale');
+    let width = aiEntity.getAttribute('width');
+    let height = aiEntity.getAttribute('height');
+    let depth = aiEntity.getAttribute('depth');
 
-        //Give a number to width, height and/or depth if its not already
-        if (width === null) {
-            width = 1;
-            childEntity.setAttribute('width', width);
-        }
-        if (height === null) {
-            height = 1;
-            childEntity.setAttribute('height', height);
-        }
-        if (depth === null) {
-            depth = 1;
-            childEntity.setAttribute('depth', depth);
-        }
-
-        return calculateCorners(boxpos, width, height, depth, scale);
-
-    } else {
-        //Get and assign world positions of childEntity
-        const att = getWorldAttributes(childEntity, parentEntity);
-        const boxpos = att[0];
-        const scale = att[1];
-        let width = att[3];
-        let depth = att[4];
-        let height = att[5];
-
-        return calculateCorners(boxpos, width, height, depth, scale);
+    if (width === null) {
+        width = 1;
     }
-}
+    if (height === null) {
+        height = 1;
+    }
+    if (depth === null) {
+        depth = 1;
+    }
 
-/**
- * Calculates the two corner positions of an (box) entity
- * @param position Position of the entity
- * @param width The width of the entity
- * @param height The height of the entity
- * @param depth The depth of the entity
- * @param scale The scale of the entity
- * @returns {THREE.Vector3[]} The two corner positions of the entity
- */
-function calculateCorners(position, width, height, depth, scale) {
     const pos1 = new THREE.Vector3();
-    pos1.x = position.x - (width / 2) * scale.x;
-    pos1.y = position.y - (height / 2) * scale.y;
-    pos1.z = position.z - (depth / 2) * scale.z;
+    pos1.x = boxpos.x - (width/2) * scale.x;
+    pos1.y = boxpos.y - (height/2) * scale.y;
+    pos1.z = boxpos.z - (depth/2) * scale.z;
 
     const pos2 = new THREE.Vector3();
-    pos2.x = position.x + (width / 2) * scale.x;
-    pos2.y = position.y + (height / 2) * scale.y;
-    pos2.z = position.z + (depth / 2) * scale.z;
+    pos2.x = boxpos.x + (width/2) * scale.x;
+    pos2.y = boxpos.y + (height/2) * scale.y;
+    pos2.z = boxpos.z + (depth/2) * scale.z;
 
-    return [pos1, pos2]
+    return [pos1, pos2];
 }
 
 /**
@@ -153,7 +92,6 @@ function calculateCorners(position, width, height, depth, scale) {
 function checkIfGonnaHit(listOfTrajectory, corner1, corner2) {
     const cordsBetweenCorners = [];
 
-    //Checks every point in listOfTrajectory if it is between the two given corners
     for (let i = 0; i < listOfTrajectory.length; i++) {
         if (corner1.x < listOfTrajectory[i].x && listOfTrajectory[i].x < corner2.x && corner1.y < listOfTrajectory[i].y && listOfTrajectory[i].y < corner2.y && corner1.z < listOfTrajectory[i].z && listOfTrajectory[i].z < corner2.z) {
             cordsBetweenCorners.push(listOfTrajectory[i]);
@@ -162,104 +100,7 @@ function checkIfGonnaHit(listOfTrajectory, corner1, corner2) {
     return cordsBetweenCorners;
 }
 
-/**
- * Calculates the trajectory, calls checkIfGonnaHit to check if the trajectory interferes with the aiBot and moves the bot using dodgeMovement if necessary.
- * @param coordinate1 The first coordinate of the punch
- * @param coordinate2 The second coordinate of the punch
- * @param aiBot The bot or opponent you are boxing against
- * @param hitBoxes The hit boxes of the aiBot
- */
-function executeCalculations(coordinate1, coordinate2, aiBot, hitBoxes) {
-    //Calculate the step size of the trajectory
-    const dif = calculateSteps(coordinate1, coordinate2);
-
-    //List with trajectory point
-    const trajectory = [coordinate2];
-
-    //How far the trajectory will be predicted
-    const reach = 0.3;
-
-    while (dif.x + dif.y + dif.z !== 0 && diff(coordinate2.x, trajectory[trajectory.length - 1].x) < reach && diff(coordinate2.y, trajectory[trajectory.length - 1].y) < reach && diff(coordinate2.z, trajectory[trajectory.length - 1].z) < reach) {
-        const endpoint = new THREE.Vector3();
-        endpoint.x = trajectory[trajectory.length - 1].x + dif.x;
-        endpoint.y = trajectory[trajectory.length - 1].y + dif.y;
-        endpoint.z = trajectory[trajectory.length - 1].z + dif.z;
-        trajectory.push(endpoint);
-    }
-
-    //Check if the trajectory will hit the hitboxes and move the opponent if so
-    hitBoxes.forEach(element => {
-        const botHit = checkIfGonnaHit(trajectory, element[0], element[1]);
-
-        // Cooldown to reduce difficulty
-        const robot_dodge_cooldown = document.querySelector("#robot_dodge_cooldown");
-        const dodge_cooldown_value = robot_dodge_cooldown.getAttribute('value');
-
-        // Move opponent if punch will hit it
-        if (botHit.length > 0) {
-            if (dodge_cooldown_value === "false"){
-                dodgeMovement(aiBot, botHit);
-                robot_dodge_cooldown.setAttribute('value', "true");
-            }
-        }
-    })
-}
-
-/**
- * This function refines coordinates.
- * @param coordinate The coordinate you want to refine
- * @returns {*} The refined coordinate
- */
-function refineCoordinate(coordinate) {
-    const pos = new THREE.Vector3();
-    pos.x = coordinate['x'];
-    pos.y = coordinate['y'];
-    pos.z = coordinate['z'];
-    return pos
-}
-
-/**
- * Calculates the 'world values' of an entities attributes.
- * @param childEntity The entity where you want the 'world values' calculated of
- * @param parentEntity The parent entity of the childEntity
- * @returns {*[]} The calculated 'world values' of the childEntity
- */
-function getWorldAttributes(childEntity, parentEntity) {
-    const returns = [];
-
-    //All attributes we want to convert into 'world values'
-    const attributes = ['position', 'scale', 'rotation', 'width', 'depth', 'height'];
-
-    attributes.forEach(element => {
-        let childAtt = childEntity.getAttribute(element);
-        let parentAtt = parentEntity.getAttribute(element);
-
-        //Some childEntity attributes need to be added differently to the parentEntity
-        if (element === 'scale') {
-            returns.push(sumObjects(childAtt, parentAtt, true));
-        } else if (element === 'width' || element === 'depth' || element === 'height') {
-            //Give number to attributes that have none
-            if (childAtt === null) {
-                childAtt = 1;
-                childEntity.setAttribute(element, childAtt);
-            }
-            if (parentAtt === null) {
-                parentAtt = 1;
-                parentEntity.setAttribute(element, parentAtt);
-            }
-            returns.push(parseFloat(childAtt) * parseFloat(parentAtt));
-
-        } else {
-            returns.push(sumObjects(childAtt, parentAtt));
-        }
-    })
-
-    return returns
-}
-
-//List of controller positions
-let positions_right = [];
-let positions_left = [];
+let savedPositions = [];
 
 //Calculate trajectory and moves targetBox if in its trajectory
 AFRAME.registerComponent('trajectory', {
@@ -267,46 +108,55 @@ AFRAME.registerComponent('trajectory', {
         targetBox: {type: 'string'},
     },
     init: function () {
-        //Tick when algorithm was last run
         this.lastTick = 0;
 
         //Select the opponent entity
-        this.aiBot = document.querySelector("#"+this.data.targetBox);
-        this.hitBoxes = this.aiBot.querySelectorAll('#hitbox');
+        this.aiBot = document.querySelector("#"+this.data.targetBox)
     },
     tick: function (time) {
-        //Runs every 5 ticks
-        if (Math.round(time - this.lastTick) > 5) {
+        //Runs every 2 seconds
+        if (Math.round(time - this.lastTick) > 500) {
             this.lastTick = Math.round(time);
 
-            //Gets positions of headset and controllers
             const list = getPositions(this.el);
-            const obj_rc = refineCoordinate(list[1]);
-            const obj_lc = refineCoordinate(list[2]);
+            const obj_rc = list[1];
 
-            //Store positions
-            positions_right.push(obj_rc);
-            positions_left.push(obj_lc);
-        }
+            const pos = new THREE.Vector3();
+            pos.x = obj_rc['x'];
+            pos.y = obj_rc['y'];
+            pos.z = obj_rc['z'];
 
-        // To get the two opposite corners of every hitbox and store them
-        if (positions_right.length === 2 || positions_left.length === 2) {
-            this.stor = [];
-            this.hitBoxes.forEach((element) => {
-                this.stor.push(positionsOfBox(element, this.aiBot));
-            })
+            savedPositions.push(pos);
         }
 
         //Runs if there are two measured points of the hand
-        if (positions_right.length === 2) {
-            executeCalculations(positions_right[0], positions_right[1], this.aiBot, this.stor);
-            positions_right = [];
+        if (savedPositions.length === 2) {
+            const box1 = savedPositions[0];
+            const box2 = savedPositions[1];
 
-        }
+            const dif = calculateSteps(box1, box2);
 
-        if (positions_left.length === 2) {
-            executeCalculations(positions_left[0], positions_left[1], this.aiBot, this.stor);
-            positions_left = [];
+            const trajectory = [box1];
+
+            while (diff(box1.x, trajectory[trajectory.length - 1].x) < 1 && diff(box1.y, trajectory[trajectory.length - 1].y) < 1 && diff(box1.z, trajectory[trajectory.length - 1].z) < 1) {
+                const endpoint = new THREE.Vector3();
+                endpoint.x = trajectory[trajectory.length - 1].x + dif.x;
+                endpoint.y = trajectory[trajectory.length - 1].y + dif.y;
+                endpoint.z = trajectory[trajectory.length - 1].z + dif.z;
+                trajectory.push(endpoint);
+            }
+
+            const botPos = positionsOfBox(this.aiBot);
+
+            const botHit = checkIfGonnaHit(trajectory, botPos[0], botPos[1]);
+
+            if (botHit.length > 0) {
+                dodgeMovement(this.aiBot, botHit)
+            }
+
+            if (savedPositions.length >= 2) {
+                savedPositions = [];
+            }
         }
     }
-});
+})
